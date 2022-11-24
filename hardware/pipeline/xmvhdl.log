@@ -1,0 +1,43 @@
+xmvhdl(64): 21.03-s015: (c) Copyright 1995-2022 Cadence Design Systems, Inc.
+        reg_pc_4 : OUT unsigned(31 DOWNTO 0);
+                                              |
+xmvhdl_p: *E,PORNKW (pipe_fetch.vhd,16|46): identifier expected.
+        reg_pc_4 : OUT unsigned(31 DOWNTO 0);
+                                              |
+xmvhdl_p: *E,MISCOL (pipe_fetch.vhd,16|46): expecting a colon (':') 87[4.3.3] 93[4.3.2].
+    );
+       |
+xmvhdl_p: *E,PORNKW (pipe_fetch.vhd,17|7): identifier expected.
+    );
+       |
+xmvhdl_p: *E,MISCOL (pipe_fetch.vhd,17|7): expecting a colon (':') 87[4.3.3] 93[4.3.2].
+END;
+     |
+xmvhdl_p: *E,PORNKW (pipe_fetch.vhd,18|5): identifier expected.
+END;
+     |
+xmvhdl_p: *E,MISCOL (pipe_fetch.vhd,18|5): expecting a colon (':') 87[4.3.3] 93[4.3.2].
+ARCHITECTURE pipe_fetch_dummy OF pipe_fetch IS
+                                          |
+xmvhdl_p: *E,ENNOFN (pipe_fetch.vhd,20|42): Intermediate file for entity 'PIPE_FETCH' could not be loaded, entity may require re-analysis.
+        reg_pc_4 : OUT unsigned(31 DOWNTO 0);
+                                              |
+xmvhdl_p: *E,PORNKW (pipe_decoder.vhd,24|46): identifier expected.
+        reg_pc_4 : OUT unsigned(31 DOWNTO 0);
+                                              |
+xmvhdl_p: *E,MISCOL (pipe_decoder.vhd,24|46): expecting a colon (':') 87[4.3.3] 93[4.3.2].
+    );
+       |
+xmvhdl_p: *E,PORNKW (pipe_decoder.vhd,25|7): identifier expected.
+    );
+       |
+xmvhdl_p: *E,MISCOL (pipe_decoder.vhd,25|7): expecting a colon (':') 87[4.3.3] 93[4.3.2].
+END;
+     |
+xmvhdl_p: *E,PORNKW (pipe_decoder.vhd,26|5): identifier expected.
+END;
+     |
+xmvhdl_p: *E,MISCOL (pipe_decoder.vhd,26|5): expecting a colon (':') 87[4.3.3] 93[4.3.2].
+ARCHITECTURE pipe_decoder_dummy OF pipe_decoder IS
+                                              |
+xmvhdl_p: *E,ENNOFN (pipe_decoder.vhd,28|46): Intermediate file for entity 'PIPE_DECODER' could not be loaded, entity may require re-analysis.
