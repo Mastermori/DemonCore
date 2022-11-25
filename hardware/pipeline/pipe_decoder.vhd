@@ -21,7 +21,7 @@ ENTITY pipe_decoder IS
         pc : IN unsigned(31 DOWNTO 0);
         pc_4 : IN unsigned(31 DOWNTO 0);
         reg_pc : OUT unsigned(31 DOWNTO 0);
-        reg_pc_4 : OUT unsigned(31 DOWNTO 0);
+        reg_pc_4 : OUT unsigned(31 DOWNTO 0)
     );
 END;
 
@@ -44,7 +44,7 @@ BEGIN
             reg_pc_4 <= 0;
         ELSIF (rising_edge(clk)) THEN
             opcode <= instruction(6 DOWNTO 0);
-            CASE(opcdode) IS
+            CASE(opcode) IS
 
                 WHEN REGISTER_ARITHMETIC_OPCODES => --R layout
                 funct7 <= instruction(31 DOWNTO 25);
@@ -76,7 +76,7 @@ BEGIN
                 immediate(11) <= instruction(8);
 
                 WHEN LOAD_UPPER_IMMEDIATE_OPCODE | LOAD_UPPER_IMMEDIATE_TO_PC_OPCODE => --U layout
-                upper_immdeiate <= instruction(31 DOWNTO 12);
+                upper_immediate <= instruction(31 DOWNTO 12);
                 reg_addr_dest <= instruction(11 DOWNTO 7);
                 -- TODO: control_enables
 

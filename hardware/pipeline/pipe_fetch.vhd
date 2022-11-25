@@ -1,7 +1,7 @@
 LIBRARY ieee;
 USE ieee.std_logic_1164.ALL;
 USE ieee.numeric_std.ALL;
-USE pipe_constants.NOP_INSTRUCTION;
+USE work.pipe_constants.NOP_INSTRUCTION;
 
 -- Immer vor in Betriebnahme ein reset!
 
@@ -13,7 +13,7 @@ ENTITY pipe_fetch IS
         reg_instruction : OUT STD_LOGIC_VECTOR(31 DOWNTO 0);
 
         reg_pc : OUT unsigned(31 DOWNTO 0);
-        reg_pc_4 : OUT unsigned(31 DOWNTO 0);
+        reg_pc_4 : OUT unsigned(31 DOWNTO 0)
     );
 END;
 
