@@ -11,8 +11,9 @@ ENTITY pipe_decoder IS
         reset : IN STD_LOGIC;
         instruction : IN instruction32;
 
-        reg_addr_1, reg_addr_2, reg_addr_dest : OUT STD_LOGIC_VECTOR(5 DOWNTO 0);
+        reg_addr_1, reg_addr_2, reg_addr_dest : OUT STD_LOGIC_VECTOR(4 DOWNTO 0);
         control_enables : OUT STD_LOGIC_VECTOR(6 DOWNTO 0);
+        logic_enable : OUT std_logic;
         register_read : OUT STD_LOGIC;
         immediate : OUT signed(31 DOWNTO 0);
         upper_immediate : OUT signed(31 DOWNTO 0);
@@ -33,15 +34,16 @@ BEGIN
     PROCESS (clk, reset)
     BEGIN
         IF (reset = '0') THEN
-            reg_addr_1 <= x"0000_0000";
-            reg_addr_2 <= x"0000_0000";
-            reg_addr_dest <= x"0000_0000";
+            reg_addr_1 <= b"0_0000";
+            reg_addr_2 <= b"0_0000";
+            reg_addr_dest <= b"0_0000";
             control_enables <= "0000000";
-            register_read <= "0";
-            immediate <= 0;
-            upper_immediate <= 0;
-            reg_pc <= 0;
-            reg_pc_4 <= 0;
+            logic_enable <= '0';
+            register_read <= '0';
+            immediate <= signed(0);
+            upper_immediate <= signed(0);
+            reg_pc <= unsigned(0);
+            reg_pc_4 <= unsigned(0);
         ELSIF (rising_edge(clk)) THEN
             opcode <= instruction(6 DOWNTO 0);
             CASE(opcode) IS
@@ -54,13 +56,13 @@ BEGIN
                 reg_addr_dest <= instruction(11 DOWNTO 7);
 
                 WHEN LOADS_OPCODE | IMMEDIATE_ARITHMETIC_OPCODE => --I layout
-                immediate <= instruction(31 DOWNTO 20);
+                immediate <= signed(b"00000_00000_00000_00000" & instruction(31 DOWNTO 20)); --TODO: fix sign extension
                 reg_addr_1 <= instruction(19 DOWNTO 15);
                 funct3 <= instruction(14 DOWNTO 12);
                 reg_addr_dest <= instruction(11 DOWNTO 7);
 
                 WHEN SAVES_OPCODE => --S layout
-                immediate(11 DOWNTO 5) <= instruction(31 DOWNTO 25);
+                immediate(11 DOWNTO 5) <= instruction(31 DOWNTO 25); --TODO: fix sign extension
                 reg_addr_1 <= instruction(24 DOWNTO 20);
                 reg_addr_2 <= instruction(19 DOWNTO 15);
                 funct3 <= instruction(14 DOWNTO 12);
