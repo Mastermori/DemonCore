@@ -11,12 +11,14 @@ ENTITY pipe_decoder IS
         reset : IN STD_LOGIC;
         instruction : IN instruction32;
 
-        reg_addr_1, reg_addr_2, reg_addr_dest : OUT STD_LOGIC_VECTOR(4 DOWNTO 0);
+        reg_addr_1, reg_addr_2, reg_addr_dest : OUT register_adress;
         control_enables : OUT STD_LOGIC_VECTOR(6 DOWNTO 0);
-        logic_enable : OUT std_logic;
+        logic_enable : OUT STD_LOGIC;
+        alu_enable : OUT STD_LOGIC;
+        add_sub_alu_code : OUT STD_LOGIC;
         register_read : OUT STD_LOGIC;
-        immediate : OUT signed(31 DOWNTO 0);
-        upper_immediate : OUT signed(31 DOWNTO 0);
+        immediate : OUT STD_LOGIC_VECTOR(11 DOWNTO 0);
+        upper_immediate : OUT STD_LOGIC_VECTOR(19 DOWNTO 0);
 
         -- Durchreiche Werte
         pc : IN unsigned(31 DOWNTO 0);
@@ -34,16 +36,16 @@ BEGIN
     PROCESS (clk, reset)
     BEGIN
         IF (reset = '0') THEN
-            reg_addr_1 <= b"0_0000";
-            reg_addr_2 <= b"0_0000";
-            reg_addr_dest <= b"0_0000";
-            control_enables <= "0000000";
+            reg_addr_1 <= (others => '0');
+            reg_addr_2 <= (others => '0');
+            reg_addr_dest <= (others => '0');
+            control_enables <= (others => '0');
             logic_enable <= '0';
             register_read <= '0';
-            immediate <= signed(0);
-            upper_immediate <= signed(0);
-            reg_pc <= unsigned(0);
-            reg_pc_4 <= unsigned(0);
+            immediate <= (others => '0');
+            upper_immediate <= (others => '0');
+            reg_pc <= to_unsigned(0,32);
+            reg_pc_4 <= to_unsigned(0,32);
         ELSIF (rising_edge(clk)) THEN
             opcode <= instruction(6 DOWNTO 0);
             CASE(opcode) IS
@@ -55,8 +57,8 @@ BEGIN
                 funct3 <= instruction(14 DOWNTO 12);
                 reg_addr_dest <= instruction(11 DOWNTO 7);
 
-                WHEN LOADS_OPCODE | IMMEDIATE_ARITHMETIC_OPCODE => --I layout
-                immediate <= signed(b"00000_00000_00000_00000" & instruction(31 DOWNTO 20)); --TODO: fix sign extension
+                WHEN LOADS_OPCODE | IMMEDIATE_ARITHMETIC_OPCODE | JUMP_AND_LINK_REGISTER_OPCODE => --I layout
+                immediate <= instruction(31 DOWNTO 20); --TODO: fix sign extension
                 reg_addr_1 <= instruction(19 DOWNTO 15);
                 funct3 <= instruction(14 DOWNTO 12);
                 reg_addr_dest <= instruction(11 DOWNTO 7);
@@ -82,8 +84,8 @@ BEGIN
                 reg_addr_dest <= instruction(11 DOWNTO 7);
                 -- TODO: control_enables
 
-                WHEN JUMP_AND_LINK_OPCODE | JUMP_AND_LINK_REGISTER_OPCODE => --J layout
-                immediate(20) <= instruction(31);
+                WHEN JUMP_AND_LINK_OPCODE => --J layout
+                upper_immediate(20) <= instruction(31);
                 immediate(10 DOWNTO 1) <= instruction(30 DOWNTO 21);
                 immediate(11) <= instruction(20);
                 immediate(19 DOWNTO 12) <= instruction(19 DOWNTO 12);
@@ -102,7 +104,14 @@ BEGIN
 
     function_decoder : PROCESS (funct3, funct7)
     BEGIN
-        -- TODO: implement
+        add_sub_alu_code <= '0';
+        alu_enable <= '0';
+        logic_enable <= '0';
+        CASE(funct3) IS
+            WHEN "000" =>
+            add_sub_alu_code <= funct7(5);
+            alu_enable <= '1';
+        END CASE;
     END PROCESS; -- function_decoder
 
 END pipe_decoder_dummy; -- pipe_fetch_dummy

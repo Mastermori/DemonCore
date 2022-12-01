@@ -1,0 +1,14 @@
+
+DEFINE std       /informatik2/tams/software/cadence/xcelium22.03/tools/inca/files/STD
+DEFINE synopsys  /informatik2/tams/software/cadence/xcelium22.03/tools/inca/files/SYNOPSYS
+DEFINE ieee      /informatik2/tams/software/cadence/xcelium22.03/tools/inca/files/IEEE
+DEFINE ambit     /informatik2/tams/software/cadence/xcelium22.03/tools/inca/files/AMBIT
+DEFINE vital_memory /informatik2/tams/software/cadence/xcelium22.03/tools/inca/files/VITAL_MEMORY
+DEFINE xmutils /informatik2/tams/software/cadence/xcelium22.03/tools/inca/files/XMUTILS
+DEFINE xminternal /informatik2/tams/software/cadence/xcelium22.03/tools/inca/files/XMINTERNAL
+DEFINE xmmodels /informatik2/tams/software/cadence/xcelium22.03/tools/inca/files/XMMODELS
+DEFINE ncutils /informatik2/tams/software/cadence/xcelium22.03/tools/inca/files/NCUTILS
+DEFINE ncinternal /informatik2/tams/software/cadence/xcelium22.03/tools/inca/files/NCINTERNAL
+DEFINE ncmodels /informatik2/tams/software/cadence/xcelium22.03/tools/inca/files/NCMODELS
+DEFINE cds_assertions /informatik2/tams/software/cadence/xcelium22.03/tools/inca/files/CDS_ASSERTIONS
+DEFINE worklib worklib
