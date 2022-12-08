@@ -1,3 +1,7 @@
 .settings/
 .library_mapping.xml
 .project
+
+hardware/work-obj93.cf
+
+*.vcd
