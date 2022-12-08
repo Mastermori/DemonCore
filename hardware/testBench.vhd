@@ -1,28 +1,33 @@
 
 library ieee;
 use ieee.std_logic_1164.all;
+use work.pipe_fetch;
+use work.pipe_decoder;
+use work.pipe_execute;
+use ieee.numeric_std.all;
 
-entity tlcTest is
+entity procTest is
 generic(	periodC	: time		:= 10 ns;
 		cyclesC	: integer	:= 100);
-end entity tlcTest;
+end entity procTest;
 
-architecture testbench of tlcTest is
-
-  component pipe_fetch is
---  generic (	maxWalkC	: integer range 10 to 2000	:= 1000; 
---		maxCarC		: integer range 10 to 2000	:=  800); 
-  port    (	clk, rst	: in  std_logic;
-		reqWalk		: in  std_logic;
-		lightCar	: out std_logic_vector(1 to 3);
-		lightWalk	: out std_logic_vector(1 to 2));
-  end component pipe_fetch;
+architecture procTestbench of procTest is
 
   signal clk, rst, req	: std_logic;
-  signal liCar		: std_logic_vector(1 to 3);
-  signal liWalk		: std_logic_vector(1 to 2);
+  signal pc : unsigned(31 downto 0);
+  
+  
 begin
-  tlcI: tlcWalk	port map (clk, rst, req, liCar, liWalk);
+  pipe_fetch_inst : entity work.pipe_fetch
+      port map(
+          clk             => clk,
+          reset           => rst,
+          pc              => pc,
+          reg_instruction => reg_instruction,
+          f_out_pc          => reg_pc,
+          f_out_pc4        => reg_pc_4
+      ) ;
+  
 
   stiP: process is
     variable	sti	: std_logic_vector(31 downto 1)	:= (others => '0');

@@ -2,37 +2,40 @@ LIBRARY ieee;
 USE ieee.std_logic_1164.ALL;
 USE work.pipe_execute;
 USE work.pipe_decoder;
+use std.textio.all;
 
-ENTITY tlcTest IS
-    GENERIC (
-        periodC : TIME := 10 ns;
-        cyclesC : INTEGER := 100);
-END ENTITY tlcTest;
+ENTITY pipeTest IS
+    GENERIC(
+        periodC : TIME    := 10 ns;
+        cyclesC : INTEGER := 10);
+END ENTITY pipeTest;
 
-ARCHITECTURE testbench OF tlcTest IS
-
+ARCHITECTURE testbenchPipe OF pipeTest IS
     SIGNAL clk, rst : STD_LOGIC;
 BEGIN
     pipeline_inst : ENTITY work.pipeline
         PORT MAP(
-            clk => clk,
+            clk   => clk,
             reset => rst
         );
 
     stiP : PROCESS IS
+        variable l : line;
     BEGIN
         clk <= '0';
         rst <= '0';
-        WAIT FOR periodC/2;
+        WAIT FOR periodC / 2;
         clk <= '1';
-        WAIT FOR periodC/2;
+        WAIT FOR periodC / 2;
         rst <= '1';
-        FOR i IN 1 TO cyclesC LOOP
-            FOR j IN 1 TO 1000 LOOP
+        FOR i IN 0 TO cyclesC LOOP
+            FOR j IN 1 TO 5 LOOP
                 clk <= '0';
-                WAIT FOR periodC/2;
+                WAIT FOR periodC / 2;
                 clk <= '1';
-                WAIT FOR periodC/2;
+                WAIT FOR periodC / 2;
+                --write(l, j);
+                --writeline(output, l);
             END LOOP;
         END LOOP;
         WAIT;
@@ -55,7 +58,7 @@ BEGIN
     --    wait on rst;
     --  end process rstP;
 
-END ARCHITECTURE testbench;
+END ARCHITECTURE testbenchPipe;
 
 ----------------------------------------------------------------------------
 --configuration tlcConf of tlcTest is
