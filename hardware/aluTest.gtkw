@@ -1,0 +1,43 @@
+[*]
+[*] GTKWave Analyzer v3.3.104 (w)1999-2020 BSI
+[*] Fri Dec  9 02:13:21 2022
+[*]
+[dumpfile] "/mnt/c/Users/Mo/Documents/Studium/Mikrorechner/DemonCore/hardware/pipeTest.vcd"
+[dumpfile_mtime] "Fri Dec  9 02:12:36 2022"
+[dumpfile_size] 32920
+[savefile] "/mnt/c/Users/Mo/Documents/Studium/Mikrorechner/DemonCore/hardware/aluTest.gtkw"
+[timestart] 0
+[size] 1908 1119
+[pos] -1 -1
+*-24.208853 45900000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] pipetest.
+[treeopen] pipetest.pipeline_inst.
+[treeopen] pipetest.pipeline_inst.pipe_execute_inst.
+[sst_width] 214
+[signals_width] 198
+[sst_expanded] 1
+[sst_vpaned_height] 334
+@28
+pipetest.pipeline_inst.pipe_execute_inst.clk
+@22
+pipetest.pipeline_inst.pipe_execute_inst.data_1[31:0]
+pipetest.pipeline_inst.pipe_execute_inst.data_2[31:0]
+pipetest.pipeline_inst.pipe_execute_inst.result[31:0]
+@28
+pipetest.pipeline_inst.pipe_execute_inst.in_alu_main_func[2:0]
+pipetest.pipeline_inst.pipe_execute_inst.in_alu_second_func
+@22
+pipetest.pipeline_inst.pipe_execute_inst.alu_inst.out_vec[31:0]
+pipetest.pipeline_inst.pipe_execute_inst.alu_inst.vec1[31:0]
+pipetest.pipeline_inst.pipe_execute_inst.alu_inst.vec2[31:0]
+@29
+pipetest.pipeline_inst.pipe_execute_inst.alu_inst.main_func[2:0]
+@28
+pipetest.pipeline_inst.pipe_execute_inst.alu_inst.second_func
+pipetest.pipeline_inst.pipe_execute_inst.in_use_immediate
+pipetest.pipeline_inst.pipe_decoder_inst.d_out_main_func[2:0]
+pipetest.pipeline_inst.pipe_decoder_inst.d_out_second_func
+@22
+pipetest.pipeline_inst.pipe_decoder_inst.instruction[31:0]
+[pattern_trace] 1
+[pattern_trace] 0
