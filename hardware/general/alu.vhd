@@ -18,10 +18,10 @@ BEGIN
     begin
         case main_func is
             when "000" =>
-                if second_func = '0' then
-                    out_vec <= vec1 + vec2; -- add/addi
-                else
+                if second_func = '1' then
                     out_vec <= vec1 - vec2; -- sub
+                else
+                    out_vec <= vec1 + vec2; -- add/addi
                 end if;
             when "001" =>
                 out_vec <= shift_left(vec1, to_integer(vec2)); -- sll
@@ -41,8 +41,7 @@ BEGIN
                 out_vec <= vec1 xor vec2; -- xor / xori
             when "101" =>
                 if second_func = '0' then
-                    --out_vec <= shift_right(unsigned(vec1), 2); -- srl /srli
-                    -- TODO: fix logical shift right
+                    out_vec <= signed(shift_right(unsigned(vec1), to_integer(vec2))); -- srl /srli
                 else
                     out_vec <= shift_right(vec1, to_integer(vec2)); -- sra / srai
                 end if;
