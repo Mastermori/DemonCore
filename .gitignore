@@ -5,3 +5,5 @@
 hardware/work-obj93.cf
 
 *.vcd
+
+*.ghw
