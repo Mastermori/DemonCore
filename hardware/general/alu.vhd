@@ -24,7 +24,7 @@ BEGIN
                     out_vec <= vec1 + vec2; -- add/addi
                 end if;
             when "001" =>
-                out_vec <= shift_left(vec1, to_integer(vec2)); -- sll
+                out_vec <= shift_left(vec1, to_integer(vec2(4 downto 0))); -- sll/slli
             when "010" =>
                 if signed(vec1) < signed(vec2) then -- slt / slti
                     out_vec <= x"0000_0001";
@@ -40,10 +40,10 @@ BEGIN
             when "100" =>
                 out_vec <= vec1 xor vec2; -- xor / xori
             when "101" =>
-                if second_func = '0' then
-                    out_vec <= signed(shift_right(unsigned(vec1), to_integer(vec2))); -- srl /srli
+                if vec2(10) = '1' then
+                    out_vec <= shift_right(signed(vec1), to_integer(vec2(4 downto 0))); -- sra / srai
                 else
-                    out_vec <= shift_right(vec1, to_integer(vec2)); -- sra / srai
+                    out_vec <= signed(shift_right(unsigned(vec1), to_integer(vec2(4 downto 0)))); -- srl /srli
                 end if;
             when "110" =>
                 out_vec <= vec1 or vec2; -- or / ori

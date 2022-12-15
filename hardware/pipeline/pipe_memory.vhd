@@ -12,6 +12,7 @@ ENTITY pipe_memory IS
         m_in_reg_addr_dest     : IN  register_adress;
         m_in_write_reg_enable  : IN  std_logic;
         m_in_data              : IN  signed(31 downto 0);
+        m_in_read_memory       : IN  std_logic;
         m_out_reg_addr_dest    : OUT register_adress;
         m_out_write_reg_enable : OUT std_logic;
         m_out_data             : OUT signed(31 downto 0)
@@ -30,7 +31,12 @@ BEGIN
         ELSIF (rising_edge(clk)) THEN
             m_out_reg_addr_dest    <= m_in_reg_addr_dest;
             m_out_write_reg_enable <= m_in_write_reg_enable;
-            m_out_data             <= m_in_data;
+            if m_in_read_memory = '1' then
+                -- TODO: Implement memory access
+                m_out_data <= x"0000_0000";
+            else
+                m_out_data <= m_in_data;
+            end if;
         END IF;
     END PROCESS;
-END pipe_memory_simple;             -- pipe_memory_simple
+END pipe_memory_simple;                 -- pipe_memory_simple

@@ -24,7 +24,7 @@ BEGIN
     PROCESS(clk, reset)
     BEGIN
         IF (reset = '0') THEN
-            --w_out_reg_addr_dest    <= b"0_0000";
+            w_out_reg_addr_dest    <= b"0_0000";
             w_out_data             <= x"0000_0000";
             w_out_write_reg_enable <= '0';
         ELSIF (rising_edge(clk)) THEN
