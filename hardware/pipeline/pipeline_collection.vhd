@@ -43,8 +43,10 @@ ARCHITECTURE pipeline_collection OF pipeline IS
     signal e_out_pc_write_enable  : std_logic;
     signal e_out_write_reg_enable : std_logic;
     signal e_out_reg_addr_dest    : register_adress;
-    signal e_out_read_memory      : std_logic;
+    signal e_out_read_memory_enable      : std_logic;
     signal e_out_computed_pc      : unsigned(31 downto 0);
+    signal e_out_memory_read_addr : unsigned(31 downto 0);
+    signal e_out_write_memory_enable : std_logic;
 
     -- Memory signals
     signal m_out_reg_addr_dest    : register_adress;
@@ -59,23 +61,23 @@ ARCHITECTURE pipeline_collection OF pipeline IS
 BEGIN
     pipe_fetch_inst : ENTITY work.pipe_fetch
         PORT MAP(
-            clk             => clk,
-            reset           => reset,
-            pc              => pc,
+            clk               => clk,
+            reset             => reset,
+            pc                => pc,
             f_out_instruction => reg_instruction,
-            f_out_pc        => reg_pc_fetch
+            f_out_pc          => reg_pc_fetch
         );
     pipe_decoder_inst : ENTITY work.pipe_decoder
         PORT MAP(
             clk                 => clk,
             reset               => reset,
-            d_in_instruction         => reg_instruction,
+            d_in_instruction    => reg_instruction,
             d_reg_addr_1        => reg_addr_1,
             d_reg_addr_2        => reg_addr_2,
             d_reg_addr_dest     => reg_addr_dest,
             d_out_register_read => d_out_register_read,
             d_out_read_memory   => d_out_read_memory,
-            d_out_immediate           => d_out_immediate,
+            d_out_immediate     => d_out_immediate,
             d_out_use_immediate => d_out_use_immediate,
             d_out_main_func     => d_out_main_func,
             d_out_second_func   => d_out_second_func,
@@ -114,36 +116,40 @@ BEGIN
         );
     pipe_execute_inst : ENTITY work.pipe_execute
         PORT MAP(
-            clk                    => clk,
-            reset                  => reset,
-            data_1                 => reg_data_1,
-            data_2                 => reg_data_2,
-            e_in_reg_addr_dest     => r_out_addr_dest,
-            e_in_immediate         => r_out_immediate,
-            in_alu_main_func       => r_out_main_func,
-            in_alu_second_func     => r_out_second_func,
-            in_use_immediate       => r_out_use_immediate,
-            in_exec_func           => r_out_exec_func,
-            e_in_pc                => r_out_pc,
-            e_in_read_memory       => r_out_read_memory,
-            e_out_result           => e_out_result,
-            e_out_computed_pc => e_out_computed_pc,
-            e_out_write_pc_enable  => e_out_pc_write_enable,
-            e_out_write_reg_enable => e_out_write_reg_enable,
-            e_out_reg_addr_dest    => e_out_reg_addr_dest,
-            e_out_read_memory      => e_out_read_memory
+            clk                       => clk,
+            reset                     => reset,
+            data_1                    => reg_data_1,
+            data_2                    => reg_data_2,
+            e_in_reg_addr_dest        => r_out_addr_dest,
+            e_in_immediate            => r_out_immediate,
+            in_alu_main_func          => r_out_main_func,
+            in_alu_second_func        => r_out_second_func,
+            in_use_immediate          => r_out_use_immediate,
+            in_exec_func              => r_out_exec_func,
+            e_in_pc                   => r_out_pc,
+            e_in_read_memory          => r_out_read_memory,
+            e_out_result              => e_out_result,
+            e_out_computed_pc         => e_out_computed_pc,
+            e_out_write_pc_enable     => e_out_pc_write_enable,
+            e_out_write_reg_enable    => e_out_write_reg_enable,
+            e_out_reg_addr_dest       => e_out_reg_addr_dest,
+            e_out_memory_read_addr => e_out_memory_read_addr,
+            e_out_read_memory_enable  => e_out_read_memory_enable,
+            e_out_write_memory_enable => e_out_write_memory_enable
         );
     pipe_memory_inst : entity work.pipe_memory
         port map(
-            clk                    => clk,
-            reset                  => reset,
-            m_in_reg_addr_dest     => e_out_reg_addr_dest,
-            m_in_write_reg_enable  => e_out_write_reg_enable,
-            m_in_data              => e_out_result,
-            m_in_read_memory       => e_out_read_memory,
-            m_out_reg_addr_dest    => m_out_reg_addr_dest,
-            m_out_write_reg_enable => m_out_write_reg_enable,
-            m_out_data             => m_out_data
+            clk                      => clk,
+            reset                    => reset,
+            m_in_reg_addr_dest       => e_out_reg_addr_dest,
+            m_in_write_reg_enable    => e_out_write_reg_enable,
+            m_in_data                => e_out_result,
+            m_in_read_addr           => e_out_memory_read_addr,
+            m_in_read_memory_enable  => e_out_read_memory_enable,
+            m_in_write_memory_enable => e_out_write_memory_enable,
+            m_out_reg_addr_dest      => m_out_reg_addr_dest,
+            m_out_write_reg_enable   => m_out_write_reg_enable,
+            m_out_data               => m_out_data
         );
 
     pipe_write_back_inst : ENTITY work.pipe_write_back

@@ -5,4 +5,4 @@ ghdl -a pipeline/pipe_memory.vhd pipeline/pipe_write_back.vhd pipeline/pipeline_
 ghdl -a pipeline/pipeline_test.vhd
 ghdl -e pipeTest
 ghdl -r pipeTest --wave=pipeTest.ghw
-gtkwave aluTest.gtkw
+gtkwave pipeTest.ghw

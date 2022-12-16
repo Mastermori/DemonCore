@@ -6,23 +6,25 @@ USE WORK.alu;
 
 ENTITY pipe_execute IS
     PORT(
-        clk                    : IN  STD_LOGIC;
-        reset                  : IN  STD_LOGIC;
-        data_1, data_2         : IN  signed;
-        e_in_reg_addr_dest     : IN  register_adress;
-        e_in_immediate         : IN  signed(31 DOWNTO 0);
-        in_alu_main_func       : IN  std_logic_vector(2 downto 0);
-        in_alu_second_func     : IN  std_logic;
-        in_use_immediate       : IN  std_logic;
-        in_exec_func           : IN  std_logic_vector(2 downto 0);
-        e_in_pc                : IN  unsigned(31 DOWNTO 0);
-        e_in_read_memory       : IN  std_logic;
-        e_out_result           : OUT signed(31 DOWNTO 0);
-        e_out_computed_pc      : OUT unsigned(31 downto 0);
-        e_out_write_pc_enable  : OUT std_logic;
-        e_out_write_reg_enable : OUT std_logic;
-        e_out_reg_addr_dest    : OUT register_adress;
-        e_out_read_memory      : OUT std_logic
+        clk                       : IN  STD_LOGIC;
+        reset                     : IN  STD_LOGIC;
+        data_1, data_2            : IN  signed;
+        e_in_reg_addr_dest        : IN  register_adress;
+        e_in_immediate            : IN  signed(31 DOWNTO 0);
+        in_alu_main_func          : IN  std_logic_vector(2 downto 0);
+        in_alu_second_func        : IN  std_logic;
+        in_use_immediate          : IN  std_logic;
+        in_exec_func              : IN  std_logic_vector(2 downto 0);
+        e_in_pc                   : IN  unsigned(31 DOWNTO 0);
+        e_in_read_memory          : IN  std_logic;
+        e_out_result              : OUT signed(31 DOWNTO 0);
+        e_out_computed_pc         : OUT unsigned(31 downto 0);
+        e_out_write_pc_enable     : OUT std_logic;
+        e_out_write_reg_enable    : OUT std_logic;
+        e_out_reg_addr_dest       : OUT register_adress;
+        e_out_memory_read_addr    : OUT unsigned(31 downto 0);
+        e_out_read_memory_enable  : OUT std_logic;
+        e_out_write_memory_enable : OUT std_logic
     );
 END;
 
@@ -51,15 +53,17 @@ begin
         end procedure;
     begin
         if (reset = '0') then
-            e_out_result           <= (others => '0');
-            e_out_write_reg_enable <= '0';
-            e_out_reg_addr_dest    <= (others => '0');
-            e_out_read_memory      <= '0';
-            e_out_computed_pc      <= x"0000_0000";
-            e_out_write_pc_enable  <= '0';
+            e_out_result              <= (others => '0');
+            e_out_write_reg_enable    <= '0';
+            e_out_reg_addr_dest       <= (others => '0');
+            e_out_computed_pc         <= (others => '0');
+            e_out_write_pc_enable     <= '0';
+            e_out_memory_read_addr    <= (others => '0');
+            e_out_read_memory_enable  <= '0';
+            e_out_write_memory_enable <= '0';
         elsif (rising_edge(clk)) then
-            e_out_reg_addr_dest <= e_in_reg_addr_dest;
-            e_out_read_memory   <= e_in_read_memory;
+            e_out_reg_addr_dest      <= e_in_reg_addr_dest;
+            e_out_read_memory_enable <= e_in_read_memory;
             case in_exec_func is
                 when LOGIC_ARITHMETIC_EXEC_CODE =>
                     e_out_result           <= alu_result;

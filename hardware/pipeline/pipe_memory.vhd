@@ -7,20 +7,23 @@ USE work.pipe_constants.ALL;
 
 ENTITY pipe_memory IS
     PORT(
-        clk                    : IN  STD_LOGIC;
-        reset                  : IN  STD_LOGIC;
-        m_in_reg_addr_dest     : IN  register_adress;
-        m_in_write_reg_enable  : IN  std_logic;
-        m_in_data              : IN  signed(31 downto 0);
-        m_in_read_memory       : IN  std_logic;
-        m_out_reg_addr_dest    : OUT register_adress;
-        m_out_write_reg_enable : OUT std_logic;
-        m_out_data             : OUT signed(31 downto 0)
+        clk                      : IN  STD_LOGIC;
+        reset                    : IN  STD_LOGIC;
+        m_in_reg_addr_dest       : IN  register_adress;
+        m_in_write_reg_enable    : IN  std_logic;
+        m_in_data                : IN  signed(31 downto 0);
+        m_in_read_addr           : IN  unsigned(31 downto 0);
+        m_in_read_memory_enable  : IN  std_logic;
+        m_in_write_memory_enable : IN  std_logic;
+        m_out_reg_addr_dest      : OUT register_adress;
+        m_out_write_reg_enable   : OUT std_logic;
+        m_out_data               : OUT signed(31 downto 0)
     );
 END;
 
 ARCHITECTURE pipe_memory_simple OF pipe_memory IS
-
+    TYPE memory_bank IS ARRAY (0 to 4095) OF word;
+    signal memory : memory_bank;
 BEGIN
     PROCESS(clk, reset)
     BEGIN
@@ -31,9 +34,11 @@ BEGIN
         ELSIF (rising_edge(clk)) THEN
             m_out_reg_addr_dest    <= m_in_reg_addr_dest;
             m_out_write_reg_enable <= m_in_write_reg_enable;
-            if m_in_read_memory = '1' then
+            if m_in_read_memory_enable = '1' then
                 -- TODO: Implement memory access
-                m_out_data <= x"0000_0000";
+                m_out_data <= signed(memory(to_integer(m_in_read_addr)));
+            elsif m_in_write_memory_enable = '1' then
+                memory(to_integer(m_in_read_addr)) <= word(m_in_data);
             else
                 m_out_data <= m_in_data;
             end if;

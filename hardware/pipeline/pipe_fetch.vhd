@@ -24,7 +24,7 @@ BEGIN
         IF (reset = '0') THEN
             rom               <= (
                 0      => ADDI_ONE_INSTRUCTION,
-                1      => JAL_INSTRUCTION,
+                5      => BNEQ_INSTRUCTION,
                 others => NOP_INSTRUCTION
             );
             f_out_instruction <= NOP_INSTRUCTION;
