@@ -20,7 +20,6 @@ BEGIN
         );
 
     stiP : PROCESS IS
-        variable l : line;
     BEGIN
         clk <= '0';
         rst <= '0';

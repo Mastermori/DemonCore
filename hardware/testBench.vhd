@@ -23,7 +23,7 @@ begin
           clk             => clk,
           reset           => rst,
           pc              => pc,
-          reg_instruction => reg_instruction,
+          f_out_instruction => reg_instruction,
           f_out_pc          => reg_pc,
           f_out_pc4        => reg_pc_4
       ) ;
