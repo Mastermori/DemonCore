@@ -58,7 +58,7 @@ BEGIN
                     d_out_exec_func     <= LOGIC_ARITHMETIC_EXEC_CODE;
 
                 WHEN LOADS_OPCODE | IMMEDIATE_ARITHMETIC_OPCODE | JUMP_AND_LINK_REGISTER_OPCODE => --I layout
-                    d_out_immediate     <= resize(signed(d_in_instruction(31 DOWNTO 20)), d_out_immediate'length); --TODO: fix sign extension
+                    d_out_immediate     <= resize(signed(d_in_instruction(31 DOWNTO 20)), d_out_immediate'length);
                     d_reg_addr_1        <= d_in_instruction(19 DOWNTO 15);
                     --reg_addr_2 <= instruction(24 DOWNTO 20);
                     d_out_main_func     <= d_in_instruction(14 DOWNTO 12);
@@ -87,7 +87,7 @@ BEGIN
                     d_reg_addr_2                    <= d_in_instruction(19 DOWNTO 15);
                     d_out_main_func                 <= d_in_instruction(14 DOWNTO 12);
                     internal_immediate(4 DOWNTO 0)  := signed(d_in_instruction(11 DOWNTO 7));
-                    d_out_immediate                 <= resize(internal_immediate, d_out_immediate'length);
+                    d_out_immediate                 <= resize(internal_immediate(11 downto 0), d_out_immediate'length);
                     -- overwrite flags
                     d_out_second_func               <= '0';
                     -- control flags
