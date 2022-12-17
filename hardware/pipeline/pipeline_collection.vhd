@@ -39,14 +39,16 @@ ARCHITECTURE pipeline_collection OF pipeline IS
     signal r_out_read_memory      : std_logic;
 
     -- Execute signals
-    SIGNAL e_out_result           : signed(31 downto 0);
-    signal e_out_pc_write_enable  : std_logic;
-    signal e_out_write_reg_enable : std_logic;
-    signal e_out_reg_addr_dest    : register_adress;
-    signal e_out_read_memory_enable      : std_logic;
-    signal e_out_computed_pc      : unsigned(31 downto 0);
-    signal e_out_memory_read_addr : unsigned(31 downto 0);
+    SIGNAL e_out_result              : signed(31 downto 0);
+    signal e_out_pc_write_enable     : std_logic;
+    signal e_out_write_reg_enable    : std_logic;
+    signal e_out_reg_addr_dest       : register_adress;
+    signal e_out_read_memory_enable  : std_logic;
+    signal e_out_computed_pc         : unsigned(31 downto 0);
+    signal e_out_memory_addr         : unsigned(31 downto 0);
     signal e_out_write_memory_enable : std_logic;
+    signal e_out_memory_size         : unsigned(4 downto 0);
+    signal e_out_memory_sign_type    : std_logic;
 
     -- Memory signals
     signal m_out_reg_addr_dest    : register_adress;
@@ -118,8 +120,8 @@ BEGIN
         PORT MAP(
             clk                       => clk,
             reset                     => reset,
-            data_1                    => reg_data_1,
-            data_2                    => reg_data_2,
+            e_in_data_1               => reg_data_1,
+            e_in_data_2               => reg_data_2,
             e_in_reg_addr_dest        => r_out_addr_dest,
             e_in_immediate            => r_out_immediate,
             in_alu_main_func          => r_out_main_func,
@@ -133,7 +135,9 @@ BEGIN
             e_out_write_pc_enable     => e_out_pc_write_enable,
             e_out_write_reg_enable    => e_out_write_reg_enable,
             e_out_reg_addr_dest       => e_out_reg_addr_dest,
-            e_out_memory_read_addr => e_out_memory_read_addr,
+            e_out_memory_addr         => e_out_memory_addr,
+            e_out_memory_size         => e_out_memory_size,
+            e_out_memory_sign_type    => e_out_memory_sign_type,
             e_out_read_memory_enable  => e_out_read_memory_enable,
             e_out_write_memory_enable => e_out_write_memory_enable
         );
@@ -144,9 +148,11 @@ BEGIN
             m_in_reg_addr_dest       => e_out_reg_addr_dest,
             m_in_write_reg_enable    => e_out_write_reg_enable,
             m_in_data                => e_out_result,
-            m_in_read_addr           => e_out_memory_read_addr,
+            m_in_memory_addr         => e_out_memory_addr,
             m_in_read_memory_enable  => e_out_read_memory_enable,
             m_in_write_memory_enable => e_out_write_memory_enable,
+            m_in_memory_size         => e_out_memory_size,
+            m_in_memory_sign_type    => e_out_memory_sign_type,
             m_out_reg_addr_dest      => m_out_reg_addr_dest,
             m_out_write_reg_enable   => m_out_write_reg_enable,
             m_out_data               => m_out_data

@@ -19,7 +19,7 @@ PACKAGE pipe_constants IS
     CONSTANT LUI_INSTRUCTION               : instruction32 := b"00000000000000000001_00011_0110111"; --lui x3, 1;
     CONSTANT JAL_INSTRUCTION               : instruction32 := b"00000000000000000101_00100_1101111"; --jal x4, 5;
     CONSTANT JALR_INSTRUCTION              : instruction32 := b"000000000001_00101_000_00100_1100111"; --jalr x4, 1;
-    CONSTANT BNEQ_INSTRUCTION               : instruction32 := b"1111111_00101_00001_001_11011_1100011"; --bneq x1, x5, 1;
+    CONSTANT BNEQ_INSTRUCTION              : instruction32 := b"1111111_00101_00001_001_11011_1100011"; --bneq x1, x5, 1;
 
     -- words
     CONSTANT ZERO_WORD : word := "00000000" & "00000000" & "00000000" & "00000000";
