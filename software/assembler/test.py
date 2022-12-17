@@ -99,7 +99,7 @@ opDictionary = {
   'LUI': ['imm20','rd','1101111'],
   'AUIPC': ['imm20','rd','1101111'],
   }
-file = open("C:/Users/Paul/Documents/Uni/DemonCore/software/assembler/test.txt").read().splitlines();
+file = open("test.txt", "r").read().splitlines();
 memonic = ''
 program = ''
 count = 0
