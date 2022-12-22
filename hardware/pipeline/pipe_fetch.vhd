@@ -16,7 +16,7 @@ ENTITY pipe_fetch IS
 END;
 
 ARCHITECTURE pipe_fetch_dummy OF pipe_fetch IS
-    TYPE instruction_memory IS ARRAY (0 to 4095) OF instruction32; -- 2^12-1 as pc is 32 bit but fuck that
+    TYPE instruction_memory IS ARRAY (0 to 4095) OF instruction32; -- 2^12-1 as pc is 32 bit but that would be too big
     SIGNAL rom : instruction_memory;
 BEGIN
     PROCESS(clk, reset)
