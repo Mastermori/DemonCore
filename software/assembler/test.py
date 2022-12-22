@@ -1,4 +1,23 @@
 import re
+
+def tcomplement12(a: int):
+  if(a < 0):
+    temp = int(bin(int(a))[3:],2)^int('111111111111',2)
+    return f'{temp+1:12b}'
+  else:
+    return f'{int(a):012b}'
+def tcomplement5(a: int):
+  if(a < 0):
+    temp = int(bin(int(a))[3:],2)^int('11111',2)
+    return f'{temp+1:5b}'
+  else:
+    return f'{int(a):05b}'
+def tcomplement20(a: int):
+  if(a < 0):
+    temp = int(bin(int(a))[3:],2)^int('11111111111111111111',2)
+    return f'{temp+1:20b}'
+  else:
+    return f'{int(a):020b}'
 typeDictionary = {
    #---------------------R_Type-------------------------#
   'ADD': 'r',
@@ -120,19 +139,19 @@ for x in list:
     case 'i':
       #['imm12','rs1','000','rd','0110011'] #maschinecode#
       # mem[0] rd[1], rs1[2], imm[3] #memonic#
-      maschinecode[0] = f'{int(memonic[3]):012b}'
+      maschinecode[0] = tcomplement12(int(memonic[3]))
       maschinecode[1] = f'{int(memonic[2]):05b}'
       maschinecode[3] = f'{int(memonic[1]):05b}'
     case 'is':
       #['0000000','shamt','rs1','001','rd','0110011'], #maschinecode#
       # mem[0] rd[1], rs1[2], shamt[3] #memonic#
-      maschinecode[2] = f'{int(memonic[3]):05b}' #rs1
-      maschinecode[1] = f'{int(memonic[3]):05b}' #shamt
+      maschinecode[2] = f'{int(memonic[2]):05b}' #rs1
+      maschinecode[1] = tcomplement5(int(memonic[3])) #shamt
       maschinecode[4] = f'{int(memonic[1]):05b}' #rd
     case 's':
       #['imm_high7','rs2','rs1','000','imm_low5','0100011'],#maschinecode
       # mem[0] rs1[1], rs2[2], imm12[3] #memonic#
-      temp = f'{int(memonic[3]):012b}'
+      temp = tcomplement12(int(memonic[3]))
       maschinecode[0] =  temp[0:7]#imm_high7
       maschinecode[4] = temp[7:12]#imm_low5
       maschinecode[1] = f'{int(memonic[2]):05b}' #rs2
@@ -140,19 +159,15 @@ for x in list:
     case 'b':
       # ['imm_high7','rs2','rs1','000','imm_low5','1100011'],
       # mem[0] rs1[1], rs2[2], imm[3] #memonic#
-      temp = f'{int(memonic[3]):012b}'
+      temp = tcomplement12(int(memonic[3]))
       maschinecode[0] =  temp[0:7]#imm_high7
       maschinecode[4] = temp[7:12]#imm_low5
       maschinecode[1] = f'{int(memonic[2]):05b}' #rs2
       maschinecode[2] = f'{int(memonic[1]):05b}' #rs1  
-    case 'j':
+    case 'ju':
       #['imm20','rd','1101111'],
       # mem[0] rd[1], imm20[2] #memonic#
-      maschinecode[0] = f'{int(memonic[2]):020b}'
-      maschinecode[1] = f'{int(memonic[1]):05b}'
-    case 'u':
-      # mem[0] rd[1], imm20[2] #memonic#
-      maschinecode[0] = f'{int(memonic[2]):020b}'
+      maschinecode[0] = tcomplement20(int(memonic[2]))
       maschinecode[1] = f'{int(memonic[1]):05b}'
   program += ''.join(str(count)+ '=>' + "b\"")
   count = count + 1
