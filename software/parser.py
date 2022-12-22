@@ -15,7 +15,7 @@ l = Lark(r'''start: (expression /\n/)*
               | pseudo_extra_short number_short
               | pseudo_no_args
 
-            opcode_long_register: r_type
+            opcode_long_register: r_type 
             opcode_long_immediate: i_type | b_type
             opcode_short_immediate: u_type | j_type
             opcode_short_store: i_type | s_type
@@ -75,47 +75,6 @@ l = Lark(r'''start: (expression /\n/)*
             %ignore " "           // Disregard spaces in text
          ''')
 
-# tree = l.parse("Hello, World! hello hello hello something something nothing")
 
-# tree_iter = tree.find_data("something")
-
-# for something in tree_iter:
-#   print("------------------")
-#   print(something.children[0].value)
-#   print("------------------")
-
-
-tree = l.parse('''addi sp, sp, -16
-mv s1, a0
-srai t0, a0, 1
-li t1, 0
-add t2, s1, t1
-sub t3, a0, t1
-addi t3, t3, -1
-add t3, t3, s1
-lb t4, 0(t2)
-lb t5, 0(t3)
-sb t4, 0(t3)
-sb t5, 0(t2)
-addi t1, t1, 1
-addi sp, sp, 16
-ret
-''')
-
-for token in tree.scan_values(lambda v: isinstance(v, Token)):
-  print(token)
-  # print(token)
-  # match token.data:
-  #   case "long_expression":
-  #     print(token.children[1].children[0])
-  #   case "i_type":
-  #     print(token.children[0])
-  #   case "s_type":
-  #     print(token.children[0])
-  #   case "b_type":
-  #     print(token.children[0])
-  #   case "u_type":
-  #     print(token.children[0])
-  #   case "j_type":
-  #     print(token.children[0])
-  # print(node.type + ", " + node.value)
+def createTree(file):
+  return l.parse(file)
