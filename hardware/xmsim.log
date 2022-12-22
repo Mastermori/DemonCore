@@ -1,0 +1,101 @@
+xmsim(64): 22.03-s005: (c) Copyright 1995-2022 Cadence Design Systems, Inc.
+xmsim: *W,NOMTDGUI: Multi-Threaded Dumping is disabled for interactive debug mode.
+
+-------------------------------------
+Relinquished control to SimVision...
+xcelium> 
+xcelium> source /informatik2/tams/software/cadence/xcelium22.03/tools/xcelium/files/xmsimrc
+xcelium> database -open waves -into waves.shm -default
+Created default SHM database waves
+xcelium> probe -create -shm :pipeline_inst:pipe_memory_inst:memory[102] :pipeline_inst:pipe_execute_inst:e_out_computed_pc :pipeline_inst:pipe_execute_inst:e_out_result
+xmsim: *W,PRUASZ: Unpacked array at ":pipeline_inst:pipe_memory_inst:memory" of 131072 elements exceeds limit of 16384 - not probed
+ Use 'probe -create -unpacked 131072 :pipeline_inst:pipe_memory_inst:memory' or 'setenv SHM_UNPACKED_LIMIT 131072' to adjust limit.
+xmsim: *SE,DBOBBD: Cannot create SHM probe for :pipeline_inst:pipe_memory_inst:memory[102].
+Created probe 1
+xcelium> probe -create -shm :pipeline_inst:pipe_memory_inst:memory[102]
+xmsim: *W,PRUASZ: Unpacked array at ":pipeline_inst:pipe_memory_inst:memory" of 131072 elements exceeds limit of 16384 - not probed
+ Use 'probe -create -unpacked 131072 :pipeline_inst:pipe_memory_inst:memory' or 'setenv SHM_UNPACKED_LIMIT 131072' to adjust limit.
+xmsim: *SE,DBOBBD: Cannot create SHM probe for :pipeline_inst:pipe_memory_inst:memory[102].
+xcelium> run
+xmsim: *W,RNQUIE: Simulation is complete.
+xcelium> run 100
+Ran until 560000100 FS + 0
+xcelium> probe -create -shm :pipeline_inst:pipe_memory_inst:memory[102] :pipeline_inst:pipe_execute_inst:clk
+xmsim: *W,PRUASZ: Unpacked array at ":pipeline_inst:pipe_memory_inst:memory" of 131072 elements exceeds limit of 16384 - not probed
+ Use 'probe -create -unpacked 131072 :pipeline_inst:pipe_memory_inst:memory' or 'setenv SHM_UNPACKED_LIMIT 131072' to adjust limit.
+xmsim: *SE,DBOBBD: Cannot create SHM probe for :pipeline_inst:pipe_memory_inst:memory[102].
+Created probe 2
+xcelium> probe -create -shm :pipeline_inst:pipe_memory_inst:memory[102]
+xmsim: *W,PRUASZ: Unpacked array at ":pipeline_inst:pipe_memory_inst:memory" of 131072 elements exceeds limit of 16384 - not probed
+ Use 'probe -create -unpacked 131072 :pipeline_inst:pipe_memory_inst:memory' or 'setenv SHM_UNPACKED_LIMIT 131072' to adjust limit.
+xmsim: *SE,DBOBBD: Cannot create SHM probe for :pipeline_inst:pipe_memory_inst:memory[102].
+xcelium> run 10
+Ran until 560000110 FS + 0
+xcelium> run
+xmsim: *W,RNQUIE: Simulation is complete.
+xcelium> run
+xmsim: *W,RNQUIE: Simulation is complete.
+xcelium> run
+xmsim: *W,RNQUIE: Simulation is complete.
+xcelium> run
+xmsim: *W,RNQUIE: Simulation is complete.
+xcelium> run
+xmsim: *W,RNQUIE: Simulation is complete.
+xcelium> run
+xmsim: *W,RNQUIE: Simulation is complete.
+xcelium> run
+xmsim: *W,RNQUIE: Simulation is complete.
+xcelium> run
+xmsim: *W,RNQUIE: Simulation is complete.
+xcelium> run
+xmsim: *W,RNQUIE: Simulation is complete.
+xcelium> run
+xmsim: *W,RNQUIE: Simulation is complete.
+xcelium> run
+xmsim: *W,RNQUIE: Simulation is complete.
+xcelium> run
+xmsim: *W,RNQUIE: Simulation is complete.
+xcelium> run
+xmsim: *W,RNQUIE: Simulation is complete.
+xcelium> run
+xmsim: *W,RNQUIE: Simulation is complete.
+xcelium> run
+xmsim: *W,RNQUIE: Simulation is complete.
+xcelium> reset
+Loaded snapshot work.pipetest:testbenchpipe
+xcelium> run
+xmsim: *W,RNQUIE: Simulation is complete.
+xcelium> reset
+Loaded snapshot work.pipetest:testbenchpipe
+xcelium> run
+xmsim: *W,RNQUIE: Simulation is complete.
+xcelium> probe -create -shm :pipeline_inst:pipe_memory_inst:memory[102] :pipeline_inst:pipe_execute_inst:e_out_memory_addr
+xmsim: *W,PRUASZ: Unpacked array at ":pipeline_inst:pipe_memory_inst:memory" of 131072 elements exceeds limit of 16384 - not probed
+ Use 'probe -create -unpacked 131072 :pipeline_inst:pipe_memory_inst:memory' or 'setenv SHM_UNPACKED_LIMIT 131072' to adjust limit.
+xmsim: *SE,DBOBBD: Cannot create SHM probe for :pipeline_inst:pipe_memory_inst:memory[102].
+Created probe 3
+xcelium> reset
+Loaded snapshot work.pipetest:testbenchpipe
+xcelium> probe -create -shm :pipeline_inst:pipe_memory_inst:memory[102]
+xmsim: *W,PRUASZ: Unpacked array at ":pipeline_inst:pipe_memory_inst:memory" of 131072 elements exceeds limit of 16384 - not probed
+ Use 'probe -create -unpacked 131072 :pipeline_inst:pipe_memory_inst:memory' or 'setenv SHM_UNPACKED_LIMIT 131072' to adjust limit.
+xmsim: *SE,DBOBBD: Cannot create SHM probe for :pipeline_inst:pipe_memory_inst:memory[102].
+xcelium> run
+xmsim: *W,RNQUIE: Simulation is complete.
+xcelium> probe -create -shm :pipeline_inst:pipe_memory_inst:memory[102] :pipeline_inst:pipe_memory_inst:memory[120]
+xmsim: *W,PRUASZ: Unpacked array at ":pipeline_inst:pipe_memory_inst:memory" of 131072 elements exceeds limit of 16384 - not probed
+ Use 'probe -create -unpacked 131072 :pipeline_inst:pipe_memory_inst:memory' or 'setenv SHM_UNPACKED_LIMIT 131072' to adjust limit.
+xmsim: *SE,DBOBBD: Cannot create SHM probe for :pipeline_inst:pipe_memory_inst:memory[102].
+xmsim: *W,PRUASZ: Unpacked array at ":pipeline_inst:pipe_memory_inst:memory" of 131072 elements exceeds limit of 16384 - not probed
+ Use 'probe -create -unpacked 131072 :pipeline_inst:pipe_memory_inst:memory' or 'setenv SHM_UNPACKED_LIMIT 131072' to adjust limit.
+xmsim: *SE,DBOBBD: Cannot create SHM probe for :pipeline_inst:pipe_memory_inst:memory[120].
+xcelium> reset
+Loaded snapshot work.pipetest:testbenchpipe
+xcelium> run
+xmsim: *W,RNQUIE: Simulation is complete.
+xcelium> reset
+Loaded snapshot work.pipetest:testbenchpipe
+xcelium> run
+xmsim: *W,RNQUIE: Simulation is complete.
+xcelium> ^C
+xcelium> exit

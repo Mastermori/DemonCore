@@ -6,7 +6,7 @@ PACKAGE pipe_constants IS
 
     SUBTYPE instruction32 IS STD_LOGIC_VECTOR(31 DOWNTO 0);
     SUBTYPE opcode IS STD_LOGIC_VECTOR(6 DOWNTO 0);
-    SUBTYPE word IS STD_LOGIC_VECTOR(31 DOWNTO 0);
+    SUBTYPE word IS std_logic_vector(31 DOWNTO 0);
     SUBTYPE signedNumber IS signed(31 DOWNTO 0);
     SUBTYPE register_adress IS STD_LOGIC_VECTOR(4 DOWNTO 0);
     SUBTYPE exec_code IS std_logic_vector(2 downto 0);
@@ -22,27 +22,27 @@ PACKAGE pipe_constants IS
     CONSTANT BNEQ_INSTRUCTION              : instruction32 := b"1111111_00101_00001_001_11011_1100011"; --bneq x1, x5, 1;
 
     -- words
-    CONSTANT ZERO_WORD : word := "00000000" & "00000000" & "00000000" & "00000000";
+    CONSTANT ZERO_WORD : word := (others => '0');
 
     -- opcodes
-    CONSTANT BRANCHES_OPCODE                   : opcode := "1100011";
-    CONSTANT LOADS_OPCODE                      : opcode := "0000011";
-    CONSTANT IMMEDIATE_ARITHMETIC_OPCODE       : opcode := "0010011";
-    CONSTANT LOAD_UPPER_IMMEDIATE_OPCODE       : opcode := "0110111";
-    CONSTANT LOAD_UPPER_IMMEDIATE_TO_PC_OPCODE : opcode := "0010111";
-    CONSTANT JUMP_AND_LINK_OPCODE              : opcode := "1101111";
-    CONSTANT JUMP_AND_LINK_REGISTER_OPCODE     : opcode := "1100111";
-    CONSTANT STORE_OPCODE                      : opcode := "0100011";
-    CONSTANT REGISTER_ARITHMETIC_OPCODES       : opcode := "0110011";
+    CONSTANT BRANCHES_OPCODE                   : opcode := b"1100011";
+    CONSTANT LOADS_OPCODE                      : opcode := b"0000011";
+    CONSTANT IMMEDIATE_ARITHMETIC_OPCODE       : opcode := b"0010011";
+    CONSTANT LOAD_UPPER_IMMEDIATE_OPCODE       : opcode := b"0110111";
+    CONSTANT LOAD_UPPER_IMMEDIATE_TO_PC_OPCODE : opcode := b"0010111";
+    CONSTANT JUMP_AND_LINK_OPCODE              : opcode := b"1101111";
+    CONSTANT JUMP_AND_LINK_REGISTER_OPCODE     : opcode := b"1100111";
+    CONSTANT STORE_OPCODE                      : opcode := b"0100011";
+    CONSTANT REGISTER_ARITHMETIC_OPCODES       : opcode := b"0110011";
 
     -- execute codes (internal codes for execute multiplexer)
-    CONSTANT LOGIC_ARITHMETIC_EXEC_CODE : exec_code := "000";
-    CONSTANT JUMP_EXEC_CODE             : exec_code := "001";
-    CONSTANT JUMP_REGISTER_EXEC_CODE    : exec_code := "010";
-    CONSTANT BRANCH_EXEC_CODE           : exec_code := "011";
-    CONSTANT LOAD_EXEC_CODE             : exec_code := "100";
-    CONSTANT STORE_EXEC_CODE            : exec_code := "101";
-    CONSTANT ADD_TO_PC_EXEC_CODE        : exec_code := "110";
+    CONSTANT LOGIC_ARITHMETIC_EXEC_CODE : exec_code := b"000";
+    CONSTANT JUMP_EXEC_CODE             : exec_code := b"001";
+    CONSTANT JUMP_REGISTER_EXEC_CODE    : exec_code := b"010";
+    CONSTANT BRANCH_EXEC_CODE           : exec_code := b"011";
+    CONSTANT LOAD_EXEC_CODE             : exec_code := b"100";
+    CONSTANT STORE_EXEC_CODE            : exec_code := b"101";
+    CONSTANT ADD_TO_PC_EXEC_CODE        : exec_code := b"110";
 
 END pipe_constants;
 
