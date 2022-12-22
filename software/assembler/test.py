@@ -71,10 +71,6 @@ opDictionary = {
   'ORI': ['imm12','rs1','110','rd','0010011'],
   'ANDI': ['imm12','rs1','111','rd','0010011'],
 
-  'SLLI': ['0000000','shamt','rs1','001','rd','0010011'],
-  'SRLI': ['0000000','shamt','rs1','101','rd','0010011'],
-  'SRAI': ['0100000','shamt','rs1','101','rd','0010011'],
-
   'LB': ['imm12','rs1','000','rd','0000011'],
   'LH': ['imm12','rs1','001','rd','0000011'],
   'LW': ['imm12','rs1','010','rd','0000011'],
@@ -82,6 +78,10 @@ opDictionary = {
   'LHU': ['imm12','rs1','101','rd','0000011'],
 
   'JALR': ['imm','rs1','000','rd','1100111'],
+  #---------------------Is_Type-------------------------#
+  'SLLI': ['0000000','shamt','rs1','001','rd','0010011'],
+  'SRLI': ['0000000','shamt','rs1','101','rd','0010011'],
+  'SRAI': ['0100000','shamt','rs1','101','rd','0010011'],
   #---------------------S_Type-------------------------#
   'SB': ['imm_high7','rs2','rs1','000','imm_low5','0100011'],
   'SH': ['imm_high7','rs2','rs1','001','imm_low5','0100011'],
@@ -99,7 +99,7 @@ opDictionary = {
   'LUI': ['imm20','rd','1101111'],
   'AUIPC': ['imm20','rd','1101111'],
   }
-file = open("test.txt", "r").read().splitlines();
+file = open("software/assembler/test.txt", "r").read().splitlines();
 memonic = ''
 program = ''
 count = 0
@@ -161,7 +161,10 @@ for x in list:
       program += ''.join(i+"_")
     else:
       program = program + ''.join(i)
-  program += ''.join("\", \n")
+  if x != list[len(list)-1]:
+    program += ''.join("\", \n")
+  else:
+    program += ''.join("\",")
 print(program)
 print("others => NOP_INSTRUCTION")
 print()
