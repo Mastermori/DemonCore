@@ -50,3 +50,39 @@ BEGIN
         END IF;
     END PROCESS;
 END pipe_memory_simple;                 -- pipe_memory_simple
+
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
+
+entity hard_memory is
+    generic (
+        address_length : natural := 8;
+        word_length : natural := 32
+    );
+    port(
+        mem_in_target_addr    : IN unsigned(address_length-1 downto 0);
+        mem_in_read_enable    : IN std_logic;
+        mem_in_read_sign_type : IN std_logic;
+        mem_in_write_enable   : IN std_logic;
+        mem_in_write_data     : IN unsigned(31 downto 0);
+        mem_in_target_size    : IN unsigned(2 downto 0);
+        mem_out_read_data : OUT unsigned(31 downto 0)
+    );
+end entity hard_memory;
+
+architecture hard_memory_simple of hard_memory is
+    SUBTYPE memory_byte IS unsigned(7 downto 0);
+    TYPE memory_array IS ARRAY (0 to 4095) OF memory_byte;
+    SIGNAL memory : memory_array := (others => x"00");
+begin
+    read_access : process is
+    begin
+        if mem_in_read_enable = '1' then
+            
+        else
+            null;
+        end if;
+    end process read_access;
+end architecture hard_memory_simple;
+
