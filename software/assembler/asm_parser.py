@@ -1,12 +1,13 @@
 from lark import Lark, Token
 
-l = Lark(r'''start: (expression /\n/)*
+l = Lark(r'''start: (expression|/\n/)*
             expression: long_expression | short_expression // | label
 
             // label:
 
             long_expression: opcode_long_register register "," register "," register
               | opcode_long_immediate register "," register "," number_short
+              | opcode_long_shamt register "," register "," shamt
               | pseudo_long_immediate register "," register "," number_short
             short_expression: opcode_short_immediate register "," number_long
               | opcode_short_store register "," number_short "(" register ")"
@@ -17,6 +18,7 @@ l = Lark(r'''start: (expression /\n/)*
 
             opcode_long_register: r_type 
             opcode_long_immediate: i_type | b_type
+            opcode_long_shamt: is_type
             opcode_short_immediate: u_type | j_type
             opcode_short_store: i_type | s_type
 
@@ -26,12 +28,14 @@ l = Lark(r'''start: (expression /\n/)*
             !pseudo_extra_short: "j"i | "call"i  // braucht mehr als upper immediate
             !pseudo_no_args: "ret"i | "nop"i
 
+            shamt: SHAMT_DEC | SHAMT_HEX | SHAMT_OCT | SHAMT_BIN
             number_short: IMM12_DEC | IMM12_HEX | IMM12_OCT | IMM12_BIN
             number_long: IMM20_DEC | IMM20_HEX | IMM20_OCT | IMM20_BIN
 
             !r_type: "add"i | "sub"i | "xor"i | "or"i | "and"i | "sll"i | "srl"i | "sra"i | "slt"i | "sltu"i
-            !i_type: "addi"i | "xori"i | "ori"i | "andi"i | "slli"i | "srli"i | "srai"i | "slti"i | "sltiu"i
+            !i_type: "addi"i | "xori"i | "ori"i | "andi"i | "slti"i | "sltiu"i
               | "lb"i | "lh"i | "lw"i | "lbu"i | "lhu"i | "jalr"i | "ecall"i | "ebreak"i
+            !is_type: "slli"i | "srli"i | "srai"i
             !s_type: "sb"i | "sh"i | "sw"i
             !b_type: "beq"i | "bne"i | "blt"i | "bge"i | "bltu"i | "bgeu"i
             !u_type: "lui"i | "auipc"i
@@ -68,13 +72,19 @@ l = Lark(r'''start: (expression /\n/)*
             |0b111111111110[0-1]{7}|0b1111111111110[0-1]{6}|0b11111111111110[0-1]{5}|0b111111111111110[0-1]{4}|0b1111111111111110[0-1]{3}|0b11111111111111110[0-1]{2}
             |0b111111111111111110[0-1]|0b111111111111111111[01])\b/x
 
+            SHAMT_DEC: /([0-9]|[12][0-9]|3[01])\b/
+            SHAMT_HEX: /(0x[0-9a-fA-F]|0x1?[0-9a-fA-F])\b/
+            SHAMT_OCT: /(0[0-7]|0[123][0-7]|03[0-7])\b/
+            SHAMT_BIN: /(0b[0-1]{0,4}1|0b0)\b/
+
             // CHARACTERS:
             // SHAMT: Bei RV32I shamt[5] = 0
 
             %import common.WORD   // imports from terminal library
             %ignore " "           // Disregard spaces in text
+            %ignore " "           // Disregard tabs in text
          ''')
 
 
 def createTree(file):
-  return l.parse(file)
+    return l.parse(file)
