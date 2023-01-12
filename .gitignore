@@ -9,3 +9,5 @@ hardware/work-obj93.cf
 *.ghw
 
 software/assembler/__pycache__/
+
+vs-extension/

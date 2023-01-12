@@ -1,26 +1,28 @@
 from lark import Lark, Token
 
 l = Lark(r'''start: (expression|/\n/)*
-            expression: long_expression | short_expression // | label
+            expression: param_3 | param_2 // | label
 
             // label:
+            param_3: register_format | immediate_format | offset_format | branch_format | shift_format
+            param_2: jump_upper_format | pseudo_format
 
-            long_expression: opcode_long_register register "," register "," register
-              | opcode_long_immediate register "," register "," number_short
-              | opcode_long_shamt register "," register "," shamt
-              | pseudo_long_immediate register "," register "," number_short
-            short_expression: opcode_short_immediate register "," number_long
-              | opcode_short_store register "," number_short "(" register ")"
-              | pseudo_short_register register "," register
+            // Param formats
+            register_format: r_type register "," register "," register
+            immediate_format: i_type register "," register "," number_short
+            offset_format: _offset_format_type register "," number_short "(" register ")"
+            branch_format: b_type register "," register "," number_short
+            shift_format: is_type register "," register "," shamt
+            jump_upper_format: ju_type register "," number_long
+            // Format hacks
+            _offset_format_type: s_type | l_type | jl_type
+            
+
+            // TODO: Pseudo
+            pseudo_format: pseudo_short_register register "," register
               | pseudo_short_immediate register "," number_short
               | pseudo_extra_short number_short
-              | pseudo_no_args
-
-            opcode_long_register: r_type 
-            opcode_long_immediate: i_type | b_type
-            opcode_long_shamt: is_type
-            opcode_short_immediate: u_type | j_type
-            opcode_short_store: i_type | s_type
+              | pseudo_no_args // TODO: mach richtig
 
             !pseudo_long_immediate: "bgt"i | "ble"i | "bgtu"i | "bleu"i
             !pseudo_short_register: "mv"i | "not"i | "neg"i
@@ -28,35 +30,39 @@ l = Lark(r'''start: (expression|/\n/)*
             !pseudo_extra_short: "j"i | "call"i  // braucht mehr als upper immediate
             !pseudo_no_args: "ret"i | "nop"i
 
-            shamt: SHAMT_DEC | SHAMT_HEX | SHAMT_OCT | SHAMT_BIN
-            number_short: IMM12_DEC | IMM12_HEX | IMM12_OCT | IMM12_BIN
-            number_long: IMM20_DEC | IMM20_HEX | IMM20_OCT | IMM20_BIN
-
+            // Mnemonic types
             !r_type: "add"i | "sub"i | "xor"i | "or"i | "and"i | "sll"i | "srl"i | "sra"i | "slt"i | "sltu"i
             !i_type: "addi"i | "xori"i | "ori"i | "andi"i | "slti"i | "sltiu"i
-              | "lb"i | "lh"i | "lw"i | "lbu"i | "lhu"i | "jalr"i | "ecall"i | "ebreak"i
+             | "ecall"i | "ebreak"i
+            !l_type: "lb"i | "lh"i | "lw"i | "lbu"i | "lhu"i
             !is_type: "slli"i | "srli"i | "srai"i
             !s_type: "sb"i | "sh"i | "sw"i
             !b_type: "beq"i | "bne"i | "blt"i | "bge"i | "bltu"i | "bgeu"i
-            !u_type: "lui"i | "auipc"i
-            !j_type: "jal"i
+            !ju_type: "lui"i | "auipc"i | "jal"i
+            !jl_type: "jalr"i
 
-            register: always_zero | return_adress | stack_pointer | global_pointer | thread_pointer | frame_pointer
+            // Registers
+            ?register: always_zero | return_adress | stack_pointer | global_pointer | thread_pointer | frame_pointer
               | temporary | saved_register | function_argument
 
-            !always_zero: "x0" | "zero"
-            !return_adress: "x1" | "ra"
-            !stack_pointer: "x2" | "sp"
-            !global_pointer: "x3" | "gp"
-            !thread_pointer: "x4" | "tp"
-            !frame_pointer: "fp"
-            !temporary: "x5" | "t0" | "x6" | "t1" | "x7" | "t2" | "x28" | "t3" | "x29"
+            ?!always_zero: "x0" | "zero"
+            ?!return_adress: "x1" | "ra"
+            ?!stack_pointer: "x2" | "sp"
+            ?!global_pointer: "x3" | "gp"
+            ?!thread_pointer: "x4" | "tp"
+            ?!frame_pointer: "fp"
+            ?!temporary: "x5" | "t0" | "x6" | "t1" | "x7" | "t2" | "x28" | "t3" | "x29"
               | "t4" | "x30" | "t5" | "x31" | "t6"
-            !saved_register: "x8" | "s0" | "x9" | "s1" | "x18" | "s2" | "x19"
+            ?!saved_register: "x8" | "s0" | "x9" | "s1" | "x18" | "s2" | "x19"
               | "s3" | "x20" | "s4" | "x21" | "s5" | "x22" | "s6" | "x23" | "s7"
               | "x24" | "s8" | "x25" | "s9" | "x26" | "s10" | "x27" | "s11"
-            !function_argument: "x10" | "a0" | "x11" | "a1" | "x12" | "a2" | "x13"
+            ?!function_argument: "x10" | "a0" | "x11" | "a1" | "x12" | "a2" | "x13"
               | "a3" | "x14" | "a4" | "x15" | "a5" | "x16" | "a6" | "x17" | "a7"
+
+            // Immediates
+            ?shamt: SHAMT_DEC | SHAMT_HEX | SHAMT_OCT | SHAMT_BIN
+            ?number_short: IMM12_DEC | IMM12_HEX | IMM12_OCT | IMM12_BIN
+            ?number_long: IMM20_DEC | IMM20_HEX | IMM20_OCT | IMM20_BIN
 
             IMM12_DEC: /(-[1-9]|-204[0-8]|-?[1-9][0-9]{1,2}|-?1[0-9][0-9][0-9]|-?20[0-3][0-9]|[0-9]|204[0-7])\b/
             IMM12_HEX: /(-0x[1-9a-fA-F]|-0x800|-?0x[1-9a-fA-F][0-9a-fA-F]|-?0x[1-7][0-9a-fA-F]{2}|0x[0-9a-fA-F])\b/
@@ -75,14 +81,17 @@ l = Lark(r'''start: (expression|/\n/)*
             SHAMT_DEC: /([0-9]|[12][0-9]|3[01])\b/
             SHAMT_HEX: /(0x[0-9a-fA-F]|0x1?[0-9a-fA-F])\b/
             SHAMT_OCT: /(0[0-7]|0[123][0-7]|03[0-7])\b/
-            SHAMT_BIN: /(0b[0-1]{0,4}1|0b0)\b/
+            SHAMT_BIN: /(0b[0-1]{1,5})\b/
 
             // CHARACTERS:
             // SHAMT: Bei RV32I shamt[5] = 0
 
             %import common.WORD   // imports from terminal library
-            %ignore " "           // Disregard spaces in text
-            %ignore " "           // Disregard tabs in text
+            %import common.NEWLINE
+            %import common.WS
+            %ignore WS           // Disregard whitespace in text
+            COMMENT: "//" /(.)+/
+            %ignore COMMENT
          ''')
 
 
