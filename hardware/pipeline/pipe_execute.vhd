@@ -5,191 +5,155 @@ USE WORK.pipe_constants.ALL;
 USE WORK.alu;
 
 ENTITY pipe_execute IS
-    PORT(
-        clk                       : IN  STD_LOGIC;
-        reset                     : IN  STD_LOGIC;
-        e_in_data_1, e_in_data_2  : IN  signed;
-        e_in_reg_addr_dest        : IN  register_adress;
-        e_in_immediate            : IN  signed(31 DOWNTO 0);
-        in_alu_main_func          : IN  std_logic_vector(2 downto 0);
-        in_alu_second_func        : IN  std_logic;
-        in_use_immediate          : IN  std_logic;
-        in_exec_func              : IN  std_logic_vector(2 downto 0);
-        e_in_pc                   : IN  unsigned(31 DOWNTO 0);
-        e_in_read_memory          : IN  std_logic;
-        e_out_result              : OUT signed(31 DOWNTO 0);
-        e_out_computed_pc         : OUT unsigned(31 downto 0);
-        e_out_write_pc_enable     : OUT std_logic;
-        e_out_write_reg_enable    : OUT std_logic;
-        e_out_reg_addr_dest       : OUT register_adress;
-        e_out_memory_addr         : OUT unsigned(31 downto 0);
-        e_out_memory_size         : OUT unsigned(4 downto 0);
-        e_out_memory_sign_type    : OUT std_logic;
-        e_out_read_memory_enable  : OUT std_logic;
-        e_out_write_memory_enable : OUT std_logic
+    PORT (
+        clk : IN STD_LOGIC;
+        reset : IN STD_LOGIC;
+        e_in_data_1, e_in_data_2 : IN signed;
+        e_in_reg_addr_dest : IN register_adress;
+        e_in_immediate : IN signed(31 DOWNTO 0);
+        in_alu_main_func : IN STD_LOGIC_VECTOR(2 DOWNTO 0);
+        in_alu_second_func : IN STD_LOGIC;
+        in_use_immediate : IN STD_LOGIC;
+        in_exec_func : IN STD_LOGIC_VECTOR(2 DOWNTO 0);
+        e_in_pc : IN unsigned(31 DOWNTO 0);
+        e_in_read_memory : IN STD_LOGIC;
+        e_out_result : OUT signed(31 DOWNTO 0);
+        e_out_computed_pc : OUT unsigned(31 DOWNTO 0);
+        e_out_write_pc_enable : OUT STD_LOGIC;
+        e_out_write_reg_enable : OUT STD_LOGIC;
+        e_out_reg_addr_dest : OUT register_adress;
+        e_out_memory_addr : OUT unsigned(31 DOWNTO 0);
+        e_out_read_memory_enable : OUT STD_LOGIC;
+        e_out_write_memory_enable : OUT STD_LOGIC
     );
 END;
 
-architecture pipe_execute_simple of pipe_execute is
-    signal alu_result : signedNumber;
-    signal alu_data_2 : signedNumber;
-begin
+ARCHITECTURE pipe_execute_simple OF pipe_execute IS
+    SIGNAL alu_result : signedNumber;
+    SIGNAL alu_data_2 : signedNumber;
+BEGIN
 
-    alu_inst : entity work.alu(alu_simple)
-        port map(
-            vec1        => e_in_data_1,
-            vec2        => alu_data_2,
-            main_func   => in_alu_main_func,
+    alu_inst : ENTITY work.alu(alu_simple)
+        PORT MAP(
+            vec1 => e_in_data_1,
+            vec2 => alu_data_2,
+            main_func => in_alu_main_func,
             second_func => in_alu_second_func,
-            out_vec     => alu_result
+            out_vec => alu_result
         );
 
-    alu_data_2 <= e_in_immediate when in_use_immediate = '1' else e_in_data_2;
+    alu_data_2 <= e_in_immediate WHEN in_use_immediate = '1' ELSE
+        e_in_data_2;
 
-    alu_proc : process(clk, reset) is
-        variable pc_4 : unsigned(31 downto 0);
-        procedure branch is
-        begin
-            e_out_computed_pc     <= unsigned(e_in_pc + unsigned(e_in_immediate));
+    alu_proc : PROCESS (clk, reset) IS
+        VARIABLE pc_4 : unsigned(31 DOWNTO 0);
+        PROCEDURE branch IS
+        BEGIN
+            e_out_computed_pc <= unsigned(e_in_pc + unsigned(e_in_immediate));
             e_out_write_pc_enable <= '1';
-        end procedure;
-        procedure load(size : unsigned(4 downto 0); sign_type : std_logic) is
-        begin
-            e_out_memory_size      <= size;
-            e_out_memory_sign_type <= sign_type;
-        end procedure load;
-        procedure save(size : unsigned(4 downto 0)) is
-        begin
-            e_out_memory_size <= size;
-        end procedure save;
-    begin
-        if (reset = '0') then
-            e_out_result              <= (others => '0');
-            e_out_write_reg_enable    <= '0';
-            e_out_reg_addr_dest       <= (others => '0');
-            e_out_computed_pc         <= (others => '0');
-            e_out_write_pc_enable     <= '0';
-            e_out_memory_addr         <= (others => '0');
-            e_out_memory_size         <= (others => '0');
-            e_out_memory_sign_type    <= '0';
-            e_out_read_memory_enable  <= '0';
+        END PROCEDURE;
+    BEGIN
+        IF (reset = '0') THEN
+            e_out_result <= (OTHERS => '0');
+            e_out_computed_pc <= (OTHERS => '0');
+            e_out_write_pc_enable <= '0';
+            e_out_write_pc_enable <= '0';
+            e_out_write_reg_enable <= '0';
+            e_out_reg_addr_dest <= (OTHERS => '0');
+            e_out_memory_addr <= (OTHERS => '0');
+            e_out_read_memory_enable <= '0';
             e_out_write_memory_enable <= '0';
-        elsif (rising_edge(clk)) then
-            e_out_reg_addr_dest      <= e_in_reg_addr_dest;
+        ELSIF (rising_edge(clk)) THEN
+            --e_out_result <= (OTHERS => '-');
+            --e_out_computed_pc <= (OTHERS => '-');
+            --e_out_write_pc_enable <= '-';
+            --e_out_write_pc_enable <= '-';
+            --e_out_write_reg_enable <= '-';
+            --e_out_reg_addr_dest <= (OTHERS => '-');
+            --e_out_memory_addr <= (OTHERS => '-');
+            --e_out_read_memory_enable <= '-';
+            --e_out_write_memory_enable <= '-';
+            e_out_reg_addr_dest <= e_in_reg_addr_dest;
             e_out_read_memory_enable <= e_in_read_memory;
-            case in_exec_func is
-                when LOGIC_ARITHMETIC_EXEC_CODE =>
-                    e_out_result              <= alu_result;
-                    e_out_write_pc_enable     <= '0';
-                    e_out_write_reg_enable    <= '1';
-                    e_out_read_memory_enable  <= '0';
+            CASE in_exec_func IS
+                WHEN LOGIC_ARITHMETIC_EXEC_CODE =>
+                    e_out_result <= alu_result;
+                    e_out_write_pc_enable <= '0';
+                    e_out_write_reg_enable <= '1';
+                    e_out_read_memory_enable <= '0';
                     e_out_write_memory_enable <= '0';
-                when JUMP_EXEC_CODE =>
-                    pc_4                      := e_in_pc + 4;
+                WHEN JUMP_EXEC_CODE =>
+                    pc_4 := e_in_pc + 4;
                     -- write linked register
-                    e_out_result              <= signed(pc_4);
-                    e_out_write_reg_enable    <= '1';
+                    e_out_result <= signed(pc_4);
+                    e_out_write_reg_enable <= '1';
                     -- jump (by setting pc)
-                    e_out_computed_pc         <= unsigned(pc_4 + unsigned(e_in_immediate));
-                    e_out_write_pc_enable     <= '1';
-                    e_out_read_memory_enable  <= '0';
+                    e_out_computed_pc <= unsigned(pc_4 + unsigned(e_in_immediate));
+                    e_out_write_pc_enable <= '1';
+                    e_out_read_memory_enable <= '0';
                     e_out_write_memory_enable <= '0';
-                when BRANCH_EXEC_CODE =>
-                    e_out_read_memory_enable  <= '0';
+                WHEN BRANCH_EXEC_CODE =>
+                    e_out_read_memory_enable <= '0';
                     e_out_write_memory_enable <= '0';
-                    case in_alu_main_func is
-                        when "000" =>
-                            if e_in_data_1 = e_in_data_2 then
+                    CASE in_alu_main_func IS
+                        WHEN "000" =>
+                            IF e_in_data_1 = e_in_data_2 THEN
                                 branch;
-                            else
-                                null;
-                            end if;
-                        when "001" =>
-                            if e_in_data_1 /= e_in_data_2 then
+                            END IF;
+                        WHEN "001" =>
+                            IF e_in_data_1 /= e_in_data_2 THEN
                                 branch;
-                            else
-                                null;
-                            end if;
-                        when "100" =>
-                            if e_in_data_1 < e_in_data_2 then
+                            END IF;
+                        WHEN "100" =>
+                            IF e_in_data_1 < e_in_data_2 THEN
                                 branch;
-                            else
-                                null;
-                            end if;
-                        when "101" =>
-                            if e_in_data_1 >= e_in_data_2 then
+                            END IF;
+                        WHEN "101" =>
+                            IF e_in_data_1 >= e_in_data_2 THEN
                                 branch;
-                            else
-                                null;
-                            end if;
-                        when "110" =>
-                            if unsigned(e_in_data_1) < unsigned(e_in_data_2) then
+                            END IF;
+                        WHEN "110" =>
+                            IF unsigned(e_in_data_1) < unsigned(e_in_data_2) THEN
                                 branch;
-                            else
-                                null;
-                            end if;
-                        when "111" =>
-                            if unsigned(e_in_data_1) >= unsigned(e_in_data_2) then
+                            END IF;
+                        WHEN "111" =>
+                            IF unsigned(e_in_data_1) >= unsigned(e_in_data_2) THEN
                                 branch;
-                            else
-                                null;
-                            end if;
-                        when others => null;
-                    end case;
+                            END IF;
+                        WHEN OTHERS => NULL;
+                    END CASE;
 
-                when JUMP_REGISTER_EXEC_CODE =>
+                WHEN JUMP_REGISTER_EXEC_CODE =>
                     -- write linked register
-                    e_out_result              <= signed(e_in_pc + 4);
-                    e_out_write_reg_enable    <= '1';
+                    e_out_result <= signed(e_in_pc + 4);
+                    e_out_write_reg_enable <= '1';
                     -- jump (by setting pc)
-                    e_out_computed_pc         <= unsigned(shift_left(e_in_data_1, 2) + shift_left(e_in_immediate, 2));
-                    e_out_write_pc_enable     <= '1';
-                    e_out_read_memory_enable  <= '0';
+                    e_out_computed_pc <= unsigned(shift_left(e_in_data_1, 2) + shift_left(e_in_immediate, 2));
+                    e_out_write_pc_enable <= '1';
+                    e_out_read_memory_enable <= '0';
                     e_out_write_memory_enable <= '0';
 
-                when LOAD_EXEC_CODE =>
-                    e_out_memory_addr         <= unsigned(e_in_data_1 + e_in_immediate);
-                    e_out_read_memory_enable  <= '1';
+                WHEN LOAD_EXEC_CODE =>
+                    e_out_memory_addr <= unsigned(e_in_data_1 + e_in_immediate);
+                    e_out_read_memory_enable <= '1';
                     e_out_write_memory_enable <= '0';
-                    case in_alu_main_func is
-                        when "000" =>
-                            load("00111", '0');
-                        when "001" =>
-                            load("01111", '0');
-                        when "010" =>
-                            load("11111", '0');
-                        when "100" =>
-                            load("00111", '1');
-                        when "101" =>
-                            load("01111", '1');
-                        when others => null;
-                    end case;
 
-                when STORE_EXEC_CODE =>
-                    e_out_memory_addr         <= unsigned(e_in_data_1 + e_in_immediate);
-                    e_out_read_memory_enable  <= '0';
+                WHEN STORE_EXEC_CODE =>
+                    e_out_memory_addr <= unsigned(e_in_data_1 + e_in_immediate);
+                    e_out_read_memory_enable <= '0';
                     e_out_write_memory_enable <= '1';
-                    e_out_result              <= e_in_data_2;
-                    case in_alu_main_func is
-                        when "000" =>
-                            save("00111");
-                        when "001" =>
-                            save("01111");
-                        when "010" =>
-                            save("11111");
-                        when others => null;
-                    end case;
+                    e_out_result <= e_in_data_2;
 
-                when ADD_TO_PC_EXEC_CODE =>
-                    e_out_result              <= signed(unsigned(e_in_pc) + unsigned(e_in_immediate)); -- TODO: check if this really works correctly
-                    e_out_write_pc_enable     <= '0';
-                    e_out_write_reg_enable    <= '1';
-                    e_out_read_memory_enable  <= '0';
+                WHEN ADD_TO_PC_EXEC_CODE =>
+                    e_out_result <= signed(unsigned(e_in_pc) + unsigned(e_in_immediate)); -- TODO: check if this really works correctly
+                    e_out_write_pc_enable <= '0';
+                    e_out_write_reg_enable <= '1';
+                    e_out_read_memory_enable <= '0';
                     e_out_write_memory_enable <= '0';
-                when others => null;
-            end case;
-        else
-            null;
-        end if;
-    end process;
-end architecture;
+                WHEN OTHERS => NULL;
+            END CASE;
+        ELSE
+            NULL;
+        END IF;
+    END PROCESS;
+END ARCHITECTURE;

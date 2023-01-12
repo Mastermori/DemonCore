@@ -4,53 +4,54 @@ USE ieee.numeric_std.ALL;
 USE work.pipe_constants.ALL;
 
 ENTITY alu IS
-    PORT(
-        vec1, vec2  : IN  signed(31 downto 0);
-        main_func   : IN  std_logic_vector(2 downto 0);
-        second_func : IN  std_logic;
-        out_vec     : OUT signed(31 downto 0)
+    PORT (
+        vec1, vec2 : IN signed(31 DOWNTO 0);
+        main_func : IN STD_LOGIC_VECTOR(2 DOWNTO 0);
+        second_func : IN STD_LOGIC;
+        out_vec : OUT signed(31 DOWNTO 0)
     );
 END;
 
 ARCHITECTURE alu_simple OF alu IS
 BEGIN
-    evaluate : process(vec1, vec2, main_func, second_func) is
-    begin
-        case main_func is
-            when "000" =>
-                if second_func = '1' then
+    evaluate : PROCESS (vec1, vec2, main_func, second_func) IS
+    BEGIN
+        --out_vec <= (OTHERS => '-');
+        CASE main_func IS
+            WHEN "000" =>
+                IF second_func = '1' THEN
                     out_vec <= vec1 - vec2; -- sub
-                else
+                ELSE
                     out_vec <= vec1 + vec2; -- add/addi
-                end if;
-            when "001" =>
-                out_vec <= shift_left(vec1, to_integer(vec2(4 downto 0))); -- sll/slli
-            when "010" =>
-                if signed(vec1) < signed(vec2) then -- slt / slti
+                END IF;
+            WHEN "001" =>
+                out_vec <= shift_left(vec1, to_integer(vec2(4 DOWNTO 0))); -- sll/slli
+            WHEN "010" =>
+                IF signed(vec1) < signed(vec2) THEN -- slt / slti
                     out_vec <= x"0000_0001";
-                else
+                ELSE
                     out_vec <= x"0000_0000";
-                end if;
-            when "011" =>
-                if unsigned(vec1) < unsigned(vec2) then -- sltu / sltiu
+                END IF;
+            WHEN "011" =>
+                IF unsigned(vec1) < unsigned(vec2) THEN -- sltu / sltiu
                     out_vec <= x"0000_0001";
-                else
+                ELSE
                     out_vec <= x"0000_0000";
-                end if;
-            when "100" =>
-                out_vec <= vec1 xor vec2; -- xor / xori
-            when "101" =>
-                if vec2(10) = '1' then
-                    out_vec <= shift_right(signed(vec1), to_integer(vec2(4 downto 0))); -- sra / srai
-                else
-                    out_vec <= signed(shift_right(unsigned(vec1), to_integer(vec2(4 downto 0)))); -- srl /srli
-                end if;
-            when "110" =>
-                out_vec <= vec1 or vec2; -- or / ori
-            when "111" =>
-                out_vec <= vec1 and vec2; -- and / andi
-            when others => null;
-        end case;
-        
-    end process evaluate;
-END alu_simple;                         -- alu_simple
+                END IF;
+            WHEN "100" =>
+                out_vec <= vec1 XOR vec2; -- xor / xori
+            WHEN "101" =>
+                IF vec2(10) = '1' THEN
+                    out_vec <= shift_right(signed(vec1), to_integer(vec2(4 DOWNTO 0))); -- sra / srai
+                ELSE
+                    out_vec <= signed(shift_right(unsigned(vec1), to_integer(vec2(4 DOWNTO 0)))); -- srl /srli
+                END IF;
+            WHEN "110" =>
+                out_vec <= vec1 OR vec2; -- or / ori
+            WHEN "111" =>
+                out_vec <= vec1 AND vec2; -- and / andi
+            WHEN OTHERS => NULL;
+        END CASE;
+
+    END PROCESS evaluate;
+END alu_simple; -- alu_simple

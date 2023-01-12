@@ -1,0 +1,26 @@
+xmelab(64): 22.03-s005: (c) Copyright 1995-2022 Cadence Design Systems, Inc.
+xmelab: *W,ARCMRA: Elaborating the WORK.PIPETEST:TESTBENCHPIPE, MRA (most recently analyzed) architecture.
+xmelab: *W,DLWNEW: Intermediate file package WORK.PIPE_CONSTANTS (AST)
+	is newer than expected by architecture WORK.PIPE_FETCH:PIPE_FETCH_DUMMY (AST)
+		actual:   Thu Dec 22 15:01:25 2022
+		expected: Thu Dec 22 15:00:33 2022.
+xmelab: *W,DLWNEW: Intermediate file package WORK.PIPE_CONSTANTS (AST)
+	is newer than expected by architecture WORK.PIPE_DECODER:PIPE_DECODER_DUMMY (AST)
+		actual:   Thu Dec 22 15:01:25 2022
+		expected: Thu Dec 22 15:00:33 2022.
+xmelab: *W,DLWNEW: Intermediate file package WORK.PIPE_CONSTANTS (AST)
+	is newer than expected by architecture WORK.PIPE_REGISTER_SELECT:PIPE_REGISTER_SELECT_SIMPLE (AST)
+		actual:   Thu Dec 22 15:01:25 2022
+		expected: Thu Dec 22 15:00:33 2022.
+xmvhdl_cg: *W,DLWNEW: Intermediate file package WORK.PIPE_CONSTANTS (AST)
+	is newer than expected by architecture WORK.PIPE_REGISTER_SELECT:PIPE_REGISTER_SELECT_SIMPLE (AST)
+		actual:   Thu Dec 22 15:01:25 2022
+		expected: Thu Dec 22 15:00:33 2022.
+xmvhdl_cg: *W,DLWNEW: Intermediate file package WORK.PIPE_CONSTANTS (AST)
+	is newer than expected by architecture WORK.PIPE_DECODER:PIPE_DECODER_DUMMY (AST)
+		actual:   Thu Dec 22 15:01:25 2022
+		expected: Thu Dec 22 15:00:33 2022.
+xmvhdl_cg: *W,DLWNEW: Intermediate file package WORK.PIPE_CONSTANTS (AST)
+	is newer than expected by architecture WORK.PIPE_FETCH:PIPE_FETCH_DUMMY (AST)
+		actual:   Thu Dec 22 15:01:25 2022
+		expected: Thu Dec 22 15:00:33 2022.
