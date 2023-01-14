@@ -14,6 +14,7 @@ END;
 ARCHITECTURE pipeline_collection OF pipeline IS
     SIGNAL pc : unsigned(31 DOWNTO 0);
 
+    SIGNAL f_out_rom_addr : std_logic_vector(7 downto 0);
     SIGNAL reg_instruction : instruction32;
     SIGNAL reg_pc_fetch : unsigned(31 DOWNTO 0);
 
@@ -63,7 +64,11 @@ ARCHITECTURE pipeline_collection OF pipeline IS
 
     -- RAM signals
     SIGNAL ram_out_data : word;
-    signal dummy_txt : fileIoT;
+    SIGNAL dummy_txt : fileIoT;
+
+    -- ROM signals
+    SIGNAL rom_out_data : instruction32;
+    SIGNAL rom_txt : fileIoT;
 
 BEGIN
     pipe_fetch_inst : ENTITY work.pipe_fetch
@@ -71,6 +76,8 @@ BEGIN
             clk => clk,
             reset => reset,
             pc => pc,
+            f_out_rom_addr    => f_out_rom_addr,
+            f_in_rom_data     => rom_out_data,
             f_out_instruction => reg_instruction,
             f_out_pc => reg_pc_fetch
         );
@@ -182,16 +189,29 @@ BEGIN
         )
         PORT MAP(
             nWE => m_out_memory_not_write_enable,
-            addr => m_out_memory_addr(7 DOWNTO 0),
+            addr => m_out_memory_addr(9 DOWNTO 2), -- TODO: Find out how to do proper this properly (+4 bit adresses)
             dataI => m_out_data,
             dataO => ram_out_data,
             fileIO => dummy_txt
+        );
+    romio_inst : ENTITY work.rom
+        GENERIC MAP(
+            addrWd => 8,
+            dataWd => 32,
+            fileId	=> "memorySim/rom_fill.dat"
+        )
+        PORT MAP(
+            addr => f_out_rom_addr,
+            data => rom_out_data,
+            fileIO => rom_txt
         );
 
     clkProcess : PROCESS (clk, reset) IS
     BEGIN
         IF (reset = '0') THEN
             pc <= x"0000_0000";
+            dummy_txt	<= load,  none after 5 ns;
+            rom_txt	<= load,  none after 5 ns;
         ELSIF (rising_edge(clk)) THEN
             IF e_out_pc_write_enable = '1' THEN
                 pc <= unsigned(e_out_computed_pc);
