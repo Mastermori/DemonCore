@@ -1,0 +1,12 @@
+{
+    "Set register": {
+        "prefix": [
+            "set",
+            "set-register"
+        ],
+        "body": [
+            "addi\t${1:register}, x0, ${2:value}  $LINE_COMMENT sets $1 to $2"
+        ],
+        "description": "A for loop."
+    }
+}
