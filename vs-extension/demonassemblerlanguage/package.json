@@ -1,0 +1,33 @@
+{
+  "name": "demonassemblerlanguage",
+  "displayName": "DemonAssemblerLanguage",
+  "description": "Language support for the assembler language of the demon-core processor",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.74.0"
+  },
+  "categories": [
+    "Programming Languages",
+    "Themes"
+  ],
+  "contributes": {
+    "languages": [{
+      "id": "demonass",
+      "aliases": ["Demon Assembler", "demonass"],
+      "extensions": [".dasmb"],
+      "configuration": "./language-configuration.json"
+    }],
+    "grammars": [{
+      "language": "demonass",
+      "scopeName": "source.demonass",
+      "path": "./syntaxes/demonass.tmLanguage.json"
+    }],
+    "themes": [
+      {
+        "label": "demonass",
+        "uiTheme": "vs-dark",
+        "path": "./themes/demonass-color-theme.json"
+      }
+    ]
+  }
+}
