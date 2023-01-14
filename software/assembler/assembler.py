@@ -1,9 +1,9 @@
 import re
 from lark import Lark, Token
-import asm_parser
+import parser.asm_parser as asm_parser
 import json
-from dictionarys import *
-from util import *
+from parser.dictionarys import *
+from parser.util import *
 
 
 def main():
