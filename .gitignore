@@ -11,3 +11,15 @@ hardware/work-obj93.cf
 software/assembler/__pycache__/
 
 vs-extension/
+
+vs-extension/demonass/node_modules/
+
+vs-extension/colortest/
+
+vs-extension/demonass/
+
+vs-extension/vscode-extension-samples/
+
+vs-extension/demonass-old/
+
+software/assembler/parser/__pycache__/
