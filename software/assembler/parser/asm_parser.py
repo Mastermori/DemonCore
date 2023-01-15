@@ -17,8 +17,6 @@ from ast_pseudo import _PseudoInstruction
 #
 #   Define AST
 #
-
-
 class ToAst(ToAstInstructions):
     def __default_token__(self, token: Token):
         if token.type.startswith("__ANON"):
