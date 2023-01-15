@@ -4,26 +4,19 @@ import re
 
 from lark import Lark, ast_utils, Transformer, v_args, Token
 
-from parser_base import *
-from parser_control import *
-from parser_instructions import *
-from parser_variables import *
-from parser_base import _Ast
-from parser_control import _Label
-from parser_instructions import _DirectInstruction
-
-l = Lark.open("../grammar.lark", rel_to=__file__, propagate_positions=True)
-
-
-def createTree(file):
-    return l.parse(file)
-
-
-this_module = sys.modules[__name__]
+from ast_base import *
+from ast_control import *
+from ast_instructions import *
+from ast_variables import *
+from ast_base import _Ast
+from ast_control import _Label
+from ast_instructions import _DirectInstruction
 
 #
 #   Define AST
 #
+
+
 class ToAst(ToAstInstructions):
     def __default_token__(self, token: Token):
         if token.type.startswith("__ANON"):
@@ -39,8 +32,11 @@ class ToAst(ToAstInstructions):
         return x
 
 
-
+this_module = sys.modules[__name__]
 transformer = ast_utils.create_transformer(this_module, ToAst())
+
+
+l = Lark.open("../grammar.lark", rel_to=__file__, propagate_positions=True)
 
 
 def parse(text):
@@ -49,15 +45,18 @@ def parse(text):
 
 
 def main():
-    file_contents = open("software/assembler/testAssembly.dasmb", "r").read()
+    with open("software/assembler/testAssembly.dasmb", "r") as file:
+        file_contents = file.read()
     reference_lines = file_contents.split("\n")
     ast: _Ast = parse(file_contents)
     print(ast)
     parseContext = ParseContext(reference_lines)
+    # Parse context:
     for token in ast:
         if token is _Label:
             parseContext.add_label(token)
 
+    # Parse content (context-dependend)
     for token in ast:
         if isinstance(token, _DirectInstruction):
             parseContext.append_raw_instruction(

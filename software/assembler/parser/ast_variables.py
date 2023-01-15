@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import List
 from lark import ast_utils
-from parser_base import _Ast, _AstMeta
+from ast_base import _Ast, _AstMeta
 
 
 @dataclass

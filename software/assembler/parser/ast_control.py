@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from parser_base import _AstMeta
+from ast_base import _AstMeta
 
 
 @dataclass

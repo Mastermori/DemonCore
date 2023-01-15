@@ -3,8 +3,8 @@ from dataclasses import dataclass
 from typing import List
 
 from lark import Transformer, v_args
-from parser_base import _AstMeta
-from parser_base import ParseContext, Register
+from ast_base import _AstMeta
+from ast_base import ParseContext, Register
 from util import two_complement
 from dictionarys import opDictionary
 
