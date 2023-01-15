@@ -12,7 +12,7 @@ PACKAGE pipe_constants IS
     SUBTYPE exec_code IS std_logic_vector(2 downto 0);
 
     -- instructions
-    CONSTANT NOP_INSTRUCTION               : instruction32 := b"0000000_00000_00000_000_00000_0110011"; --add x0, x0, x0
+    CONSTANT NOP_INSTRUCTION               : instruction32 := b"0000000_00000_00000_000_00000_0010011"; --addi x0, x0, 0
     CONSTANT ADDI_ONE_INSTRUCTION          : instruction32 := b"000000000001_00001_000_00001_0010011"; --addi x1, x1, 1;
     CONSTANT ADDI_NEGATIVE_ONE_INSTRUCTION : instruction32 := b"111111111111_00001_000_00001_0010011"; --addi x1, x1, -1;
     CONSTANT AUIPC_INSTRUCTION             : instruction32 := b"00000000000000000001_00010_0010111"; --auipc x2, 1; 
