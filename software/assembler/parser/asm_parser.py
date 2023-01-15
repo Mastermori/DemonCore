@@ -8,9 +8,11 @@ from ast_base import *
 from ast_control import *
 from ast_instructions import *
 from ast_variables import *
-from ast_base import _Ast
+from ast_pseudo import *
+from ast_base import _Ast, _ImmediateNumber
 from ast_control import _Label
 from ast_instructions import _DirectInstruction
+from ast_pseudo import _PseudoInstruction
 
 #
 #   Define AST
@@ -24,7 +26,7 @@ class ToAst(ToAstInstructions):
         if token.type.lower() == token.value.lower():
             return token.value
         if re.match("(imm|shamt|var_param_word).*", token.type.lower()):
-            return int(token.value, int(token.type.split("_")[-1]))
+            return _ImmediateNumber(int(token.value, int(token.type.split("_")[-1])))
         return token
 
     @v_args(inline=True)
@@ -53,15 +55,30 @@ def main():
     parseContext = ParseContext(reference_lines)
     # Parse context:
     for token in ast:
-        if token is _Label:
+        if isinstance(token, _Label):
             parseContext.add_label(token)
+        if isinstance(token, Variable):
+            parseContext.add_varaible(token)
 
     # Parse content (context-dependend)
     for token in ast:
         if isinstance(token, _DirectInstruction):
-            parseContext.append_raw_instruction(
+            parseContext.append_raw_instructions(
                 [token.get_raw_instruction(parseContext)], token.meta.line)
+        if isinstance(token, _PseudoInstruction):
+            parseContext.append_raw_instructions(
+                token.get_raw_instructions(parseContext), token.meta.line)
+
+    print("ROM:")
     print("\n".join(parseContext.instruction_strings))
+    print("RAM:")
+    print(parseContext.get_ram_content_str())
+
+    with open("hardware/memorySim/rom_fill.dat", "w") as out_file:
+        out_file.writelines("\n".join(parseContext.instruction_strings))
+    
+    with open("hardware/memorySim/ram_fill.dat", "w") as out_file:
+        out_file.writelines(parseContext.get_ram_content_str())
 
 
 if __name__ == '__main__':

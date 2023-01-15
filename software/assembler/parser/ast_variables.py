@@ -1,12 +1,13 @@
+import abc
 from dataclasses import dataclass
 from typing import List
 from lark import ast_utils
-from ast_base import _Ast, _AstMeta
+from ast_base import _Ast, _AstMeta, ParseContext, _Immediate
 
 
 @dataclass
 class _VariableParam(_Ast):
-    value: str
+    value: _Immediate
 
     def get_bits_for_ascii(self) -> List[str]:
         raise NotImplementedError(
@@ -25,19 +26,30 @@ class _VariableParam(_Ast):
             f"{self.__class__.__name__} does not support word format.")
 
 
-class VarDirective(_Ast, ast_utils.AsList):
-    type: str
+@dataclass
+class _VarDirective(_Ast, ast_utils.AsList):
     params: List[_VariableParam]
 
-    def __init__(self, arg_list):
-        self.type = arg_list[0]
-        self.params = arg_list[1:]
+    @abc.abstractmethod
+    def get_words(self) -> List[str]:
+        pass
+
+
+class VarDirectiveWord(_VarDirective):
+    def get_words(self) -> List[str]:
+        return list([param.get_bits_for_word() for param in self.params])
 
 
 @dataclass
 class Variable(_AstMeta):
     name: str
-    directive: VarDirective
+    directive: _VarDirective
+    address: int = -1
+
+    def __init__(self, meta, name: str, directive: _VarDirective):
+        super().__init__(meta)
+        self.name = name
+        self.directive = directive
 
 
 class VarParamChar(_VariableParam):
@@ -56,23 +68,47 @@ class VarParamWord(_VariableParam):
                 f"A VarParamWord can only store 32 bit at most, got {len(self.get_bits_for_word())} bit for value {value}")
 
     def get_bits_for_word(self) -> str:
-        return f"{self.value:032b}"
+        value = self.value.get_value(None)
+        return f"{value:032b}"
 
 
 class VarParamString(_VariableParam):
-    def __init__(self, value: str):
-        self.value = value[1:-1]
-
     def get_bits_for_ascii(self) -> List[str]:
         bit_string = []
-        for string_index in range(len(self.value)//4+1):
+        value = str(self.value.get_value())
+        value = value[1:-1]
+        for string_index in range(len(value)//4+1):
             bits = ""
             for i in range(4):
                 char_index = string_index * 4 + i
-                if char_index >= len(self.value):
+                if char_index >= len(value):
                     bits += "0"*8
                     continue
-                char = self.value[char_index]
+                char = value[char_index]
                 bits += f"{ord(char):08b}"
             bit_string.append(bits)
         return bit_string
+
+
+@dataclass
+class VarAddressLower(_Ast):
+    name: str
+
+    def get_value(self, context: ParseContext) -> int:
+        address = context.get_variable(self.name).address
+        if address < 0:
+            raise ValueError(
+                f"Cannot process address {address} of non existent or faulty variable: {self.name}")
+        return address & 0xfff  # Get lower 12 bits
+
+
+@dataclass
+class VarAddressUpper(_Ast):
+    name: str
+
+    def get_value(self, context: ParseContext) -> int:
+        address = context.get_variable(self.name).address
+        if address < 0:
+            raise ValueError(
+                f"Cannot process address {address} of non existent or faulty variable: {self.name}")
+        return (address & 0xfffff000) >> 12  # Get upper 20 bits

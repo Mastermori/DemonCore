@@ -4,7 +4,7 @@ from typing import List
 
 from lark import Transformer, v_args
 from ast_base import _AstMeta
-from ast_base import ParseContext, Register
+from ast_base import ParseContext, Register, _Immediate
 from util import two_complement
 from dictionarys import opDictionary
 
@@ -31,13 +31,6 @@ class _DirectInstruction(_Instruction, metaclass=abc.ABCMeta):
 
 
 @dataclass
-class _PseudoInstruction(_Instruction):
-    @abc.abstractmethod
-    def get_raw_instructions(self, context: ParseContext) -> List[List[str]]:
-        pass
-
-
-@dataclass
 class RegisterDirectInstruction(_DirectInstruction):
     register_destination: Register
     register1: Register
@@ -55,11 +48,11 @@ class RegisterDirectInstruction(_DirectInstruction):
 class ImmediateDirectInstruction(_DirectInstruction):
     register_destination: Register
     register1: Register
-    imm12: int
+    imm12: _Immediate
 
     def get_raw_instruction(self, context: ParseContext) -> List[str]:
         raw_instruction = self.get_instruction_from_mnemonic()
-        raw_instruction[0] = two_complement(self.imm12, 12)  # imm12
+        raw_instruction[0] = two_complement(self.imm12.get_value(context), 12)  # imm12
         raw_instruction[1] = self.register1.get_bit_string()  # rs1
         raw_instruction[3] = self.register_destination.get_bit_string()  # rd
         return raw_instruction
@@ -68,20 +61,20 @@ class ImmediateDirectInstruction(_DirectInstruction):
 @dataclass
 class OffsetDirectInstruction(_DirectInstruction):
     register1: Register
+    offset: _Immediate
     register2: Register
-    offset: int
 
     def get_raw_instruction(self, context: ParseContext) -> List[str]:
         raw_instruction = self.get_instruction_from_mnemonic()
         match self.mnemonic.type:
             case 'jl_type' | 'l_type':
-                raw_instruction[0] = two_complement(self.offset, 12)  # imm12
+                raw_instruction[0] = two_complement(self.offset.get_value(None), 12)  # imm12
                 raw_instruction[1] = self.register2.get_bit_string()  # rs2
                 raw_instruction[3] = self.register1.get_bit_string()  # rs1
             case 's_type':
                 # ['imm_high7','rs2','rs1','000','imm_low5','0100011'],#maschinecode
                 # mem[0] rs1[1], imm12[2](rs2[3])  #memonic#
-                imm12 = two_complement(self.offset, 12)
+                imm12 = two_complement(self.offset.get_value(None), 12)
                 raw_instruction[0] = imm12[0:7]  # imm_high7
                 raw_instruction[4] = imm12[7:12]  # imm_low5
                 raw_instruction[1] = self.register2.get_bit_string()  # rs2
@@ -93,12 +86,12 @@ class OffsetDirectInstruction(_DirectInstruction):
 class BranchDirectInstruction(_DirectInstruction):
     register1: Register
     register2: Register
-    imm12: int
+    imm12: _Immediate
 
     def get_raw_instruction(self, context: ParseContext) -> List[str]:
         raw_instruction = self.get_instruction_from_mnemonic()
-        raw_instruction[0] = self.imm12[0:7]  # imm_high7
-        raw_instruction[4] = self.imm12[7:12]  # imm_low5
+        raw_instruction[0] = self.imm12.get_value(context)[0:7]  # imm_high7
+        raw_instruction[4] = self.imm12.get_value(context)[7:12]  # imm_low5
         raw_instruction[1] = self.register2.get_bit_string()  # rs2
         raw_instruction[2] = self.register1.get_bit_string()  # rs1
         return raw_instruction
@@ -121,11 +114,11 @@ class ShiftDirectInstruction(_DirectInstruction):
 @dataclass
 class JumpUpperDirectInstruction(_DirectInstruction):
     register_destination: Register
-    imm20: int
+    imm20: _Immediate
 
     def get_raw_instruction(self, context: ParseContext) -> List[str]:
         raw_instruction = self.get_instruction_from_mnemonic()
-        raw_instruction[0] = two_complement(self.imm20, 20)  # imm20
+        raw_instruction[0] = two_complement(self.imm20.get_value(context), 20)  # imm20
         raw_instruction[1] = self.register_destination.get_bit_string()  # rd
         return raw_instruction
 

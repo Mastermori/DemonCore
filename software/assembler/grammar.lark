@@ -2,7 +2,7 @@ start: (instruction | _label | directive | variable)*
 
 instruction: direct_instruction | pseudo_instruction
 direct_instruction: param_3 | param_2
-pseudo_instruction: pseudo_param_2 | pseudo_param_1 | pseudo_param_0
+?pseudo_instruction: pseudo_param_2 | pseudo_param_1 | pseudo_param_0
 
 param_3: register_direct_instruction | immediate_direct_instruction | offset_direct_instruction | branch_direct_instruction | shift_direct_instruction
 param_2: jump_upper_direct_instruction
@@ -10,13 +10,14 @@ param_2: jump_upper_direct_instruction
 pseudo_param_2: pseudo_short_register register "," register
     | pseudo_short_immediate register "," number_short
 pseudo_param_1: pseudo_label _label
-pseudo_param_0: pseudo_no_args
+?pseudo_param_0: pseudo_no_args
 
 
 _label: global_label | local_label
 directive: "."(simple_directive | int_directive) //TODO: Add more directives
-variable: /\w(\w|\d|_|-)*/":" var_directive
-var_directive: var_directive_word | var_directive_ascii | var_directive_int | var_directive_byte
+variable: var_name ":" var_directive
+?var_name: /\w(\w|\d|_|-)*/
+?var_directive: var_directive_word | var_directive_ascii | var_directive_int | var_directive_byte
 
 global_label: /\w(\w|\d|_|-)*/":"
 local_label: "."/\w(\w|\d|_|-)*/":"
@@ -84,10 +85,13 @@ register: always_zero | return_adress | stack_pointer | global_pointer | thread_
 ?!function_argument: "x10" | "a0" | "x11" | "a1" | "x12" | "a2" | "x13"
     | "a3" | "x14" | "a4" | "x15" | "a5" | "x16" | "a6" | "x17" | "a7"
 
+var_address_lower: "%lo(" var_name ")"
+var_address_upper: "%hi(" var_name ")"
+
 // Immediates
 ?shamt: SHAMT_BASE_10 | SHAMT_BASE_16 | SHAMT_BASE_8 | SHAMT_BASE_2
-?number_short: IMM12_BASE_10 | IMM12_BASE_16 | IMM12_BASE_8 | IMM12_BASE_2
-?number_long: IMM20_BASE_10 | IMM20_BASE_16 | IMM20_BASE_8 | IMM20_BASE_2
+?number_short: var_address_lower | IMM12_BASE_10 | IMM12_BASE_16 | IMM12_BASE_8 | IMM12_BASE_2
+?number_long: var_address_upper | IMM20_BASE_10 | IMM20_BASE_16 | IMM20_BASE_8 | IMM20_BASE_2
 
 IMM12_BASE_10: /(-[1-9]|-204[0-8]|-?[1-9][0-9]{1,2}|-?1[0-9][0-9][0-9]|-?20[0-3][0-9]|[0-9]|204[0-7])\b/
 IMM12_BASE_16: /(0x[1-9a-fA-F][0-9a-fA-F]|0x[1-7][0-9a-fA-F]{2}|0x[0-9a-fA-F])\b/
