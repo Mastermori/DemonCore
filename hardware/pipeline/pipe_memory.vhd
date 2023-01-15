@@ -25,17 +25,10 @@ ENTITY pipe_memory IS
 END;
 
 ARCHITECTURE pipe_memory_simple OF pipe_memory IS
-    SIGNAL m_internal_read_enable : STD_LOGIC;
 BEGIN
     PROCESS (clk, reset)
     BEGIN
-        IF (reset = '0') THEN
-            m_out_memory_addr <= (OTHERS => '0');
-            m_out_memory_not_write_enable <= '0';
-            m_out_reg_addr_dest <= (OTHERS => '0');
-            m_out_write_reg_enable <= '1';
-            m_out_data <= (OTHERS => '0');
-        ELSIF (rising_edge(clk)) THEN
+        IF (rising_edge(clk)) THEN
             -- Dont cares
             --m_out_reg_addr_dest <= (OTHERS => '-');
             --m_out_data <= (OTHERS => '-');
@@ -45,13 +38,17 @@ BEGIN
             m_out_memory_addr <= STD_LOGIC_VECTOR(m_in_memory_addr);
             m_out_memory_not_write_enable <= NOT m_in_write_memory_enable;
 
-            IF m_internal_read_enable = '1' THEN
+            IF m_in_read_memory_enable = '1' THEN
                 m_out_data <= m_in_memory_data;
             ELSE
                 m_out_data <= STD_LOGIC_VECTOR(m_in_data);
             END IF;
-
-            m_internal_read_enable <= m_in_read_memory_enable; -- used to decide output multiplexer output next clock cycle
+        ELSIF (reset = '0') THEN
+            m_out_memory_addr <= (OTHERS => '1') ,  (OTHERS => '0') after 1 ns;
+            m_out_memory_not_write_enable <= '1';
+            m_out_reg_addr_dest <= (OTHERS => '0');
+            m_out_write_reg_enable <= '1';
+            m_out_data <= (OTHERS => '0');
         END IF;
     END PROCESS;
 END pipe_memory_simple; -- pipe_memory_simple

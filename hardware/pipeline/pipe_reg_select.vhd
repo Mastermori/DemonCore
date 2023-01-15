@@ -37,7 +37,7 @@ END;
 
 ARCHITECTURE pipe_register_select_simple OF pipe_register_select IS
     TYPE register_bank IS ARRAY (31 DOWNTO 0) OF signed(31 DOWNTO 0);
-    SIGNAL reg_bank : register_bank := (5 => x"0000_0004", OTHERS => x"0000_0000");
+    SIGNAL reg_bank : register_bank := (OTHERS => x"0000_0000");
 BEGIN
     PROCESS (clk, reset)
     BEGIN

@@ -57,7 +57,6 @@ BEGIN
             e_out_result <= (OTHERS => '0');
             e_out_computed_pc <= (OTHERS => '0');
             e_out_write_pc_enable <= '0';
-            e_out_write_pc_enable <= '0';
             e_out_write_reg_enable <= '0';
             e_out_reg_addr_dest <= (OTHERS => '0');
             e_out_memory_addr <= (OTHERS => '0');

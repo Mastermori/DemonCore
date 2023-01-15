@@ -210,8 +210,9 @@ BEGIN
     BEGIN
         IF (reset = '0') THEN
             pc <= x"0000_0000";
-            dummy_txt	<= load,  none after 5 ns;
-            rom_txt	<= load,  none after 5 ns;
+            dummy_txt	<= load;
+            rom_txt   <= load;
+            -- rom_txt	<= load,  none after 5 ns;
         ELSIF (rising_edge(clk)) THEN
             IF e_out_pc_write_enable = '1' THEN
                 pc <= unsigned(e_out_computed_pc);
