@@ -1,5 +1,4 @@
 import sys
-import abc
 import re
 
 from lark import Lark, ast_utils, Transformer, v_args, Token

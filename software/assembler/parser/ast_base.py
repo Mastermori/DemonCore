@@ -21,8 +21,6 @@ class Register(_Ast):
     name: str
 
     def get_bit_string(self) -> str:
-        print(self.name)
-        print(get_register_bits(self.name))
         return get_register_bits(self.name)
 
 class _Immediate(_Ast):
