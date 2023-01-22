@@ -22,7 +22,7 @@ ENTITY pipe_execute IS
         e_out_write_pc_enable : OUT STD_LOGIC;
         e_out_write_reg_enable : OUT STD_LOGIC;
         e_out_reg_addr_dest : OUT register_adress;
-        e_out_memory_addr : OUT unsigned(31 DOWNTO 0);
+        e_out_memory_addr : OUT std_logic_vector(31 DOWNTO 0);
         e_out_read_memory_enable : OUT STD_LOGIC;
         e_out_write_memory_enable : OUT STD_LOGIC
     );
@@ -133,12 +133,12 @@ BEGIN
                     e_out_write_memory_enable <= '0';
 
                 WHEN LOAD_EXEC_CODE =>
-                    e_out_memory_addr <= unsigned(e_in_data_1 + e_in_immediate);
+                    e_out_memory_addr <= std_logic_vector(e_in_data_1 + e_in_immediate);
                     e_out_read_memory_enable <= '1';
                     e_out_write_memory_enable <= '0';
 
                 WHEN STORE_EXEC_CODE =>
-                    e_out_memory_addr <= unsigned(e_in_data_1 + e_in_immediate);
+                    e_out_memory_addr <= std_logic_vector(e_in_data_1 + e_in_immediate);
                     e_out_read_memory_enable <= '0';
                     e_out_write_memory_enable <= '1';
                     e_out_result <= e_in_data_2;

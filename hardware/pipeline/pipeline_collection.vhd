@@ -47,7 +47,7 @@ ARCHITECTURE pipeline_collection OF pipeline IS
     SIGNAL e_out_reg_addr_dest : register_adress;
     SIGNAL e_out_read_memory_enable : STD_LOGIC;
     SIGNAL e_out_computed_pc : unsigned(31 DOWNTO 0);
-    SIGNAL e_out_memory_addr : unsigned(31 DOWNTO 0);
+    SIGNAL e_out_memory_addr : std_logic_vector(31 DOWNTO 0);
     SIGNAL e_out_write_memory_enable : STD_LOGIC;
 
     -- Memory signals

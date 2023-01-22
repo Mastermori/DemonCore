@@ -19,14 +19,13 @@ END;
 
 ARCHITECTURE pipe_fetch_dummy OF pipe_fetch IS
 BEGIN
+    f_out_rom_addr <= std_logic_vector(pc(9 downto 2)); -- TODO: Find out how to do proper this properly (+4 bit adresses)
     PROCESS (clk, reset)
     BEGIN
         IF (reset = '0') THEN
             f_out_instruction <= NOP_INSTRUCTION;
-            f_out_rom_addr <= (others => '0');
             f_out_pc <= (OTHERS => '0');
         ELSIF (rising_edge(clk)) THEN
-            f_out_rom_addr <= std_logic_vector(pc(9 downto 2)); -- TODO: Find out how to do proper this properly (+4 bit adresses)
             f_out_instruction <= f_in_rom_data;
             f_out_pc <= pc;
         END IF;
