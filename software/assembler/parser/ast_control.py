@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from ast_base import _AstMeta
+from ast_base import _AstMeta, ParseContext
 
 
 @dataclass
@@ -19,3 +19,10 @@ class LocalLabel(_Label):
 
 class _Directive(_AstMeta):
     pass
+
+@dataclass
+class AddressDirective(_Directive):
+    address: str
+
+    def run(self, context: ParseContext) -> None:
+        context.set_ram_address(int(self.address))

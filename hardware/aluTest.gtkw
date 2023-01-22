@@ -1,43 +1,30 @@
 [*]
 [*] GTKWave Analyzer v3.3.104 (w)1999-2020 BSI
-[*] Fri Dec  9 02:13:21 2022
+[*] Sun Jan 22 17:19:43 2023
 [*]
-[dumpfile] "/mnt/c/Users/Mo/Documents/Studium/Mikrorechner/DemonCore/hardware/pipeTest.vcd"
-[dumpfile_mtime] "Fri Dec  9 02:12:36 2022"
-[dumpfile_size] 32920
+[dumpfile] "/mnt/c/Users/Mo/Documents/Studium/Mikrorechner/DemonCore/hardware/pipeTest.ghw"
+[dumpfile_mtime] "Sun Jan 22 17:17:25 2023"
+[dumpfile_size] 13591
 [savefile] "/mnt/c/Users/Mo/Documents/Studium/Mikrorechner/DemonCore/hardware/aluTest.gtkw"
 [timestart] 0
-[size] 1908 1119
-[pos] -1 -1
-*-24.208853 45900000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
-[treeopen] pipetest.
-[treeopen] pipetest.pipeline_inst.
-[treeopen] pipetest.pipeline_inst.pipe_execute_inst.
+[size] 1908 999
+[pos] -280 -2
+*-26.177231 125000000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] top.
+[treeopen] top.pipetest.
+[treeopen] top.pipetest.pipeline_inst.
+[treeopen] top.pipetest.pipeline_inst.pipe_fetch_inst.
+[treeopen] top.pipetest.pipeline_inst.pipe_register_select_inst.reg_bank.
 [sst_width] 214
-[signals_width] 198
+[signals_width] 214
 [sst_expanded] 1
-[sst_vpaned_height] 334
+[sst_vpaned_height] 563
 @28
-pipetest.pipeline_inst.pipe_execute_inst.clk
+top.pipetest.clk
 @22
-pipetest.pipeline_inst.pipe_execute_inst.data_1[31:0]
-pipetest.pipeline_inst.pipe_execute_inst.data_2[31:0]
-pipetest.pipeline_inst.pipe_execute_inst.result[31:0]
-@28
-pipetest.pipeline_inst.pipe_execute_inst.in_alu_main_func[2:0]
-pipetest.pipeline_inst.pipe_execute_inst.in_alu_second_func
-@22
-pipetest.pipeline_inst.pipe_execute_inst.alu_inst.out_vec[31:0]
-pipetest.pipeline_inst.pipe_execute_inst.alu_inst.vec1[31:0]
-pipetest.pipeline_inst.pipe_execute_inst.alu_inst.vec2[31:0]
-@29
-pipetest.pipeline_inst.pipe_execute_inst.alu_inst.main_func[2:0]
-@28
-pipetest.pipeline_inst.pipe_execute_inst.alu_inst.second_func
-pipetest.pipeline_inst.pipe_execute_inst.in_use_immediate
-pipetest.pipeline_inst.pipe_decoder_inst.d_out_main_func[2:0]
-pipetest.pipeline_inst.pipe_decoder_inst.d_out_second_func
-@22
-pipetest.pipeline_inst.pipe_decoder_inst.instruction[31:0]
+#{top.pipetest.pipeline_inst.pipe_register_select_inst.reg_bank[5][31:0]} top.pipetest.pipeline_inst.pipe_register_select_inst.reg_bank[5][31] top.pipetest.pipeline_inst.pipe_register_select_inst.reg_bank[5][30] top.pipetest.pipeline_inst.pipe_register_select_inst.reg_bank[5][29] top.pipetest.pipeline_inst.pipe_register_select_inst.reg_bank[5][28] top.pipetest.pipeline_inst.pipe_register_select_inst.reg_bank[5][27] top.pipetest.pipeline_inst.pipe_register_select_inst.reg_bank[5][26] top.pipetest.pipeline_inst.pipe_register_select_inst.reg_bank[5][25] top.pipetest.pipeline_inst.pipe_register_select_inst.reg_bank[5][24] top.pipetest.pipeline_inst.pipe_register_select_inst.reg_bank[5][23] top.pipetest.pipeline_inst.pipe_register_select_inst.reg_bank[5][22] top.pipetest.pipeline_inst.pipe_register_select_inst.reg_bank[5][21] top.pipetest.pipeline_inst.pipe_register_select_inst.reg_bank[5][20] top.pipetest.pipeline_inst.pipe_register_select_inst.reg_bank[5][19] top.pipetest.pipeline_inst.pipe_register_select_inst.reg_bank[5][18] top.pipetest.pipeline_inst.pipe_register_select_inst.reg_bank[5][17] top.pipetest.pipeline_inst.pipe_register_select_inst.reg_bank[5][16] top.pipetest.pipeline_inst.pipe_register_select_inst.reg_bank[5][15] top.pipetest.pipeline_inst.pipe_register_select_inst.reg_bank[5][14] top.pipetest.pipeline_inst.pipe_register_select_inst.reg_bank[5][13] top.pipetest.pipeline_inst.pipe_register_select_inst.reg_bank[5][12] top.pipetest.pipeline_inst.pipe_register_select_inst.reg_bank[5][11] top.pipetest.pipeline_inst.pipe_register_select_inst.reg_bank[5][10] top.pipetest.pipeline_inst.pipe_register_select_inst.reg_bank[5][9] top.pipetest.pipeline_inst.pipe_register_select_inst.reg_bank[5][8] top.pipetest.pipeline_inst.pipe_register_select_inst.reg_bank[5][7] top.pipetest.pipeline_inst.pipe_register_select_inst.reg_bank[5][6] top.pipetest.pipeline_inst.pipe_register_select_inst.reg_bank[5][5] top.pipetest.pipeline_inst.pipe_register_select_inst.reg_bank[5][4] top.pipetest.pipeline_inst.pipe_register_select_inst.reg_bank[5][3] top.pipetest.pipeline_inst.pipe_register_select_inst.reg_bank[5][2] top.pipetest.pipeline_inst.pipe_register_select_inst.reg_bank[5][1] top.pipetest.pipeline_inst.pipe_register_select_inst.reg_bank[5][0]
+#{top.pipetest.pipeline_inst.pipe_register_select_inst.reg_bank[6][31:0]} top.pipetest.pipeline_inst.pipe_register_select_inst.reg_bank[6][31] top.pipetest.pipeline_inst.pipe_register_select_inst.reg_bank[6][30] top.pipetest.pipeline_inst.pipe_register_select_inst.reg_bank[6][29] top.pipetest.pipeline_inst.pipe_register_select_inst.reg_bank[6][28] top.pipetest.pipeline_inst.pipe_register_select_inst.reg_bank[6][27] top.pipetest.pipeline_inst.pipe_register_select_inst.reg_bank[6][26] top.pipetest.pipeline_inst.pipe_register_select_inst.reg_bank[6][25] top.pipetest.pipeline_inst.pipe_register_select_inst.reg_bank[6][24] top.pipetest.pipeline_inst.pipe_register_select_inst.reg_bank[6][23] top.pipetest.pipeline_inst.pipe_register_select_inst.reg_bank[6][22] top.pipetest.pipeline_inst.pipe_register_select_inst.reg_bank[6][21] top.pipetest.pipeline_inst.pipe_register_select_inst.reg_bank[6][20] top.pipetest.pipeline_inst.pipe_register_select_inst.reg_bank[6][19] top.pipetest.pipeline_inst.pipe_register_select_inst.reg_bank[6][18] top.pipetest.pipeline_inst.pipe_register_select_inst.reg_bank[6][17] top.pipetest.pipeline_inst.pipe_register_select_inst.reg_bank[6][16] top.pipetest.pipeline_inst.pipe_register_select_inst.reg_bank[6][15] top.pipetest.pipeline_inst.pipe_register_select_inst.reg_bank[6][14] top.pipetest.pipeline_inst.pipe_register_select_inst.reg_bank[6][13] top.pipetest.pipeline_inst.pipe_register_select_inst.reg_bank[6][12] top.pipetest.pipeline_inst.pipe_register_select_inst.reg_bank[6][11] top.pipetest.pipeline_inst.pipe_register_select_inst.reg_bank[6][10] top.pipetest.pipeline_inst.pipe_register_select_inst.reg_bank[6][9] top.pipetest.pipeline_inst.pipe_register_select_inst.reg_bank[6][8] top.pipetest.pipeline_inst.pipe_register_select_inst.reg_bank[6][7] top.pipetest.pipeline_inst.pipe_register_select_inst.reg_bank[6][6] top.pipetest.pipeline_inst.pipe_register_select_inst.reg_bank[6][5] top.pipetest.pipeline_inst.pipe_register_select_inst.reg_bank[6][4] top.pipetest.pipeline_inst.pipe_register_select_inst.reg_bank[6][3] top.pipetest.pipeline_inst.pipe_register_select_inst.reg_bank[6][2] top.pipetest.pipeline_inst.pipe_register_select_inst.reg_bank[6][1] top.pipetest.pipeline_inst.pipe_register_select_inst.reg_bank[6][0]
+@23
+#{top.pipetest.pipeline_inst.pipe_fetch_inst.f_out_instruction[31:0]} top.pipetest.pipeline_inst.pipe_fetch_inst.f_out_instruction[31] top.pipetest.pipeline_inst.pipe_fetch_inst.f_out_instruction[30] top.pipetest.pipeline_inst.pipe_fetch_inst.f_out_instruction[29] top.pipetest.pipeline_inst.pipe_fetch_inst.f_out_instruction[28] top.pipetest.pipeline_inst.pipe_fetch_inst.f_out_instruction[27] top.pipetest.pipeline_inst.pipe_fetch_inst.f_out_instruction[26] top.pipetest.pipeline_inst.pipe_fetch_inst.f_out_instruction[25] top.pipetest.pipeline_inst.pipe_fetch_inst.f_out_instruction[24] top.pipetest.pipeline_inst.pipe_fetch_inst.f_out_instruction[23] top.pipetest.pipeline_inst.pipe_fetch_inst.f_out_instruction[22] top.pipetest.pipeline_inst.pipe_fetch_inst.f_out_instruction[21] top.pipetest.pipeline_inst.pipe_fetch_inst.f_out_instruction[20] top.pipetest.pipeline_inst.pipe_fetch_inst.f_out_instruction[19] top.pipetest.pipeline_inst.pipe_fetch_inst.f_out_instruction[18] top.pipetest.pipeline_inst.pipe_fetch_inst.f_out_instruction[17] top.pipetest.pipeline_inst.pipe_fetch_inst.f_out_instruction[16] top.pipetest.pipeline_inst.pipe_fetch_inst.f_out_instruction[15] top.pipetest.pipeline_inst.pipe_fetch_inst.f_out_instruction[14] top.pipetest.pipeline_inst.pipe_fetch_inst.f_out_instruction[13] top.pipetest.pipeline_inst.pipe_fetch_inst.f_out_instruction[12] top.pipetest.pipeline_inst.pipe_fetch_inst.f_out_instruction[11] top.pipetest.pipeline_inst.pipe_fetch_inst.f_out_instruction[10] top.pipetest.pipeline_inst.pipe_fetch_inst.f_out_instruction[9] top.pipetest.pipeline_inst.pipe_fetch_inst.f_out_instruction[8] top.pipetest.pipeline_inst.pipe_fetch_inst.f_out_instruction[7] top.pipetest.pipeline_inst.pipe_fetch_inst.f_out_instruction[6] top.pipetest.pipeline_inst.pipe_fetch_inst.f_out_instruction[5] top.pipetest.pipeline_inst.pipe_fetch_inst.f_out_instruction[4] top.pipetest.pipeline_inst.pipe_fetch_inst.f_out_instruction[3] top.pipetest.pipeline_inst.pipe_fetch_inst.f_out_instruction[2] top.pipetest.pipeline_inst.pipe_fetch_inst.f_out_instruction[1] top.pipetest.pipeline_inst.pipe_fetch_inst.f_out_instruction[0]
 [pattern_trace] 1
 [pattern_trace] 0

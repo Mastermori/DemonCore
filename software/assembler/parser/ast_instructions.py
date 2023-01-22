@@ -1,12 +1,32 @@
 import abc
 from dataclasses import dataclass
-from typing import List
+from typing import List, Dict
 
 from lark import Transformer, v_args
 from ast_base import _AstMeta
 from ast_base import ParseContext, Register, _Immediate
 from util import two_complement
 from dictionarys import opDictionary
+
+
+class BaseInstruction():
+    instruction_bits: List[str]
+    bindings: Dict[int, str]
+
+    def __init__(self, mnemonic: str, bindings: Dict[str, str]):
+        self.set_instruction_bits(mnemonic, bindings)
+
+    def set_instruction_bits(self, mnemonic: str, bindings: Dict[str, str]) -> None:
+        if mnemonic in opDictionary:
+            self.instruction_bits = opDictionary[mnemonic]
+            for binding in self.bindings:
+                self.instruction_bits[binding] = self.bindings[binding]
+        else:
+            raise ValueError(
+                f"Can't find instruction with mnemonic {mnemonic}")
+
+    def get_bit_string(self) -> List[str]:
+        return self.instruction_bits
 
 
 @dataclass
@@ -16,17 +36,14 @@ class Mnemonic():
 
 
 @dataclass
-class _Instruction(_AstMeta):
+class _DirectInstruction(_AstMeta, metaclass=abc.ABCMeta):
     mnemonic: Mnemonic
 
-
-@dataclass
-class _DirectInstruction(_Instruction, metaclass=abc.ABCMeta):
     @abc.abstractmethod
-    def get_raw_instruction(self) -> List[str]:
+    def get_raw_instruction(self, context: ParseContext) -> List[str]:
         pass
 
-    def get_instruction_from_mnemonic(self) -> str:
+    def get_instruction_from_mnemonic(self) -> List[str]:
         return opDictionary[self.mnemonic.name.upper()]
 
 
@@ -37,11 +54,11 @@ class RegisterDirectInstruction(_DirectInstruction):
     register2: Register
 
     def get_raw_instruction(self, context: ParseContext) -> List[str]:
-        raw_instruction = self.get_instruction_from_mnemonic()
-        raw_instruction[4] = self.register_destination.get_bit_string()  # rd
-        raw_instruction[2] = self.register1.get_bit_string()  # rs1
-        raw_instruction[1] = self.register2.get_bit_string()  # rs2
-        return raw_instruction
+        return BaseInstruction(self.mnemonic.name, {
+            4: self.register_destination.get_bit_string(),  # rd
+            2: self.register1.get_bit_string(), #rs1
+            1: self.register2.get_bit_string() #rs2
+        }).get_bit_string()
 
 
 @dataclass
@@ -52,7 +69,8 @@ class ImmediateDirectInstruction(_DirectInstruction):
 
     def get_raw_instruction(self, context: ParseContext) -> List[str]:
         raw_instruction = self.get_instruction_from_mnemonic()
-        raw_instruction[0] = two_complement(self.imm12.get_value(context), 12)  # imm12
+        raw_instruction[0] = two_complement(
+            self.imm12.get_value(context), 12)  # imm12
         raw_instruction[1] = self.register1.get_bit_string()  # rs1
         raw_instruction[3] = self.register_destination.get_bit_string()  # rd
         return raw_instruction
@@ -68,7 +86,8 @@ class OffsetDirectInstruction(_DirectInstruction):
         raw_instruction = self.get_instruction_from_mnemonic()
         match self.mnemonic.type:
             case 'jl_type' | 'l_type':
-                raw_instruction[0] = two_complement(self.offset.get_value(None), 12)  # imm12
+                raw_instruction[0] = two_complement(
+                    self.offset.get_value(None), 12)  # imm12
                 raw_instruction[1] = self.register2.get_bit_string()  # rs2
                 raw_instruction[3] = self.register1.get_bit_string()  # rs1
             case 's_type':
@@ -90,8 +109,8 @@ class BranchDirectInstruction(_DirectInstruction):
 
     def get_raw_instruction(self, context: ParseContext) -> List[str]:
         raw_instruction = self.get_instruction_from_mnemonic()
-        raw_instruction[0] = self.imm12.get_value(context)[0:7]  # imm_high7
-        raw_instruction[4] = self.imm12.get_value(context)[7:12]  # imm_low5
+        raw_instruction[0] = self.imm12.get_value_bit_str(context, 12)[0:7]  # imm_high7
+        raw_instruction[4] = self.imm12.get_value_bit_str(context, 12)[7:12]  # imm_low5
         raw_instruction[1] = self.register2.get_bit_string()  # rs2
         raw_instruction[2] = self.register1.get_bit_string()  # rs1
         return raw_instruction
@@ -118,28 +137,13 @@ class JumpUpperDirectInstruction(_DirectInstruction):
 
     def get_raw_instruction(self, context: ParseContext) -> List[str]:
         raw_instruction = self.get_instruction_from_mnemonic()
-        raw_instruction[0] = two_complement(self.imm20.get_value(context), 20)  # imm20
+        raw_instruction[0] = two_complement(
+            self.imm20.get_value(context), 20)  # imm20
         raw_instruction[1] = self.register_destination.get_bit_string()  # rd
         return raw_instruction
 
 
 class ToAstInstructions(Transformer):
-    @v_args(inline=True)
-    def instruction(self, x):
-        return x
-
-    @v_args(inline=True)
-    def direct_instruction(self, x):
-        return x
-
-    @v_args(inline=True)
-    def param_3(self, x):
-        return x
-
-    @v_args(inline=True)
-    def param_2(self, x):
-        return x
-
     @v_args(inline=True)
     def r_type(self, x):
         return Mnemonic(x, "r_type")

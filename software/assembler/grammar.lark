@@ -1,20 +1,21 @@
 start: (instruction | _label | directive | variable)*
 
-instruction: direct_instruction | pseudo_instruction
-direct_instruction: param_3 | param_2
-?pseudo_instruction: pseudo_param_2 | pseudo_param_1 | pseudo_param_0
+?instruction: direct_instruction | pseudo_instruction
+?direct_instruction: register_direct_instruction | immediate_direct_instruction | offset_direct_instruction | branch_direct_instruction | shift_direct_instruction | jump_upper_direct_instruction
+?pseudo_instruction: pseudo_branch_swap | pseudo_branch_zero | pseudo_move | pseudo_nop | pseudo_return | pseudo_load_var | pseudo_call | pseudo_jump
 
-param_3: register_direct_instruction | immediate_direct_instruction | offset_direct_instruction | branch_direct_instruction | shift_direct_instruction
-param_2: jump_upper_direct_instruction
-
-pseudo_param_2: pseudo_short_register register "," register
-    | pseudo_short_immediate register "," number_short
-pseudo_param_1: pseudo_label _label
-?pseudo_param_0: pseudo_no_args
-
+pseudo_branch_swap: pseudo_branch_swap_mnemonics register "," register "," imm12
+pseudo_branch_zero: pseudo_branch_zero_mnemonics register "," imm12
+pseudo_load: pseudo_load_mnemonics register "," //(imm32 | addr) 
+pseudo_move: pseudo_move_mnemonics register "," register
+pseudo_nop: "nop"i /[1-9]\d*/?
+pseudo_return: "ret"i
+pseudo_load_var: "loadvar"i register "," var_name
+pseudo_call: "call"i _label
+pseudo_jump: "j"i _label
 
 _label: global_label | local_label
-directive: "."(simple_directive | int_directive) //TODO: Add more directives
+?directive: "."(address_directive | align_directive) //TODO: Add more directives
 variable: var_name ":" var_directive
 ?var_name: /\w(\w|\d|_|-)*/
 ?var_directive: var_directive_word | var_directive_ascii | var_directive_int | var_directive_byte
@@ -22,8 +23,8 @@ variable: var_name ":" var_directive
 global_label: /\w(\w|\d|_|-)*/":"
 local_label: "."/\w(\w|\d|_|-)*/":"
 
-simple_directive: "DATA"
-int_directive: "ALIGN" /\d+/
+address_directive: "ADDR" /\d+/
+align_directive: "ALIGN" /\d+/
 
 _seperated{x, sep}: x (sep x)*
 
@@ -41,22 +42,21 @@ VAR_PARAM_WORD_BASE_16: /0x0|0x[1-9a-fA-F][0-9a-fA-F]*/
 VAR_PARAM_WORD_BASE_8: /00|0[1-7][0-7]*/
 VAR_PARAM_WORD_BASE_2: /0b[0-1]*/
 
-// Param formats
+// Param formats:
 register_direct_instruction: r_type register "," register "," register
-immediate_direct_instruction: i_type register "," register "," number_short
-offset_direct_instruction: (s_type | l_type | jl_type) register "," number_short "(" register ")"
-branch_direct_instruction: b_type register "," register "," number_short
+immediate_direct_instruction: i_type register "," register "," imm12
+offset_direct_instruction: (s_type | l_type | jl_type) register "," imm12 "(" register ")"
+branch_direct_instruction: b_type register "," register "," imm12
 shift_direct_instruction: is_type register "," register "," shamt
-jump_upper_direct_instruction: ju_type register "," number_long
+jump_upper_direct_instruction: ju_type register "," imm20
 
+// Mnemonic types:
+?!pseudo_branch_swap_mnemonics: "bgt"i | "ble"i | "bgtu"i | "bleu"i
+?!pseudo_branch_zero_mnemonics: "beqz"i | "bnez"i | "bgez"i | "blez"i | "bgtz"i
+?!pseudo_load_mnemonics: "li"i | "la"i
+?!pseudo_move_mnemonics: "mv"i | "not"i | "neg"i
+?!pseudo_label_mnemonics: "j"i | "call"i  // braucht mehr als upper immediate
 
-!pseudo_long_immediate: "bgt"i | "ble"i | "bgtu"i | "bleu"i
-!pseudo_short_register: "mv"i | "not"i | "neg"i
-!pseudo_short_immediate: "li"i | "la"i | "beqz"i | "bnez"i | "bgez"i | "blez"i | "bgtz"i // braucht mehr als upper immediate
-!pseudo_label: "j"i | "call"i  // braucht mehr als upper immediate
-!pseudo_no_args: "ret"i | "nop"i
-
-// Mnemonic types
 !r_type: "add"i | "sub"i | "xor"i | "or"i | "and"i | "sll"i | "srl"i | "sra"i | "slt"i | "sltu"i
 !i_type: "addi"i | "xori"i | "ori"i | "andi"i | "slti"i | "sltiu"i
     //| "ecall"i | "ebreak"i
@@ -67,7 +67,7 @@ jump_upper_direct_instruction: ju_type register "," number_long
 !ju_type: "lui"i | "auipc"i | "jal"i
 !jl_type: "jalr"i
 
-// Registers
+// Registers:
 register: always_zero | return_adress | stack_pointer | global_pointer | thread_pointer | frame_pointer
     | temporary | saved_register | function_argument
 
@@ -90,8 +90,9 @@ var_address_upper: "%hi(" var_name ")"
 
 // Immediates
 ?shamt: SHAMT_BASE_10 | SHAMT_BASE_16 | SHAMT_BASE_8 | SHAMT_BASE_2
-?number_short: var_address_lower | IMM12_BASE_10 | IMM12_BASE_16 | IMM12_BASE_8 | IMM12_BASE_2
-?number_long: var_address_upper | IMM20_BASE_10 | IMM20_BASE_16 | IMM20_BASE_8 | IMM20_BASE_2
+?imm12: var_address_lower | IMM12_BASE_10 | IMM12_BASE_16 | IMM12_BASE_8 | IMM12_BASE_2
+?imm20: var_address_upper | IMM20_BASE_10 | IMM20_BASE_16 | IMM20_BASE_8 | IMM20_BASE_2
+?imm32: IMM32_BASE_10 | IMM32_BASE_16 | IMM32_BASE_8 | IMM32_BASE_2
 
 IMM12_BASE_10: /(-[1-9]|-204[0-8]|-?[1-9][0-9]{1,2}|-?1[0-9][0-9][0-9]|-?20[0-3][0-9]|[0-9]|204[0-7])\b/
 IMM12_BASE_16: /(0x[1-9a-fA-F][0-9a-fA-F]|0x[1-7][0-9a-fA-F]{2}|0x[0-9a-fA-F])\b/
@@ -102,6 +103,11 @@ IMM20_BASE_10: /(-[1-9]|-52428[0-8]|-?[1-9]\d{1,4}|-?[1-4]\d{5}|-?5[01]\d{4}|-?5
 IMM20_BASE_16: /(0x[1-9a-fA-F][0-9a-fA-F]{1,3}|0x[1-7][0-9a-fA-F]{4}|0x[0-9a-fA-F])\b/
 IMM20_BASE_8: /(0[1-7][0-7]{1,5}|0[0-7]|01[0-6][0-7]{5}|017[0-6][0-7]{4}|0177[0-6][0-7]{3}|01777[0-6][0-7]{2}|017777[0-6][0-7]|0177777[0-7])\b/
 IMM20_BASE_2: /(0b[0-1]{1,20})\b/
+
+IMM32_BASE_10: /([0-9]|[1-9][0-9]{1,8}|[1-3][0-9]{9}|4[01][0-9]{8}|42[0-8][0-9]{7}|429[0-3][0-9]{6}|4294[0-8][0-9]{5}|42949[0-5][0-9]{4}|429496[0-6][0-9]{3}|4294967[01][0-9]{2}|42949672[0-8][0-9]|429496729[0-5])\b/
+IMM32_BASE_16: /0x(0|[1-9a-fA-F][0-9a-fA-F]{0,7})\b/
+IMM32_BASE_8: /0(0|[1-7][0-7]{0,9}|[1-3][0-7]{0,10})\b/
+IMM32_BASE_2: /0b([0-1]{1,32})\b/
 
 SHAMT_BASE_10: /([0-9]|[12][0-9]|3[01])\b/
 SHAMT_BASE_16: /(0x[0-9a-fA-F]|0x1?[0-9a-fA-F])\b/

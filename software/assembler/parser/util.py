@@ -13,13 +13,13 @@ def register_lookup(register_str) -> int:
 def get_register_bits(register_str) -> int:
     return f'{register_lookup(register_str):05b}'
 
-def two_complement(a: int, b: int):
-    bitmask = '1'*b
-    if (a < 0):
-        temp = int(bin(int(a))[3:], 2) ^ int(bitmask, 2)
-        return f'{temp+1:{b}b}'
+def two_complement(value: int, length: int):
+    bitmask = '1' * length
+    if (value < 0):
+        temp = int(bin(value)[3:], 2) ^ int(bitmask, 2)
+        return f'{temp+1:{length}b}'
     else:
-        return f'{int(a):0{b}b}'
+        return f'{value:0{length}b}'
 
 chad_success = '''
     ⠘⡀       Wrote to rom!    ⡜⠀⠀⠀

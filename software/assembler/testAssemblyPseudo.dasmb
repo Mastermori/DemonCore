@@ -1,7 +1,17 @@
-loadvar t1, var1
-nop 3
+lui t1, %hi(var1)    //loadvar t1, var1
+addi x0, x0, 1    //nop 3    //loadvar t1, var1
+addi x0, x0, 1    //nop 3    //loadvar t1, var1
+addi x0, x0, 1    //nop 3    //loadvar t1, var1
+addi t1, t1, %lo(var1)    //loadvar t1, var1
+addi x0, x0, 1    //nop 3    //loadvar t1, var1
+addi x0, x0, 1    //nop 3    //loadvar t1, var1
+addi x0, x0, 1    //nop 3    //loadvar t1, var1
+lw t1, 0(t1)    //loadvar t1, var1
+addi x0, x0, 1    //nop 3
+addi x0, x0, 1    //nop 3
+addi x0, x0, 1    //nop 3
 addi t1, t1, 2
-nop
+addi x0, x0, 1    //nop
 // bge     t0, a2, 100
 // lb      t1, 0(t1)
 // beq     t1, zero, 10 // Test
