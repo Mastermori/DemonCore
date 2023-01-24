@@ -1,0 +1,253 @@
+{
+	"$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+	"name": "Demon Assembler",
+	"patterns": [
+		{
+			"include": "#all_keywords"
+		},
+		{
+			"include": "#registers"
+		},
+		{
+			"include": "#strings"
+		},
+		{
+			"include": "#comments"
+		},
+		{
+			"include": "#directive"
+		}
+	],
+	"repository": {
+		"directive": {
+			"patterns": [
+				{
+					"name": "keyword.control.directive.demonass",
+					"match": "(\\.[A-Z]+)\\b"
+				}
+			]
+		},
+		"all_keywords": {
+			"patterns": [
+				{
+					"include": "#direct_keywords"
+				},
+				{
+					"include": "#pseudo_keywords"
+				}
+			]
+		},
+		"pseudo_keywords": {
+			"patterns": [
+				{
+					"include": "#pseudo_branch_keywords"
+				},
+				{
+					"include": "#pseudo_load_keywords"
+				},
+				{
+					"include": "#pseudo_move_keywords"
+				},
+				{
+					"include": "#pseudo_jump_keywords"
+				},
+				{
+					"name": "keyword.pseudo.operator.demonass",
+					"match": "(?i-)\\b(nop)\\b"
+				},
+				{
+					"name": "keyword.pseudo.control.demonass",
+					"match": "(?i-)\\b(ret)\\b"
+				},
+				{
+					"name": "keyword.pseudo.memory.demonass",
+					"match": "(?i-)\\b(loadvar)\\b"
+				}
+			]
+		},
+		"pseudo_branch_keywords": {
+			"patterns": [
+				{
+					"name": "keyword.pseudo.operator.branch.demonass",
+					"match": "(?i-)\\b(beqz|bnez|bgtz|bgez|blez|bltz|bgt|ble|bgtu|bleu)\\b"
+				}
+			]
+		},
+		"pseudo_load_keywords": {
+			"patterns": [
+				{
+					"name": "keyword.pseudo.operator.load.demonass",
+					"match": "(?i-)\\b(li|la)\\b"
+				}
+			]
+		},
+		"pseudo_move_keywords": {
+			"patterns": [
+				{
+					"name": "keyword.pseudo.operator.move.demonass",
+					"match": "(?i-)\\b(mv|not|neg)\\b"
+				}
+			]
+		},
+		"pseudo_jump_keywords": {
+			"patterns": [
+				{
+					"name": "keyword.pseudo.operator.jump.demonass",
+					"match": "(?i-)\\b(j|call)\\b"
+				}
+			]
+		},
+		"direct_keywords": {
+			"patterns": [
+				{
+					"include": "#register_keywords"
+				},
+				{
+					"include": "#immediate_keywords"
+				},
+				{
+					"include": "#shift_keywords"
+				},
+				{
+					"include": "#load_keywords"
+				},
+				{
+					"include": "#save_keywords"
+				},
+				{
+					"include": "#branch_keywords"
+				},
+				{
+					"include": "#upper_immediate_keywords"
+				},
+				{
+					"include": "#jump_keywords"
+				}
+			]
+		},
+		"register_keywords": {
+			"patterns": [
+				{
+					"name": "keyword.operator.register.demonass",
+					"match": "(?i-)\\b(add|sub|xor|or|and|sll|srl|sra|slt|sltu)\\b"
+				}
+			]
+		},
+		"immediate_keywords": {
+			"patterns": [
+				{
+					"name": "keyword.operator.immediate.demonass",
+					"match": "(?i-)\\b(addi|xori|ori|andi|slti|sltiu|ecall|ebreak)\\b"
+				}
+			]
+		},
+		"shift_keywords": {
+			"patterns": [
+				{
+					"name": "keyword.operator.shift.demonass",
+					"match": "(?i-)\\b(slli|srli|srai)\\b"
+				}
+			]
+		},
+		"load_keywords": {
+			"patterns": [
+				{
+					"name": "keyword.operator.load.demonass",
+					"match": "(?i-)\\b(lb|lh|lw|lbu|lhu)\\b"
+				}
+			]
+		},
+		"save_keywords": {
+			"patterns": [
+				{
+					"name": "keyword.operator.save.demonass",
+					"match": "(?i-)\\b(sb|sh|sw)\\b"
+				}
+			]
+		},
+		"branch_keywords": {
+			"patterns": [
+				{
+					"name": "keyword.operator.branch.demonass",
+					"match": "(?i-)\\b(beq|bne|blt|bge|bltu|bgeu)\\b"
+				}
+			]
+		},
+		"upper_immediate_keywords": {
+			"patterns": [
+				{
+					"name": "keyword.operator.immediate.upper.demonass",
+					"match": "(?i-)\\b(lui|auipc|jal)\\b"
+				}
+			]
+		},
+		"jump_keywords": {
+			"patterns": [
+				{
+					"name": "keyword.operator.jump.demonass",
+					"match": "(?i-)\\b(jalr|jal)\\b"
+				}
+			]
+		},
+		"registers": {
+			"patterns": [
+				{"include": "#zero_registers"},
+				{"include": "#return_adress_registers"},
+				{"include": "#stack_pointer_registers"},
+				{"include": "#global_pointer_registers"},
+				{"include": "#thread_pointer_registers"},
+				{"include": "#frame_pointer_registers"},
+				{"include": "#temporary_registers"},
+				{"include": "#saved_registers"},
+				{"include": "#function_argument_registers"}
+			]
+		},
+		"zero_registers": {
+			"patterns": [{"name": "variable.register.zero.demonass", "match": "\\b(x0|zero)\\b"}]
+		},
+		"return_adress_registers": {
+			"patterns": [{"name": "variable.register.return.adress.demonass", "match": "\\b(x1|ra)\\b"}]
+		},
+		"stack_pointer_registers": {
+			"patterns": [{"name": "variable.register.pointer.stack.demonass", "match": "\\b(x2|sp)\\b"}]
+		},
+		"global_pointer_registers": {
+			"patterns": [{"name": "variable.register.pointer.global.demonass", "match": "\\b(x3|gp)\\b"}]
+		},
+		"thread_pointer_registers": {
+			"patterns": [{"name": "variable.register.pointer.thread.demonass", "match": "\\b(x4|tp)\\b"}]
+		},
+		"frame_pointer_registers": {
+			"patterns": [{"name": "variable.register.pointer.frame.demonass", "match": "\\b(fp)\\b"}]
+		},
+		"temporary_registers": {
+			"patterns": [{"name": "variable.register.temporary.demonass", "match": "\\b(x5|t0|x6|t1|x7|t2|x28|t3|x29|t4|x30|t5|x31|t6)\\b"}]
+		},
+		"saved_registers": {
+			"patterns": [{"name": "variable.register.saved.demonass", "match": "\\b(x8|s0|x9|s1|x18|s2|x19|s3|x20|s4|x21|s5|x22|s6|x23|s7|x24|s8|x25|s9|x26|s10|x27|s11)\\b"}]
+		},
+		"function_argument_registers": {
+			"patterns": [{"name": "variable.register.function.argument.demonass", "match": "\\b(x10|a0|x11|a1|x12|a2|x13|a3|x14|a4|x15|a5|x16|a6|x17|a7)\\b"}]
+		},
+		"strings": {
+			"name": "string.quoted.double.demonass",
+			"begin": "\"",
+			"end": "\"",
+			"patterns": [
+				{
+					"name": "constant.character.escape.demonass",
+					"match": "\\\\."
+				}
+			]
+		},
+		"comments": {
+			"patterns": [
+				{
+					"name": "comment.line.double-slash.demonass",
+					"match": "//.*\n"
+				}
+			]
+		}
+	},
+	"scopeName": "source.demonass"
+}
