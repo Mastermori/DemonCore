@@ -184,6 +184,7 @@ pseudoDic = {
     'bgez': ['bge $rs1, zero, $offset'],
     'blez': ['bge zero, $rs1, $offset'],
     'bgtz': ['blt zero, $rs1, $offset'],
+    'bltz': ['blt $rs1, zero, $offset'],
 
     'mv': ['addi $rd, $rs1, 0'],
     'not': ['xori $rd, $rs1, -1'],

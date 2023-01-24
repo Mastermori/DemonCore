@@ -52,7 +52,7 @@ jump_upper_direct_instruction: ju_type register "," imm20
 
 // Mnemonic types:
 ?!pseudo_branch_swap_mnemonics: "bgt"i | "ble"i | "bgtu"i | "bleu"i
-?!pseudo_branch_zero_mnemonics: "beqz"i | "bnez"i | "bgez"i | "blez"i | "bgtz"i
+?!pseudo_branch_zero_mnemonics: "beqz"i | "bnez"i | "bgez"i | "blez"i | "bgtz"i | "bltz"i
 ?!pseudo_load_mnemonics: "li"i | "la"i
 ?!pseudo_move_mnemonics: "mv"i | "not"i | "neg"i
 ?!pseudo_label_mnemonics: "j"i | "call"i  // braucht mehr als upper immediate
