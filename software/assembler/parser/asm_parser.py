@@ -13,7 +13,10 @@ from ast_control import _Label, _Directive
 from ast_instructions import _DirectInstruction
 from ast_pseudo import pseudo_parse
 
-def start_logging(logging_level = logging.DEBUG, logging_show_time = False, format_level = 1):
+from tkinter.filedialog import askopenfilename
+
+
+def start_logging(logging_level=logging.DEBUG, logging_show_time=False, format_level=1):
     method_format_str = "%(levelname)s: {%(filename)s:%(lineno)d} - %(funcName)s(): %(message)s"
     normal_format_str = "%(levelname)s: {%(filename)s:%(lineno)d}: %(message)s"
     minimal_format_str = "%(levelname)s: %(message)s"
@@ -31,6 +34,8 @@ def start_logging(logging_level = logging.DEBUG, logging_show_time = False, form
 #
 #   Define AST
 #
+
+
 class ToAst(ToAstInstructions):
     logging
 
@@ -66,7 +71,14 @@ def parse(text):
 
 
 def main():
-    with open("software/assembler/testAssembly.dasmb", "r") as file:
+    # "software/assembler/testAssembly.dasmb"
+    choosenPath = ""
+    if (len(sys.argv) > 1):
+        choosenPath = sys.argv[1]
+    else:
+        choosenPath = askopenfilename()
+    defaultPath = "software/assembler/testAssembly.dasmb"
+    with open(defaultPath if choosenPath == "" else choosenPath, "r") as file:
         file_contents = file.read()
     ast, reference_lines = parse(file_contents)
 
@@ -90,10 +102,10 @@ def main():
     print("\n".join(parseContext.instruction_strings))
     print("RAM:")
     print(parseContext.get_ram_content_str())
-
+    # ../../../hardware/memorySim/rom_fill.dat
     with open("hardware/memorySim/rom_fill.dat", "w") as out_file:
         out_file.writelines("\n".join(parseContext.instruction_strings))
-
+    # ../../../hardware/memorySim/ram_fill.dat
     with open("hardware/memorySim/ram_fill.dat", "w") as out_file:
         out_file.writelines(parseContext.get_ram_content_str())
 

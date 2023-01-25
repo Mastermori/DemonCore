@@ -140,6 +140,7 @@ def pseudo_parse(parser, text) -> str:
             if isinstance(instruction, _PseudoInstruction):
                 instruction.replace(pseudoContext)
         pseudo_text = "\n".join(pseudoContext.get_replaced_instructions())
+        #../testAssemblyPseudo.dasmb
         with open("software/assembler/testAssemblyPseudo.dasmb", "w") as file:
             file.write(pseudo_text)
             print("File written")
