@@ -2,26 +2,29 @@ start: (instruction | _label | directive | variable)*
 
 ?instruction: direct_instruction | pseudo_instruction
 ?direct_instruction: register_direct_instruction | immediate_direct_instruction | offset_direct_instruction | branch_direct_instruction | shift_direct_instruction | jump_upper_direct_instruction
-?pseudo_instruction: pseudo_branch_swap | pseudo_branch_zero | pseudo_move | pseudo_nop | pseudo_return | pseudo_load_var | pseudo_call | pseudo_jump
+?pseudo_instruction: pseudo_branch_swap | pseudo_branch_zero | pseudo_move | pseudo_nop | pseudo_return | pseudo_load_var | pseudo_call | pseudo_jump | pseudo_mul | pseudo_set
 
 pseudo_branch_swap: pseudo_branch_swap_mnemonics register "," register "," imm12
 pseudo_branch_zero: pseudo_branch_zero_mnemonics register "," imm12
 pseudo_load: pseudo_load_mnemonics register "," //(imm32 | addr) 
 pseudo_move: pseudo_move_mnemonics register "," register
+pseudo_set: "set" register "," imm12
 pseudo_nop: "nop"i /[1-9]\d*/?
+pseudo_mul: "mul"i register "," register "," register
 pseudo_return: "ret"i
-pseudo_load_var: "loadvar"i register "," var_name
-pseudo_call: "call"i _label
-pseudo_jump: "j"i _label
+pseudo_load_var: "loadvar"i register "," var_name ("(" /0|-?[1-9]\d*/ ")")?
+pseudo_call: "call"i label_name
+pseudo_jump: "j"i label_name
 
 _label: global_label | local_label
 ?directive: "."(address_directive | align_directive) //TODO: Add more directives
 variable: var_name ":" var_directive
 ?var_name: /\w(\w|\d|_|-)*/
-?var_directive: var_directive_word | var_directive_ascii | var_directive_int | var_directive_byte
+?var_directive: var_directive_word | var_directive_ascii | var_directive_int | var_directive_byte | var_directive_char
 
-global_label: /\w(\w|\d|_|-)*/":"
-local_label: "."/\w(\w|\d|_|-)*/":"
+global_label: label_name ":"
+local_label: "." label_name ":"
+?label_name: /\w(\w|\d|_|-)*/
 
 address_directive: "ADDR" /\d+/
 align_directive: "ALIGN" /\d+/

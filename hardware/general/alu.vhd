@@ -25,7 +25,7 @@ BEGIN
                     out_vec <= vec1 + vec2; -- add/addi
                 END IF;
             WHEN "001" =>
-                out_vec <= shift_left(vec1, to_integer(vec2(4 DOWNTO 0))); -- sll/slli
+                out_vec <= shift_left(vec1, to_integer(unsigned(vec2(4 DOWNTO 0)))); -- sll/slli
             WHEN "010" =>
                 IF signed(vec1) < signed(vec2) THEN -- slt / slti
                     out_vec <= x"0000_0001";

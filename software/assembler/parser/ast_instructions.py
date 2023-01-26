@@ -11,16 +11,15 @@ from dictionarys import opDictionary
 
 class BaseInstruction():
     instruction_bits: List[str]
-    bindings: Dict[int, str]
 
     def __init__(self, mnemonic: str, bindings: Dict[str, str]):
-        self.set_instruction_bits(mnemonic, bindings)
+        self.set_instruction_bits(mnemonic.upper(), bindings)
 
     def set_instruction_bits(self, mnemonic: str, bindings: Dict[str, str]) -> None:
         if mnemonic in opDictionary:
             self.instruction_bits = opDictionary[mnemonic]
-            for binding in self.bindings:
-                self.instruction_bits[binding] = self.bindings[binding]
+            for binding in bindings:
+                self.instruction_bits[binding] = bindings[binding]
         else:
             raise ValueError(
                 f"Can't find instruction with mnemonic {mnemonic}")

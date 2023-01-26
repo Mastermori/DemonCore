@@ -1,10 +1,2 @@
 xmvhdl(64): 22.03-s005: (c) Copyright 1995-2022 Cadence Design Systems, Inc.
 xmvhdl: *W,HVDEPRREN: HDL.VAR Variable (NCVHDLOPTS) is deprecated. Use (XMVHDLOPTS) instead.
-xmvhdl_p: *W,DLWNEW: Intermediate file package WORK.PIPE_CONSTANTS (AST)
-	is newer than expected by entity WORK.PIPE_DECODER (AST)
-		actual:   Thu Dec 22 15:01:25 2022
-		expected: Thu Dec 22 15:00:33 2022.
-xmvhdl_cg: *W,DLWNEW: Intermediate file package WORK.PIPE_CONSTANTS (AST)
-	is newer than expected by entity WORK.PIPE_DECODER (COD) <0x0f012872>
-		actual:   Thu Dec 22 15:01:25 2022
-		expected: Thu Dec 22 15:00:33 2022.

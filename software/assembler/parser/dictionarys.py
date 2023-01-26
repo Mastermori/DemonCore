@@ -166,12 +166,12 @@ registers = {
     't6': 31,
 }
 pseudoDic = {
-    'nop' : ['addi x0, x0, 1'],
+    'nop' : ['addi x0, x0, 0'],
     'loadvar': ['lui $rd, %hi($var_name)',
                 'nop 3',
                 'addi $rd, $rd, %lo($var_name)',
                 'nop 3',
-                'lw $rd, 0($rd)',
+                'lw $rd, $offset($rd)',
                 #'nop 3'
                 ],
     'bgt' : ['blt $rs2, $rs1, $offset'],
@@ -190,7 +190,19 @@ pseudoDic = {
     'not': ['xori $rd, $rs1, -1'],
     'neg': ['sub $rd, zero, $rs1'],
 
+    'set': ['addi $rd, zero, $imm12'],
+
     'j': ['jal zero, $offset'],
     'call': ['auipc $rd, $offsetHi','jalr $rd, $offsetLo($rd)'],
-    'ret': ['jarl x0, 0(x1)']
+    'ret': ['jarl x0, 0(x1)'],
+    'mul': [
+        'addi $rd, zero, 0',
+        'nop 2',
+        'beqz $rs1, 10',
+        'nop 4',
+        'addi $rs1, $rs1, -1',
+        'add $rd, $rd, $rs2',
+        'nop 2',
+        'bnez $rs1, -4',
+        'nop 4']
 }

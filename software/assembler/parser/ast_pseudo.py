@@ -39,11 +39,11 @@ class ToAstPseudo(Transformer):
 
 class _PseudoInstruction(_AstMeta):
     @abc.abstractmethod
-    def replace(self, context: ParseContext) -> List[List[str]]:
+    def replace(self, context):
         raise NotImplementedError(
             f"Method replace must be implemented in {self.__class__.__name__}")
 
-    def _get_replaced_list(self, mnemonic: str, replace_map: Dict[str, str]):
+    def _get_replaced_list(self, mnemonic: str, replace_map: Dict[str, str]) -> List[str]:
         replacement_list = []
         for i, instruction in enumerate(pseudoDic[mnemonic]):
             replaced_instruction = instruction
@@ -94,6 +94,17 @@ class PseudoMove(_PseudoInstruction):
         context.replace_pseudo_instruction(self.meta.line, replacement)
 
 @dataclass
+class PseudoMul(_PseudoInstruction):
+    register1: Register
+    register2: Register
+    register3: Register
+
+    def replace(self, context: PseudoContext):
+        replacement = self._get_replaced_list(
+            "mul", {'rd': self.register1.name, 'rs1': self.register2.name, 'rs2': self.register3.name})
+        context.replace_pseudo_instruction(self.meta.line, replacement)
+
+@dataclass
 class PseudoNop(_PseudoInstruction):
     count: int
 
@@ -112,17 +123,30 @@ class PseudoLabel(_PseudoInstruction):
     label: str
 
     def replace(self, context: ParseContext) -> List[List[str]]:
-        return super().get_direct_instructions(context)
-
+        pass # Do Nothing so label isn't replaced
 
 @dataclass
+class PseudoSet(_PseudoInstruction):
+    register1: Register
+    offset: str
+    def replace(self, context: PseudoContext):
+        replacement = self._get_replaced_list("set", {"rd": self.register1.name, "imm12": self.offset})
+        context.replace_pseudo_instruction(self.meta.line, replacement)
+
 class PseudoLoadVar(_PseudoInstruction):
     register: Register
     var_name: str
+    offset: str
+
+    def __init__(self, meta, register: Register, var_name: str, offset: str = "0"):
+        super().__init__(meta)
+        self.var_name = var_name
+        self.register = register
+        self.offset = offset
 
     def replace(self, context: PseudoContext):
         replacement = self._get_replaced_list(
-            "loadvar", {"rd": self.register.name, "var_name": self.var_name})
+            "loadvar", {"rd": self.register.name, "var_name": self.var_name, "offset": self.offset})
         context.replace_pseudo_instruction(self.meta.line, replacement)
 
 class PseudoReturn(_PseudoInstruction):

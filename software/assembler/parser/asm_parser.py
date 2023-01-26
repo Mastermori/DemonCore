@@ -9,7 +9,7 @@ from ast_control import *
 from ast_instructions import *
 from ast_variables import *
 from ast_base import _ImmediateNumber
-from ast_control import _Label, _Directive
+from ast_control import _Label, _Directive, _FlowControlPseudoInstruction
 from ast_instructions import _DirectInstruction
 from ast_pseudo import pseudo_parse
 
@@ -83,8 +83,6 @@ def main():
     parseContext = ParseContext(reference_lines)
     # Parse context:
     for token in ast:
-        if isinstance(token, _Label):
-            parseContext.add_label(token)
         if isinstance(token, Variable):
             parseContext.add_variable(token)
         if isinstance(token, _Directive):
@@ -92,17 +90,22 @@ def main():
 
     # Parse content (context-dependend)
     for token in ast:
+        if isinstance(token, _Label):
+            parseContext.add_label(token)
         if isinstance(token, _DirectInstruction):
             parseContext.append_raw_instructions(
                 [token.get_raw_instruction(parseContext)], token.meta.line)
+        if isinstance(token, _FlowControlPseudoInstruction):
+            token.replace(parseContext)
 
     print("ROM:")
-    print(parseContext.get_compiled_instructions())
+    rom_content = parseContext.get_compiled_instructions(l, transformer)
+    print(rom_content)
     print("RAM:")
     print(parseContext.get_ram_content_str())
     # ../../../hardware/memorySim/rom_fill.dat
     with open("hardware/memorySim/rom_fill.dat", "w") as out_file:
-        out_file.writelines(parseContext.get_compiled_instructions())
+        out_file.writelines(rom_content)
     # ../../../hardware/memorySim/ram_fill.dat
     with open("hardware/memorySim/ram_fill.dat", "w") as out_file:
         out_file.writelines(parseContext.get_ram_content_str())
