@@ -39,6 +39,12 @@ class VarDirectiveWord(_VarDirective):
     def get_words(self) -> List[str]:
         return list([param.get_bits_for_word() for param in self.params])
 
+class VarDirectiveAscii(_VarDirective):
+    def get_words(self) -> List[str]:
+        words = []
+        for param in self.params:
+            words.extend(param.get_bits_for_ascii())
+        return words
 
 @dataclass
 class Variable(_AstMeta):
@@ -75,12 +81,13 @@ class VarParamWord(_VariableParam):
 class VarParamString(_VariableParam):
     def get_bits_for_ascii(self) -> List[str]:
         bit_string = []
-        value = str(self.value.get_value())
+        value = str(self.value)
+        print(value)
         value = value[1:-1]
         for string_index in range(len(value)//4+1):
             bits = ""
             for i in range(4):
-                char_index = string_index * 4 + i
+                char_index = string_index * 4 + (3-i)
                 if char_index >= len(value):
                     bits += "0"*8
                     continue

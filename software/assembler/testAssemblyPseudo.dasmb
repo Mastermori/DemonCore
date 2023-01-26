@@ -32,7 +32,7 @@ addi x0, x0, 1    //nop
 // jalr    zero, 0(ra)
 // slli    x1, sp, 5 // tast
 
-var1: .WORD 0xff
+var1: .ASCII "abcd"
 var2: .WORD 0b100000000000000000001
 var3: .WORD 0b100000000000000000001
 .ADDR 16

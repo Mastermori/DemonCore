@@ -28,8 +28,9 @@ align_directive: "ALIGN" /\d+/
 
 _seperated{x, sep}: x (sep x)*
 
-var_directive_word: ".WORD" var_param_word
+var_directive_word: ".WORD" _seperated{var_param_word, ","}
 var_directive_ascii: ".ASCII" var_param_string
+var_directive_char: ".CHAR" _seperated{var_param_char, ","}
 var_directive_int: ".INT" _seperated{var_param_num, ","}
 var_directive_byte: ".BYTE" _seperated{_var_params_byte, ","}
 

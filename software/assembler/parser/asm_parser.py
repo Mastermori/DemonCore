@@ -34,8 +34,6 @@ def start_logging(logging_level=logging.DEBUG, logging_show_time=False, format_l
 #
 #   Define AST
 #
-
-
 class ToAst(ToAstInstructions):
     logging
 
@@ -99,12 +97,12 @@ def main():
                 [token.get_raw_instruction(parseContext)], token.meta.line)
 
     print("ROM:")
-    print("\n".join(parseContext.instruction_strings))
+    print(parseContext.get_compiled_instructions())
     print("RAM:")
     print(parseContext.get_ram_content_str())
     # ../../../hardware/memorySim/rom_fill.dat
     with open("hardware/memorySim/rom_fill.dat", "w") as out_file:
-        out_file.writelines("\n".join(parseContext.instruction_strings))
+        out_file.writelines(parseContext.get_compiled_instructions())
     # ../../../hardware/memorySim/ram_fill.dat
     with open("hardware/memorySim/ram_fill.dat", "w") as out_file:
         out_file.writelines(parseContext.get_ram_content_str())

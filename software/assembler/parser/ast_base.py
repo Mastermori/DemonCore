@@ -74,8 +74,10 @@ class ParseContext():
     instruction_space_count_max: int
     labels = {}
     variables = {}
-    instruction_strings = []
+    instruction_address_pointer = 0
+    instruction_strings = {}
     ram_content: RamContent = RamContent()
+    flow_commands = {}
 
     def __init__(self, reference_lines: List[str]) -> None:
         self.reference_lines = reference_lines
@@ -84,6 +86,10 @@ class ParseContext():
 
     def add_label(self, label) -> None:
         self.labels[label.name] = label
+
+    def add_flow_command(self, flowCommand) -> None:
+        self.flow_commands[self.instruction_address_pointer] = flowCommand
+        self.instruction_address_pointer += 2
 
     def add_variable(self, variable) -> None:
         var_line = variable.meta.line-1
@@ -107,16 +113,14 @@ class ParseContext():
     
     def get_ram_instructions(self) -> List[str]:
         return self.ram_content.get_instruction_list()
-
-    def get_next_adress(self) -> int:
-        return len(self.instruction_strings)
-
+    
     def append_raw_instructions(self, raw_instructions: List[List[str]], instruction_line: int):
         for raw_instruction in raw_instructions:
             line_number = len(self.instruction_strings)
             number_spaces = ' ' * (1+(self.instruction_space_count_max - len(str(line_number))))
-            self.instruction_strings.append(
-                str(len(self.instruction_strings)) + number_spaces +
-                ''.join(raw_instruction)
-                + "    --" + self.reference_lines[instruction_line-1]
-            )
+            self.instruction_strings[self.instruction_address_pointer] = \
+                f"{self.instruction_address_pointer}{number_spaces}{''.join(raw_instruction)}    --{self.reference_lines[instruction_line-1]}"
+            self.instruction_address_pointer += 1
+    
+    def get_compiled_instructions(self) -> str:
+        return "\n".join(self.instruction_strings.values())

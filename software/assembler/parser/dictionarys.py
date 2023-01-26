@@ -192,4 +192,5 @@ pseudoDic = {
 
     'j': ['jal zero, $offset'],
     'call': ['auipc $rd, $offsetHi','jalr $rd, $offsetLo($rd)'],
+    'ret': ['jarl x0, 0(x1)']
 }

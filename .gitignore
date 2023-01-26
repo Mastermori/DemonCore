@@ -3,6 +3,7 @@
 .project
 
 hardware/work-obj93.cf
+hardware/.simvision
 
 *.vcd
 
