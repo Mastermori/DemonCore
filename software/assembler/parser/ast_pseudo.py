@@ -116,13 +116,18 @@ class PseudoLabel(_PseudoInstruction):
 
 
 @dataclass
-class pseudoLoadVar(_PseudoInstruction):
+class PseudoLoadVar(_PseudoInstruction):
     register: Register
     var_name: str
 
     def replace(self, context: PseudoContext):
         replacement = self._get_replaced_list(
             "loadvar", {"rd": self.register.name, "var_name": self.var_name})
+        context.replace_pseudo_instruction(self.meta.line, replacement)
+
+class PseudoReturn(_PseudoInstruction):
+    def replace(self, context: PseudoContext):
+        replacement = self._get_replaced_list("ret", {})
         context.replace_pseudo_instruction(self.meta.line, replacement)
 
 
