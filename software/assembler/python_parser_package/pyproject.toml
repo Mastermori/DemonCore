@@ -1,0 +1,22 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "demonass_parser"
+version = "0.0.1"
+authors = [
+  {name="Mastermori"}, {name="JCKL"}, {name="Nexaye"},
+]
+description = "A parser for the demon assembler language used for the demon-core (our student project)"
+readme = "README.md"
+requires-python = ">=3.10"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/Mastermori/DemonCore"
+"Bug Tracker" = "https://github.com/Mastermori/DemonCore/issues"
