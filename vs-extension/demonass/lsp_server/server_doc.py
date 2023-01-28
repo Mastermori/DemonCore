@@ -1,10 +1,14 @@
 import abc
 import re as re
-import dictionaries
+from .dictionaries import registers
 import lsprotocol.types as types
 from dataclasses import dataclass
 from typing import Dict, List
-from lsprotocol.types import (CompletionItem, Hover, SignatureInformation, ParameterInformation)
+from lsprotocol.types import (
+    CompletionItem, Hover, SignatureInformation, ParameterInformation)
+from demonass_parser.dictionarys import pseudoDic
+
+indentation_level = 10
 
 
 @dataclass
@@ -15,36 +19,32 @@ class ParamDefinition(abc.ABC):
     @abc.abstractmethod
     def get_completion(self) -> List[CompletionItem]:
         pass
-    
+
     def get_param_info(self) -> ParameterInformation:
         return ParameterInformation(self.name, self.description)
 
 
 class RegisterParamDefinition(ParamDefinition):
-
-    def __init__(self, name: str, description: str):
-        super().__init__(name, description)
-
     def get_completion(self) -> List[CompletionItem]:
         items = []
-        for register in dictionaries.registers:
+        for register in registers:
             items.append(CompletionItem(
-                label=register, kind=types.CompletionItemKind.Variable, detail=dictionaries.registers[register]))
+                label=register, kind=types.CompletionItemKind.Variable, detail=registers[register]))
         return items
 
 
 # TODO: implement for %hi and %lo
 class ImmediateParamDefinition(ParamDefinition):
-    def __init__(self, name: str, description: str):
-        super().__init__(name, description)
+    def get_completion(self) -> List[CompletionItem]:
+        return []
 
+
+class VariableParamDefinition(ParamDefinition):
     def get_completion(self) -> List[CompletionItem]:
         return []
 
 
 class InstructionDefinition(abc.ABC):
-    indentation_level = 10
-
     name: str
     type: str
     param_definitions: List[ParamDefinition]
@@ -73,7 +73,7 @@ class InstructionDefinition(abc.ABC):
     def get_completion(self) -> CompletionItem:
         name = self.name
         indentation = ' ' * \
-            (InstructionDefinition.indentation_level - len(name))
+            (indentation_level - len(name))
         insert_text = self.get_insert_text(indentation)
         return CompletionItem(label=name, insert_text=insert_text,
                               kind=types.CompletionItemKind.Method, insert_text_format=types.InsertTextFormat.Snippet,
@@ -87,7 +87,7 @@ class InstructionDefinition(abc.ABC):
         parameters = []
         for param in self.param_definitions:
             parameters.append(param.get_param_info())
-        return SignatureInformation(label=self.get_signature_label(), documentation=self.description, parameters=parameters)
+        return SignatureInformation(label=self.get_signature_label(), documentation=types.MarkupContent(types.MarkupKind.Markdown, self.description), parameters=parameters)
 
     def get_signature_label(self) -> str:
         return re.sub(r"\${\d+:(\w+)}", r"\1", self.get_insert_text())
@@ -97,10 +97,10 @@ class InstructionDefinition(abc.ABC):
         if self.deprecated:
             lines.append("## Deprecated  \n")
         lines.extend([
-            '**' + self.get_signature_label() + '**',
+            '**' + self.get_signature_label().rstrip() + '**',
             '\n---\n',
         ])
-        lines.extend(self.description.split("\n"))
+        lines.append(self.description)
         lines.append("\nParameters:  ")
         for param_def in self.param_definitions:
             indentation = "&nbsp;" * (10 - len(param_def.name))
@@ -121,9 +121,16 @@ class InstructionDefinition(abc.ABC):
     def set_deprecated(self, deprecated: bool) -> None:
         self.deprecated = deprecated
         self._set_markdown_documentation()
-    
+
     def get_snippet(self, index: int) -> str:
         return f"${{{index+1}:{self.param_definitions[index].name}}}"
+
+    def get_snippet_by_name(self, name: str) -> str:
+        for definition in self.param_definitions:
+            if definition.name == name:
+                return self.get_snippet(self.param_definitions.index(definition))
+        raise ValueError(
+            f"Param definition {name} not found in {self.__name__}")
 
     @abc.abstractmethod
     def get_insert_text(self, indentation=" ") -> str:
@@ -131,7 +138,7 @@ class InstructionDefinition(abc.ABC):
 
 
 class RegisterInstructionDefinition(InstructionDefinition):
-    def __init__(self, name: str) -> None:
+    def __init__(self, name: str, context) -> None:
         super().__init__(name, "register", [
             RegisterParamDefinition("rd", "Destination register"),
             RegisterParamDefinition("rs1", "First operation register"),
@@ -143,7 +150,7 @@ class RegisterInstructionDefinition(InstructionDefinition):
 
 
 class ImmediateInstructionDefinition(InstructionDefinition):
-    def __init__(self, name: str) -> None:
+    def __init__(self, name: str, context) -> None:
         super().__init__(name, "immediate", [
             RegisterParamDefinition("rd", "Destination register"),
             RegisterParamDefinition("rs1", "First operation register"),
@@ -155,7 +162,7 @@ class ImmediateInstructionDefinition(InstructionDefinition):
 
 
 class ImmediateshamtInstructionDefinition(InstructionDefinition):
-    def __init__(self, name: str) -> None:
+    def __init__(self, name: str, context) -> None:
         super().__init__(name, "immediate", [
             RegisterParamDefinition("rd", "Destination register"),
             RegisterParamDefinition("rs1", "Register to shift"),
@@ -168,7 +175,7 @@ class ImmediateshamtInstructionDefinition(InstructionDefinition):
 
 
 class LoadInstructionDefinition(InstructionDefinition):
-    def __init__(self, name: str) -> None:
+    def __init__(self, name: str, context) -> None:
         super().__init__(name, "load", [
             RegisterParamDefinition("rd", "Register that will be loaded to"),
             ImmediateParamDefinition(
@@ -182,7 +189,7 @@ class LoadInstructionDefinition(InstructionDefinition):
 
 
 class SaveInstructionDefinition(InstructionDefinition):
-    def __init__(self, name: str) -> None:
+    def __init__(self, name: str, context) -> None:
         super().__init__(name, "save", [
             RegisterParamDefinition("rs1", "Register that will be saved"),
             ImmediateParamDefinition(
@@ -194,10 +201,12 @@ class SaveInstructionDefinition(InstructionDefinition):
     def get_insert_text(self, indentation=" ") -> str:
         return f"{self.name}{indentation}{self.get_snippet(0)}, {self.get_snippet(1)}({self.get_snippet(2)})"
 
+
 class JumpregisterInstructionDefinition(InstructionDefinition):
-    def __init__(self, name: str) -> None:
+    def __init__(self, name: str, context) -> None:
         super().__init__(name, "jumpregister", [
-            RegisterParamDefinition("rd", "Register to save return address to"),
+            RegisterParamDefinition(
+                "rd", "Register to save return address to"),
             ImmediateParamDefinition(
                 "offset", "12-bit immediate offset added to *rs1*"),
             RegisterParamDefinition(
@@ -209,7 +218,7 @@ class JumpregisterInstructionDefinition(InstructionDefinition):
 
 
 class BranchInstructionDefinition(InstructionDefinition):
-    def __init__(self, name: str) -> None:
+    def __init__(self, name: str, context) -> None:
         super().__init__(name, "branch", [
             RegisterParamDefinition("rs1", "First register to compare"),
             RegisterParamDefinition("rs2", "Second register to compare"),
@@ -222,7 +231,7 @@ class BranchInstructionDefinition(InstructionDefinition):
 
 
 class BigimmediateInstructionDefinition(InstructionDefinition):
-    def __init__(self, name: str) -> None:
+    def __init__(self, name: str, context) -> None:
         super().__init__(name, "bigimmediate", [
             RegisterParamDefinition("rd", "Destination register"),
             ImmediateParamDefinition("imm20", "Immediate value to compute")
@@ -235,6 +244,42 @@ class BigimmediateInstructionDefinition(InstructionDefinition):
 class ParseContext:
     current_type: str
     current_instruction: InstructionDefinition
+    current_pseudo_param_format: str
+    current_description: str
+    is_description: bool
+
+    def __init__(self) -> None:
+        self.current_type = None
+        self.current_instruction = None
+        self.current_pseudo_param_format = ""
+        self.current_description = ""
+        self.is_description = False
+
+
+class PseudoInstructionDefinition(InstructionDefinition):
+    format: str
+    expands_to_description: str
+
+    def __init__(self, name: str, context: ParseContext) -> None:
+        param_definitions = []
+        format_string = context.current_pseudo_param_format
+        self.format = format_string
+        self.expands_to_description = (
+            ("Expands to:\n```demonass\n"
+             + '\n'.join(pseudoDic[name])
+             + "\n```")
+            if name in pseudoDic else ""
+        )
+        for match in re.findall(r"(\w+):(\w+)", format_string):
+            param_definitions.append(
+                globals()[f"{match[1]}ParamDefinition"](match[0], ""))
+        super().__init__(name, "pseudo", param_definitions)
+
+    def set_description(self, description: str) -> None:
+        return super().set_description(f"{description}\n\n{self.expands_to_description}")
+
+    def get_insert_text(self, indentation=" ") -> str:
+        return f"{self.name}{indentation}" + re.sub(r"(\w+):(\w+)", lambda match: self.get_snippet_by_name(match.groups()[0]), self.format)
 
 
 class AssemblerDoc:
@@ -251,10 +296,12 @@ class AssemblerDoc:
                 stripped = line.strip()
                 if stripped.startswith("@"):
                     self.parse_annotation(line[1:], context)
+                elif context.is_description:
+                    context.current_description += line.replace("\\n", "\n")
                 elif len(stripped) > 0:
                     name = stripped
                     instructions[name] = globals(
-                    )[f"{context.current_type.capitalize()}InstructionDefinition"](name)
+                    )[f"{context.current_type.capitalize()}InstructionDefinition"](name, context)
                     context.current_instruction = instructions[name]
         return instructions
 
@@ -264,6 +311,8 @@ class AssemblerDoc:
         match annotation_name:
             case "type":
                 type = split_line[1].strip()
+                if type == "pseudo":
+                    self.parse_pseudo_types(split_line[2:], context)
                 context.current_type = type
             case "param":
                 name = split_line[1].strip()
@@ -275,8 +324,17 @@ class AssemblerDoc:
                 description = " ".join(split_line[1:]).removesuffix(
                     "\n").replace("\\n", "\n")
                 context.current_instruction.set_description(description)
+            case "description_start":
+                context.is_description = True
+            case "description_end":
+                context.is_description = False
+                context.current_instruction.set_description(
+                    context.current_description.removesuffix("\n"))
             case "deprecated":
                 context.current_instruction.set_deprecated(True)
+
+    def parse_pseudo_types(self, args: List[str], context: ParseContext) -> None:
+        context.current_pseudo_param_format = " ".join(args)
 
     def get_instruction_completions(self) -> List[CompletionItem]:
         return [definition.get_completion() for definition in self.instructions.values()]
@@ -291,8 +349,8 @@ class AssemblerDoc:
         if name in self.instructions:
             instruction_definition = self.instructions[name]
             return instruction_definition.get_hover()
-        if name in dictionaries.registers:
-            return Hover(contents=dictionaries.registers[name])
+        if name in registers:
+            return Hover(contents=registers[name])
         return None
 
     def get_signature_info_for_instruction(self, instruction_name: str) -> SignatureInformation:

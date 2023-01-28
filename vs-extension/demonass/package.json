@@ -10,7 +10,8 @@
   "categories": [
     "Programming Languages",
     "Themes",
-    "Snippets"
+    "Snippets",
+    "Formatters"
   ],
   "activationEvents": [
     "onCommand:demonass.helloWorld",

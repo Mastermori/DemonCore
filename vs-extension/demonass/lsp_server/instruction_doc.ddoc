@@ -6,7 +6,10 @@ add
 @param rs2 Summand 2
 
 sub
-@description rd = rs1 - rs2  \nAdds *rs1* to *rs2* and saves the result into *rd*
+@description_start
+rd = rs1 - rs2  
+Subtracts *rs2* from *rs1* and saves the result into *rd*
+@description_end
 @param rd Register the difference is saved to
 @param rs1 Minuend
 @param rs2 Subtrahend
@@ -67,3 +70,15 @@ bgeu
 jal
 lui
 auipc
+
+@type pseudo rd:Register, var:Variable
+loadvar
+@description Loads the value of memory at the address of *var* into *rd*.
+
+@type pseudo
+nop
+@description No Operation - stalls one clock cycle
+
+@type pseudo count:Immediate
+nop
+@description No Operation - stalls one clock cycle
