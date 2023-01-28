@@ -35,3 +35,5 @@ software/assembler/python_parser_package/dist/
 vs-extension/demonass/lsp_server/__pycache__/
 
 vs-extension/demonass/out/
+
+software/assembler/python_parser_package/build.ps1
