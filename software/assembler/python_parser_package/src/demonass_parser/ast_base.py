@@ -4,9 +4,7 @@ from dataclasses import dataclass
 from lark import ast_utils
 from lark.tree import Meta
 from typing import Dict, List
-from util import two_complement
-
-from util import get_register_bits
+from demonass_parser.util import two_complement, get_register_bits
 
 
 class ParserError():
@@ -186,7 +184,6 @@ class ParseContext():
         for key, val in self.pseudo_offset_lines.items():
             if key < error.lineno:
                 line_offset += val
-        print(line_offset)
         error.lineno -= line_offset
         self.errors.append(error)
     

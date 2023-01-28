@@ -1,8 +1,8 @@
 import abc
 from dataclasses import dataclass
 from typing import List
-from ast_base import _Ast, _AstMeta, ParseContext
-from ast_pseudo import _PseudoInstruction
+from demonass_parser.ast_base import _Ast, _AstMeta, ParseContext
+from demonass_parser.ast_pseudo import _PseudoInstruction
 
 
 @dataclass

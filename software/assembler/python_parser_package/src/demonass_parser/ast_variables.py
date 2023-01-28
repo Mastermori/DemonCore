@@ -2,8 +2,8 @@ import abc
 from dataclasses import dataclass
 from typing import List
 from lark import ast_utils
-from ast_base import _Ast, _AstMeta, ParseContext, _Immediate, ParserError
-from util import two_complement
+from demonass_parser.ast_base import _Ast, _AstMeta, ParseContext, _Immediate, ParserError
+from demonass_parser.util import two_complement
 
 
 @dataclass

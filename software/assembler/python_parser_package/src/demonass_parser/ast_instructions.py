@@ -4,10 +4,9 @@ from typing import List, Dict
 
 from lark import Transformer, v_args
 from lark.tree import Meta
-from ast_base import _AstMeta
-from ast_base import ParseContext, Register, _Immediate, ParserError
-from util import two_complement
-from dictionarys import opDictionary
+from demonass_parser.ast_base import _AstMeta, ParseContext, Register, _Immediate, ParserError
+from demonass_parser.util import two_complement
+from demonass_parser.dictionarys import opDictionary
 
 
 class BaseInstruction():

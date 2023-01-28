@@ -5,8 +5,8 @@ from typing import Dict, List, Tuple
 
 from lark import Transformer, ast_utils, v_args
 
-from ast_base import ParseContext, _AstMeta, Register, ParserError
-from dictionarys import pseudoDic
+from demonass_parser.ast_base import ParseContext, _AstMeta, Register, ParserError
+from demonass_parser.dictionarys import pseudoDic
 
 
 class PseudoContext():
@@ -175,7 +175,6 @@ def pseudo_parse(parser, text) -> str:
         pseudo_text, new_pseudo_offsets = pseudoContext.get_replaced_instructions()
         pseudo_text = "\n".join(pseudo_text)
         pseudo_offset = {x: pseudo_offset.get(x, 0) + new_pseudo_offsets.get(x, 0) for x in set(pseudo_offset).union(new_pseudo_offsets)}
-        print(pseudo_offset)
         #../testAssemblyPseudo.dasmb
         # with open("software/assembler/testAssemblyPseudo.dasmb", "w") as file:
         #     file.write(pseudo_text)

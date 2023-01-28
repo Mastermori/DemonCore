@@ -1,10 +1,10 @@
 [build-system]
-requires = ["hatchling"]
+requires = ["hatchling", "lark"]
 build-backend = "hatchling.build"
 
 [project]
 name = "demonass_parser"
-version = "0.0.1"
+version = "0.0.7"
 authors = [
   {name="Mastermori"}, {name="JCKL"}, {name="Nexaye"},
 ]

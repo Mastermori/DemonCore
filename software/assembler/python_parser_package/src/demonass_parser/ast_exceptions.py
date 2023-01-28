@@ -1,6 +1,5 @@
 
 
-
 class AssemblerSyntaxError(SyntaxError):
     line: int
     column: int

@@ -1,5 +1,5 @@
 from lark import ParseTree
-from dictionarys import registers
+from demonass_parser.dictionarys import registers
 
 def get_subtree(tree: ParseTree, depth: int, index: int = 0):
     subtree = tree

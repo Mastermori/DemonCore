@@ -4,19 +4,19 @@ import re
 
 from lark import Lark, UnexpectedInput, ast_utils, Transformer, v_args, Token
 
-from ast_base import *
-from ast_control import *
-from ast_instructions import *
-from ast_variables import *
-from ast_base import _ImmediateNumber
-from ast_control import _Label, _Directive, _FlowControlPseudoInstruction
-from ast_instructions import _DirectInstruction
-from ast_pseudo import pseudo_parse
-from util import chad_success
+from demonass_parser.ast_base import *
+from demonass_parser.ast_control import *
+from demonass_parser.ast_instructions import *
+from demonass_parser.ast_variables import *
+from demonass_parser.ast_base import _ImmediateNumber
+from demonass_parser.ast_control import _Label, _Directive, _FlowControlPseudoInstruction
+from demonass_parser.ast_instructions import _DirectInstruction
+from demonass_parser.ast_pseudo import pseudo_parse
+from demonass_parser.util import chad_success
+from demonass_parser.ast_exceptions import AssemblerInvalidRegisterError, AssemblerInvalidNumberError, AssemblerMissingCommaError, AssemblerMissingOpenParensError, AssemblerMissingCloseParensError, AssemblerInvalidSymbolError
 
 from tkinter.filedialog import askopenfilename
 
-from ast_exceptions import AssemblerInvalidRegisterError, AssemblerSyntaxError, AssemblerInvalidNumberError, AssemblerMissingCommaError, AssemblerMissingOpenParensError, AssemblerMissingCloseParensError, AssemblerInvalidSymbolError
 
 
 def start_logging(logging_level=logging.DEBUG, logging_show_time=False, format_level=1):
@@ -62,7 +62,7 @@ this_module = sys.modules[__name__]
 transformer = ast_utils.create_transformer(this_module, ToAst())
 
 
-l = Lark.open("../grammar.lark", rel_to=__file__,
+l = Lark.open("grammar.lark", rel_to=__file__,
               propagate_positions=True, parser="earley")
 
 
@@ -171,6 +171,7 @@ def main():
     # ../../../hardware/memorySim/ram_fill.dat
     with open("hardware/memorySim/ram_fill.dat", "w") as out_file:
         out_file.writelines(parseContext.get_ram_content_str())
+    print(chad_success)
 
 
 if __name__ == '__main__':
