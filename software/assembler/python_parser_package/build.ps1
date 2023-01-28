@@ -1,0 +1,3 @@
+Remove-Item -Recurse dist/*
+py -m build
+py -m twine upload --repository testpypi -u __token__ -p pypi-AgENdGVzdC5weXBpLm9yZwIkZTY3YjM3YzktZDQ1Mi00MGU5LTllMzMtZWIwNDQwMWY1ZmQwAAIqWzMsIjBhYzU5ZDUxLTY0OGMtNGI5YS1iNzdmLTZkMjIxMDZjYTc3MiJdAAAGIP9IUeiDKa4bhAG2LJGTx_7T9jXZoKAI6AN1fYeq61Lo dist/*
