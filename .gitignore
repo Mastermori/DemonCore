@@ -25,3 +25,13 @@ vs-extension/demonass-old/
 software/assembler/parser/__pycache__/
 
 vs-extension/demonass/lsp-server/__pycache__/
+
+software/assembler/python_parser_package/src/demonass_parser/__pycache__/
+
+software/assembler/python_parser_package/my_token.txt
+
+software/assembler/python_parser_package/dist/
+
+vs-extension/demonass/lsp_server/__pycache__/
+
+vs-extension/demonass/out/
