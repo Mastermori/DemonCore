@@ -3,8 +3,9 @@ from dataclasses import dataclass
 from typing import List, Dict
 
 from lark import Transformer, v_args
+from lark.tree import Meta
 from ast_base import _AstMeta
-from ast_base import ParseContext, Register, _Immediate
+from ast_base import ParseContext, Register, _Immediate, ParserError
 from util import two_complement
 from dictionarys import opDictionary
 
@@ -12,17 +13,16 @@ from dictionarys import opDictionary
 class BaseInstruction():
     instruction_bits: List[str]
 
-    def __init__(self, mnemonic: str, bindings: Dict[str, str]):
-        self.set_instruction_bits(mnemonic.upper(), bindings)
+    def __init__(self, mnemonic: str, bindings: Dict[str, str], context: ParseContext, meta: Meta):
+        self.set_instruction_bits(mnemonic.upper(), bindings, context, meta)
 
-    def set_instruction_bits(self, mnemonic: str, bindings: Dict[str, str]) -> None:
+    def set_instruction_bits(self, mnemonic: str, bindings: Dict[str, str], context: ParseContext, meta: Meta) -> None:
         if mnemonic in opDictionary:
             self.instruction_bits = opDictionary[mnemonic]
             for binding in bindings:
                 self.instruction_bits[binding] = bindings[binding]
         else:
-            raise ValueError(
-                f"Can't find instruction with mnemonic {mnemonic}")
+            context.raise_error(ParserError("Can't find instruction with mnemonic {mnemonic}", meta))
 
     def get_bit_string(self) -> List[str]:
         return self.instruction_bits
@@ -57,7 +57,7 @@ class RegisterDirectInstruction(_DirectInstruction):
             4: self.register_destination.get_bit_string(),  # rd
             2: self.register1.get_bit_string(), #rs1
             1: self.register2.get_bit_string() #rs2
-        }).get_bit_string()
+        }, context, self.meta).get_bit_string()
 
 
 @dataclass

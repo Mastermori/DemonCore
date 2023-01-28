@@ -1,12 +1,11 @@
 import abc
 from dataclasses import dataclass
-import logging
 import sys
 from typing import Dict, List
 
 from lark import Transformer, ast_utils, v_args
 
-from ast_base import ParseContext, _AstMeta, Register
+from ast_base import ParseContext, _AstMeta, Register, ParserError
 from dictionarys import pseudoDic
 
 
@@ -40,8 +39,7 @@ class ToAstPseudo(Transformer):
 class _PseudoInstruction(_AstMeta):
     @abc.abstractmethod
     def replace(self, context):
-        raise NotImplementedError(
-            f"Method replace must be implemented in {self.__class__.__name__}")
+        context.raise_error(ParserError(f"Method replace must be implemented in {self.__class__.__name__}", self.meta))
 
     def _get_replaced_list(self, mnemonic: str, replace_map: Dict[str, str]) -> List[str]:
         replacement_list = []
@@ -170,9 +168,9 @@ def pseudo_parse(parser, text) -> str:
                 instruction.replace(pseudoContext)
         pseudo_text = "\n".join(pseudoContext.get_replaced_instructions())
         #../testAssemblyPseudo.dasmb
-        with open("software/assembler/testAssemblyPseudo.dasmb", "w") as file:
-            file.write(pseudo_text)
-            print("File written")
+        # with open("software/assembler/testAssemblyPseudo.dasmb", "w") as file:
+        #     file.write(pseudo_text)
+        #     print("File written")
         if not pseudoContext.changed:
             break
 

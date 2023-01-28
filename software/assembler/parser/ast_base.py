@@ -9,6 +9,18 @@ from util import two_complement
 from util import get_register_bits
 
 
+class ParserError():
+    msg: str
+    lineno: int
+    colno: int
+    suggestion: str
+
+    def __init__(self, msg: str, meta: Meta, suggestion: str = "") -> None:
+        self.msg = msg
+        self.lineno = meta.line
+        self.colno = meta.column
+        self.suggestion = suggestion
+
 class _Ast(ast_utils.Ast):
     pass
 
@@ -83,6 +95,7 @@ class ParseContext():
     instruction_strings = {}
     ram_content: RamContent = RamContent()
     flow_commands = {}
+    errors: List[ParserError] = []
 
     def __init__(self, reference_lines: List[str]) -> None:
         self.reference_lines = reference_lines
@@ -110,7 +123,8 @@ class ParseContext():
                 print(flow_command.label_offset)
                 self.set_raw_instruction(instruction.get_raw_instruction(
                     self), address + index, flow_command.meta.line)
-        self.instruction_strings = collections.OrderedDict(sorted(self.instruction_strings.items()))
+        self.instruction_strings = collections.OrderedDict(
+            sorted(self.instruction_strings.items()))
 
     def get_label_address(self, label_name):
         return self.labels[label_name].jump_address
@@ -118,7 +132,7 @@ class ParseContext():
     def add_variable(self, variable) -> None:
         var_line = variable.meta.line-1
         variable.address = self.write_to_ram(
-            variable.directive.get_words(), self.reference_lines[var_line])
+            variable.directive.get_words(self), self.reference_lines[var_line])
         self.variables[variable.name] = variable
 
     def get_variable(self, name):
@@ -158,3 +172,9 @@ class ParseContext():
     def get_compiled_instructions(self, parser, transformer) -> str:
         self.append_flow_commdands(parser, transformer)
         return "\n".join(self.instruction_strings.values())
+    
+    def raise_error(self, error: ParserError) -> None:
+        self.errors.append(error)
+    
+    def get_errors(self) -> List[ParserError]:
+        return self.errors

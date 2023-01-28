@@ -68,17 +68,8 @@ def parse(text):
     return transformer.transform(pseudo_parsed_tree), reference_lines
 
 
-def main():
-    # "software/assembler/testAssembly.dasmb"
-    choosenPath = ""
-    if (len(sys.argv) > 1):
-        choosenPath = sys.argv[1]
-    else:
-        choosenPath = askopenfilename()
-    defaultPath = "software/assembler/testAssembly.dasmb"
-    with open(defaultPath if choosenPath == "" else choosenPath, "r") as file:
-        file_contents = file.read()
-    ast, reference_lines = parse(file_contents)
+def parse_with_context(lines_to_parse: str) -> ParseContext:
+    ast, reference_lines = parse(lines_to_parse)
 
     parseContext = ParseContext(reference_lines)
     # Parse context:
@@ -97,6 +88,21 @@ def main():
                 [token.get_raw_instruction(parseContext)], token.meta.line)
         if isinstance(token, _FlowControlPseudoInstruction):
             token.replace(parseContext)
+    
+    return parseContext
+
+def main():
+    # "software/assembler/testAssembly.dasmb"
+    choosenPath = ""
+    if (len(sys.argv) > 1):
+        choosenPath = sys.argv[1]
+    else:
+        choosenPath = askopenfilename()
+    defaultPath = "software/assembler/testAssembly.dasmb"
+    with open(defaultPath if choosenPath == "" else choosenPath, "r") as file:
+        file_contents = file.read()
+
+    parseContext = parse_with_context(file_contents)
 
     print("ROM:")
     rom_content = parseContext.get_compiled_instructions(l, transformer)
