@@ -1,0 +1,66 @@
+@type register #[mnemonic] rd rs1 rs2
+add
+@description rd = rs1 + rs2
+@param rd Destination Register
+@param rs1 Summand 1
+@param rs2 Summand 2
+
+sub
+@description rd = rs1 - rs2  \nAdds *rs1* to *rs2* and saves the result into *rd*
+@param rd Register the difference is saved to
+@param rs1 Minuend
+@param rs2 Subtrahend
+
+sll
+slt
+sltu
+xor
+srl
+sra
+or
+and
+
+@type immediate #[mnemonic] rd rs1 imm12
+addi
+subi
+slti
+sltiu
+xori
+ori
+andi
+
+@type immediateshamt #mnemonic rd rs1 shamt
+slli
+srli
+srai
+
+@type load #[mnemonic] rs1, offset(rs2)
+lb
+@deprecated
+lh
+@deprecated
+lw
+lbu
+@deprecated
+lhu
+@deprecated
+
+@type save #[mnemonic] rs1, offset(rs2)
+sb
+@deprecated # Bin mir net sicher ob es wirklich deprecated ist xD
+sh
+@deprecated # Bin mir net sicher ob es wirklich deprecated ist xD
+sw
+
+@type branch #[mnemonic] rs1, rs2, offset
+beq
+bne
+blt
+bge
+bltu
+bgeu
+
+@type bigimmediate #[menmonic] rd, imm20
+jal
+lui
+auipc

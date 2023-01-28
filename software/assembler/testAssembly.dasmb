@@ -1,14 +1,14 @@
 label1:
-addi t0, t0, 1
+addi t0, t0, 0xfff
 nop 2
-//loadvar t1, var1
+loadvar t1, var8
 //nop 3
 //addi t1, t1, 2
 //nop
 j label1
 //set t0, 4
 //set t1, 4
-//mul t2, t0, t1
+// mul t2, t0, t1
 // bge     t0, a2, 100
 // lb      t1, 0(t1)
 // beq     t1, zero, 10 // Test

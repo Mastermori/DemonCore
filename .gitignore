@@ -23,3 +23,5 @@ vs-extension/vscode-extension-samples/
 vs-extension/demonass-old/
 
 software/assembler/parser/__pycache__/
+
+vs-extension/demonass/lsp-server/__pycache__/

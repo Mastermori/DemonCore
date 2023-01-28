@@ -27,6 +27,14 @@
 				}
 			]
 		},
+		"variable": {
+			"patterns": [
+				{
+					"name": "variable.name.demonass",
+					"match": "(\\.[A-Z]+)\\b"
+				}
+			]
+		},
 		"all_keywords": {
 			"patterns": [
 				{
@@ -62,6 +70,10 @@
 				{
 					"name": "keyword.pseudo.memory.demonass",
 					"match": "(?i-)\\b(loadvar)\\b"
+				},
+				{
+					"name": "keyword.pseudo.operator.demonass",
+					"match": "(?i-)\\b(mul)\\b"
 				}
 			]
 		},
