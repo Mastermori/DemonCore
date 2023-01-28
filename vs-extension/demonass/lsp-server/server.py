@@ -14,7 +14,7 @@ from server_doc import AssemblerDoc
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(os.path.dirname(
     SCRIPT_DIR + "/../../../software/assembler/parser/"))
-from asm_parser import parse_with_context
+from asm_parser import ContextParser
 
 default_host = "127.0.0.1"
 default_port = 8080
@@ -146,7 +146,7 @@ def _validate_assembler(source: str):
     diagnostics = []
 
     try:
-        parse_context = parse_with_context(source)
+        parse_context = ContextParser(source).parse_with_context()
         for error in parse_context.get_errors():
             msg = error.msg
             col = error.colno
@@ -161,27 +161,29 @@ def _validate_assembler(source: str):
                 source=type(server).__name__
             )
             diagnostics.append(d)
-        # diagnostics.extend(parse_context.get_errors())
     except UnexpectedInput as err:
         # msg = err.msg
-        msg = f"There is an {type(err).__name__} here."
-        print(err.args)
+        msg = err.msg if hasattr(err, "msg") else f"{str(err)}"
         col = err.column
         line = err.line
-
-        d = types.Diagnostic(
-            range=types.Range(
-                start=types.Position(line=line - 1, character=col - 1),
-                end=types.Position(line=line - 1, character=col)
-            ),
-            message=msg,
-            source=type(server).__name__
-        )
-
-        diagnostics.append(d)
-        print("Error occured during diagnostics")
-
+        add_error(msg, line, col, diagnostics)
+    except SyntaxError as err:
+        msg = str(err)
+        col = err.column
+        line = err.line
+        add_error(msg, line, col, diagnostics)
     return diagnostics
+
+def add_error(msg, line, col, diagnostics):
+    d = types.Diagnostic(
+        range=types.Range(
+            start=types.Position(line=line - 1, character=col - 1),
+            end=types.Position(line=line - 1, character=col)
+        ),
+        message=msg,
+        source=type(server).__name__
+    )
+    diagnostics.append(d)
 
 
 def read_file_contents(uri: str) -> List[str]:

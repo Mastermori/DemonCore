@@ -170,12 +170,12 @@ class ImmediateshamtInstructionDefinition(InstructionDefinition):
 class LoadInstructionDefinition(InstructionDefinition):
     def __init__(self, name: str) -> None:
         super().__init__(name, "load", [
-            RegisterParamDefinition("rs1", "Register that will be loaded to"),
+            RegisterParamDefinition("rd", "Register that will be loaded to"),
             ImmediateParamDefinition(
-                "offset", "12-bit immediate offset added to *rs2*"),
+                "offset", "12-bit immediate offset added to *rs1*"),
             RegisterParamDefinition(
-                "rs2", "Memory address to load from (+ *offset*)")
-        ], "Loads memory at address *rs2* + *offset* and writes the value to *rs1*.")
+                "rs1", "Memory address to load from (+ *offset*)")
+        ], "Loads memory at address *rs1* + *offset* and writes the value to *rd*.")
 
     def get_insert_text(self, indentation=" ") -> str:
         return f"{self.name}{indentation}{self.get_snippet(0)}, {self.get_snippet(1)}({self.get_snippet(2)})"
@@ -190,6 +190,19 @@ class SaveInstructionDefinition(InstructionDefinition):
             RegisterParamDefinition(
                 "rs2", "Memory address to save *rs1* to (+ *offset*)")
         ], "Saves *rs1* to memory at address *rs2* + *offset*.")
+
+    def get_insert_text(self, indentation=" ") -> str:
+        return f"{self.name}{indentation}{self.get_snippet(0)}, {self.get_snippet(1)}({self.get_snippet(2)})"
+
+class JumpregisterInstructionDefinition(InstructionDefinition):
+    def __init__(self, name: str) -> None:
+        super().__init__(name, "jumpregister", [
+            RegisterParamDefinition("rd", "Register to save return address to"),
+            ImmediateParamDefinition(
+                "offset", "12-bit immediate offset added to *rs1*"),
+            RegisterParamDefinition(
+                "rs1", "Address to jump to (set pc to)")
+        ], "Writes the return address (pc) to *rd* and jumps to address *rs1* + *offset*.")
 
     def get_insert_text(self, indentation=" ") -> str:
         return f"{self.name}{indentation}{self.get_snippet(0)}, {self.get_snippet(1)}({self.get_snippet(2)})"

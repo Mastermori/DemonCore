@@ -79,7 +79,7 @@ class VarParamChar(_VariableParam):
         
     def get_value(self, context):
         if len(self.value) > 1:
-            context.raise_error(f"A VarParamChar can only store 1 char per word at most, got {len(self.value)} chars instead", self.meta)
+            context.raise_error(ParserError(f"A VarParamChar can only store 1 char per word at most, got {len(self.value)} chars instead", self.meta))
         return self.value
 
     def get_bits_for_char(self, context) -> str:
@@ -88,8 +88,9 @@ class VarParamChar(_VariableParam):
 
 class VarParamNum(_VariableParam):
     def get_value(self, context):
-        if len(str("{0:b}".format(abs(int(self.value))))) > 31:
-            context.raise_error(f"A VarParamNum can only store 32 bit at most, got {len(self.get_bits_for_int())} bit for value {self.value}", self.meta)
+        length = len(str("{0:b}".format(abs(int(self.value)))))
+        if length > 31:
+            context.raise_error(ParserError(f"A VarParamNum can only store 32 bit at most, got {length} bit for value {self.value}", self.meta))
         return self.value
 
     def get_bits_for_int(self, context) -> str:
@@ -98,9 +99,9 @@ class VarParamNum(_VariableParam):
 
 class VarParamWord(_VariableParam):
     def get_value(self, context):
-        print(f"{self.value.get_value(context):032b}")
-        if len(f"{self.value.get_value(context):032b}") > 32:
-            context.raise_error(f"A VarParamWord can only store 32 bit at most, got {len(self.get_bits_for_word())} bit for value {self.value}", self.meta)
+        length = len(f"{self.value.get_value(context):032b}")
+        if length > 32:
+            context.raise_error(ParserError(f"A VarParamWord can only store 32 bit at most, got {length} bit for value {self.value}", self.meta))
         return self.value
 
     def get_bits_for_word(self, context) -> str:
@@ -112,7 +113,6 @@ class VarParamString(_VariableParam):
     def get_bits_for_ascii(self, context) -> List[str]:
         bit_string = []
         value = str(self.value)
-        print(value)
         value = value[1:-1]
         for string_index in range(len(value)//4+1):
             bits = ""

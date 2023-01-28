@@ -3,7 +3,7 @@ import collections
 from dataclasses import dataclass
 from lark import ast_utils
 from lark.tree import Meta
-from typing import List
+from typing import Dict, List
 from util import two_complement
 
 from util import get_register_bits
@@ -88,19 +88,29 @@ class RamContent():
 class ParseContext():
     reference_lines: List[str]
     instruction_space_count_max: int
-    labels = {}
-    last_label = None
-    variables = {}
-    instruction_address_pointer = 0
-    instruction_strings = {}
-    ram_content: RamContent = RamContent()
-    flow_commands = {}
-    errors: List[ParserError] = []
+    labels: Dict
+    last_label: object
+    variables: Dict
+    instruction_address_pointer: int
+    instruction_strings: Dict
+    ram_content: RamContent
+    flow_commands: Dict
+    errors: List[ParserError]
+    pseudo_offset_lines: Dict[int, int]
 
     def __init__(self, reference_lines: List[str]) -> None:
         self.reference_lines = reference_lines
         line_count = len(reference_lines)
         self.instruction_space_count_max = len(str(line_count))
+        self.labels = {}
+        self.last_label = None
+        self.variables = {}
+        self.instruction_address_pointer = 0
+        self.instruction_strings = {}
+        self.ram_content = RamContent()
+        self.flow_commands = {}
+        self.errors = []
+        self.pseudo_offset_lines = {}
 
     def add_label(self, label) -> None:
         self.labels[label.name] = label
@@ -117,10 +127,8 @@ class ParseContext():
             parsed_instructions = transformer.transform(
                 parser.parse(instruction_parse_string))
             for index, instruction in enumerate(parsed_instructions):
-                print(f"{address+index} = {instruction}")
                 flow_command.label_offset = self.get_label_address(
                     flow_command.label_name) - address
-                print(flow_command.label_offset)
                 self.set_raw_instruction(instruction.get_raw_instruction(
                     self), address + index, flow_command.meta.line)
         self.instruction_strings = collections.OrderedDict(
@@ -174,6 +182,12 @@ class ParseContext():
         return "\n".join(self.instruction_strings.values())
     
     def raise_error(self, error: ParserError) -> None:
+        line_offset = 0
+        for key, val in self.pseudo_offset_lines.items():
+            if key < error.lineno:
+                line_offset += val
+        print(line_offset)
+        error.lineno -= line_offset
         self.errors.append(error)
     
     def get_errors(self) -> List[ParserError]:

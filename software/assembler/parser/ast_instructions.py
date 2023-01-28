@@ -119,12 +119,12 @@ class BranchDirectInstruction(_DirectInstruction):
 class ShiftDirectInstruction(_DirectInstruction):
     register_destination: Register
     register1: Register
-    shamt: int
+    shamt: _Immediate
 
     def get_raw_instruction(self, context: ParseContext) -> List[str]:
         raw_instruction = self.get_instruction_from_mnemonic()
         raw_instruction[2] = self.register1.get_bit_string()  # rs1
-        raw_instruction[1] = two_complement(self.shamt, 5)  # shamt
+        raw_instruction[1] = two_complement(self.shamt.get_value(context), 5)  # shamt
         raw_instruction[4] = self.register_destination.get_bit_string()  # rd
         return raw_instruction
 

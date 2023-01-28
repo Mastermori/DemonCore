@@ -34,7 +34,7 @@ slli
 srli
 srai
 
-@type load #[mnemonic] rs1, offset(rs2)
+@type load #[mnemonic] rd, offset(rs1)
 lb
 @deprecated
 lh
@@ -51,6 +51,9 @@ sb
 sh
 @deprecated # Bin mir net sicher ob es wirklich deprecated ist xD
 sw
+
+@type jumpregister #[mnemonic] rd, offset(rs1)
+jalr
 
 @type branch #[mnemonic] rs1, rs2, offset
 beq

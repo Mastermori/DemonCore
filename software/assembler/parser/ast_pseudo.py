@@ -1,7 +1,7 @@
 import abc
 from dataclasses import dataclass
 import sys
-from typing import Dict, List
+from typing import Dict, List, Tuple
 
 from lark import Transformer, ast_utils, v_args
 
@@ -13,6 +13,7 @@ class PseudoContext():
     reference_lines: List[str]
     pseudo_replaced_lines: List[List[str]]
     changed: bool = False
+    pseudo_offset = 0
 
     def __init__(self, reference_lines: List[str]) -> None:
         self.reference_lines = reference_lines
@@ -21,13 +22,17 @@ class PseudoContext():
     def replace_pseudo_instruction(self, line: int, replacement: List[str]):
         self.pseudo_replaced_lines[line-1] = [
             f"{repl_line}    //{self.reference_lines[line-1]}" for repl_line in replacement]
+        self.pseudo_offset += len(replacement) - 1
         self.changed = True
 
-    def get_replaced_instructions(self) -> List[str]:
+    def get_replaced_instructions(self) -> Tuple[List[str], Dict[int, int]]:
         replaced = []
-        for line_list in self.pseudo_replaced_lines:
+        offsets = {}
+        for line_index, line_list in enumerate(self.pseudo_replaced_lines):
+            if len(line_list) - 1 > 0:
+                offsets[line_index] = len(line_list) - 1 + (offsets[line_index] if line_index in offsets else 0)
             replaced.extend(line_list)
-        return replaced
+        return replaced, offsets
 
 
 class ToAstPseudo(Transformer):
@@ -158,6 +163,7 @@ def pseudo_parse(parser, text) -> str:
     transformer = ast_utils.create_transformer(this_module, ToAstPseudo())
 
     pseudo_text = text
+    pseudo_offset = {}
     while True:
         parse_tree = parser.parse(pseudo_text)
         ast: _AstMeta = transformer.transform(parse_tree)
@@ -166,7 +172,10 @@ def pseudo_parse(parser, text) -> str:
         for instruction in ast:
             if isinstance(instruction, _PseudoInstruction):
                 instruction.replace(pseudoContext)
-        pseudo_text = "\n".join(pseudoContext.get_replaced_instructions())
+        pseudo_text, new_pseudo_offsets = pseudoContext.get_replaced_instructions()
+        pseudo_text = "\n".join(pseudo_text)
+        pseudo_offset = {x: pseudo_offset.get(x, 0) + new_pseudo_offsets.get(x, 0) for x in set(pseudo_offset).union(new_pseudo_offsets)}
+        print(pseudo_offset)
         #../testAssemblyPseudo.dasmb
         # with open("software/assembler/testAssemblyPseudo.dasmb", "w") as file:
         #     file.write(pseudo_text)
@@ -174,4 +183,4 @@ def pseudo_parse(parser, text) -> str:
         if not pseudoContext.changed:
             break
 
-    return pseudoContext.get_replaced_instructions()
+    return pseudoContext.get_replaced_instructions()[0], pseudo_offset
