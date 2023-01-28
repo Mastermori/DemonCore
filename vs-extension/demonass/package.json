@@ -37,6 +37,17 @@
           ".dasm"
         ],
         "configuration": "./language-configuration.json"
+      },
+      {
+        "id": "demondoc",
+        "aliases": [
+          "Demon Documentation",
+          "demondoc"
+        ],
+        "extensions": [
+          ".ddoc"
+        ],
+        "configuration": "./demondoc_language-configuration.json"
       }
     ],
     "grammars": [
@@ -44,6 +55,15 @@
         "language": "demonass",
         "scopeName": "source.demonass",
         "path": "./syntaxes/demonass.tmLanguage.json"
+      },
+      {
+        "language": "demondoc",
+        "scopeName": "source.demondoc",
+        "path": "./syntaxes/demondoc.tmLanguage.json",
+        "embeddedLanguages": {
+          "text.html.markdown": "markdown",
+          "meta.embedded.block.markdown": "markdown"
+        }
       }
     ],
     "themes": [
@@ -69,13 +89,6 @@
           "default": "/usr/local/bin",
           "pattern": "(\\\\?([^\\/]*[\\/])*)([^\\/]+)$",
           "description": "The filesystem path to the Python3 executable."
-        },
-        "demonass.serverPath": {
-          "scope": "machine-overridable",
-          "type": "string",
-          "default": "",
-          "pattern": "(\\\\?([^\\/]*[\\/])*)([^\\/]+)$",
-          "description": "The filesystem path to the demonass server executable."
         }
       }
     }
@@ -89,17 +102,17 @@
     "test": "node ./out/test/runTest.js"
   },
   "devDependencies": {
-    "@types/vscode": "^1.74.0",
     "@types/glob": "^8.0.0",
     "@types/mocha": "^10.0.1",
     "@types/node": "16.x",
+    "@types/vscode": "^1.74.0",
     "@typescript-eslint/eslint-plugin": "^5.45.0",
     "@typescript-eslint/parser": "^5.45.0",
+    "@vscode/test-electron": "^2.2.0",
     "eslint": "^8.28.0",
     "glob": "^8.0.3",
     "mocha": "^10.1.0",
-    "typescript": "^4.9.3",
-    "@vscode/test-electron": "^2.2.0"
+    "typescript": "^4.9.3"
   },
   "dependencies": {
     "vscode-languageclient": "^7.0.0"

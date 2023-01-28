@@ -1,0 +1,91 @@
+{
+    "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+    "name": "Demon Assembler",
+    "patterns": [
+        {
+            "include": "#keyword"
+        },
+        {
+            "include": "#directives"
+        },
+        {
+            "include": "#comment"
+        }
+    ],
+    "repository": {
+        "keyword": {
+            "patterns": [
+                {
+                    "name": "variable.name.demondoc",
+                    "match": "(?i-)^(\\w+)\\b"
+                }
+            ]
+        },
+        "directives": {
+            "patterns": [
+                {
+                    "include": "#param_directive"
+                },
+                {
+                    "include": "#type_directive"
+                },
+                {
+                    "include": "#start_end_description_directive"
+                },
+                {
+                    "include": "#description_directive"
+                }
+            ]
+        },
+        "param_directive": {
+            "patterns": [
+                {
+                    "name": "entity.name.function.demondoc",
+                    "match": "^(@param)\\b"
+                }
+            ]
+        },
+        "type_directive": {
+            "patterns": [
+                {
+                    "name": "entity.name.function.demondoc",
+                    "match": "^(@type)\\b"
+                }
+            ]
+        },
+        "description_directive": {
+            "patterns": [
+                {
+                    "name": "entity.name.function.demondoc",
+                    "match": "^(@description)\\b"
+                }
+            ]
+        },
+        "start_end_description_directive": {
+            "begin": "^(@description_start)",
+            "name": "markdown.block.demondoc",
+            "end": "^(@description_end)",
+            "beginCaptures": {
+                "0": {"name": "punctuation.block.begin.demondoc"}
+            },
+            "endCaptures": {
+                "0": {"name": "punctuation.block.end.demondoc"}
+            },
+            "contentName": "meta.embedded.block.markdown",
+            "patterns": [
+                {
+                    "include": "text.html.markdown"
+                }
+            ]
+        },
+        "comment": {
+            "patterns": [
+                {
+                    "name": "comment.line.number-sign.demondoc",
+                    "match": "#.*\n"
+                }
+            ]
+        }
+    },
+    "scopeName": "source.demondoc"
+}

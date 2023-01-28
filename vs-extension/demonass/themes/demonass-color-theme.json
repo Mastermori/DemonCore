@@ -13,6 +13,36 @@
 		// 	}
 		// },
 		{
+			"name": "Variable Name",
+			"scope": [
+				"variable.name"
+			],
+			"settings": {
+				"fontStyle": "bold",
+				"foreground": "#319ac7"
+			}
+		},
+		{
+			"name": "Function Name",
+			"scope": [
+				"entity.name.function"
+			],
+			"settings": {
+				"fontStyle": "",
+				"foreground": "#adb353"
+			}
+		},
+		{
+			"name": "Blocks",
+			"scope": [
+				"punctuation.block"
+			],
+			"settings": {
+				"fontStyle": "italic",
+				"foreground": "#adb353"
+			}
+		},
+		{
 			"name": "Pseudo Keyword",
 			"scope": [
 				"keyword.pseudo"
