@@ -158,19 +158,19 @@ def format_instruction(edits: List, line_index: int, line: str, starts_with: str
     # server.show_message_log("\n".join(new_lines))
 
 
-def generate_edit(old_line, new_line, line_index) -> List[gls.TextEdit]:
-    current_start = len(old_line)+len(new_line)
-    operation = " "
-    current_diff = ""
-    changes = []
-    for i, s in enumerate(difflib.ndiff(old_line, new_line)):
-        distance = i - current_start
-        if distance > 1:
-            changes.append(get_text_edit(line_index, current_start, i))
-        if s[0] == ' ':
-            continue
-        elif s[0] == '-':
-            pass
+# def generate_edit(old_line, new_line, line_index) -> List[gls.TextEdit]:
+#     current_start = len(old_line)+len(new_line)
+#     operation = " "
+#     current_diff = ""
+#     changes = []
+#     for i, s in enumerate(difflib.ndiff(old_line, new_line)):
+#         distance = i - current_start
+#         if distance > 1:
+#             changes.append(get_text_edit(line_index, current_start, i))
+#         if s[0] == ' ':
+#             continue
+#         elif s[0] == '-':
+#             pass
 
 
 def get_text_edit(line_index, char_start, char_end, change):

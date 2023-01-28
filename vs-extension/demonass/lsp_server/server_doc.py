@@ -320,6 +320,8 @@ class AssemblerDoc:
                 for param_definition in context.current_instruction.param_definitions:
                     if param_definition.name == name:
                         param_definition.description = description
+                        break
+                context.current_instruction._set_markdown_documentation()
             case "description":
                 description = " ".join(split_line[1:]).removesuffix(
                     "\n").replace("\\n", "\n")
