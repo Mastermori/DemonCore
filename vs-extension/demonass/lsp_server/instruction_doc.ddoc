@@ -1,41 +1,185 @@
 @type register #[mnemonic] rd rs1 rs2
 add
-@description rd = rs1 + rs2
+@description_start
+x[rd] = x[rs1] + x[rs2]  
+Adds register x[rs2] to register x[rs1] and writes the result to x[rd]. Arithmetic overflow is
+ignored.
+@description_end 
 @param rd Destination Register
 @param rs1 Summand 1
 @param rs2 Summand 2
 
 sub
 @description_start
-rd = rs1 - rs2  
-Subtracts *rs2* from *rs1* and saves the result into *rd*
+x[rd] = x[rs1] - x[rs2]  
+Subtracts register x[rs2] from register x[rs1] and writes the result to x[rd]. Arithmetic over
+flow is ignored.
 @description_end
-@param rd Register the difference is saved to
+@param rd Destination Register
 @param rs1 Minuend
 @param rs2 Subtrahend
 
 sll
+@description_start
+x[rd] = x[rs1] << x[rs2]  
+Shifts register x[rs1] left by x[rs2] bit positions. The vacated bits are filled with zeros, and
+the result is written to x[rd]. The least-significant five bits of x[rs2] (or six bits for RV64I)
+form the shift amount; the upper bits are ignored.
+@description_end 
+@param rd Destination Register
+@param rs1 Shifted Register
+@param rs2 Shifter Register
 slt
+@description_start
+x[rd] = x[rs1] < x[rs2] (signed)  
+Compares x[rs1] and x[rs2] as two's complement numbers, and writes 1 to x[rd] if x[rs1] is
+smaller, or 0 if not.
+@description_end 
+@param rd Destination Register
+@param rs1 First Register
+@param rs2 Second Register
 sltu
+@description_start
+x[rd] = x[rs1] < x[rs2] (unsigned)  
+Compares x[rs1] and x[rs2] as unsigned numbers, and writes 1 to x[rd] if x[rs1] is smaller,
+or 0 if not.
+@description_end 
+@param rd Destination Register
+@param rs1 First Register
+@param rs2 Second Register
 xor
+@description_start
+x[rd] = x[rs1] ^ x[rs2]  
+Computes the bitwise exclusive-OR of registers x[rs1] and x[rs2] and writes the result to
+x[rd].
+@description_end 
+@param rd Destination Register
+@param rs1 First Register
+@param rs2 Second Register
 srl
+@description_start
+x[rd] = x[rs1] >> x[rs2] (unsigned)  
+Shifts register x[rs1] right by x[rs2] bit positions. The vacated bits are filled with zeros, and
+the result is written to x[rd]. The least-significant five bits of x[rs2] form the shift amount; the upper bits are ignored.
+@description_end 
+@param rd Destination Register
+@param rs1 First Register
+@param rs2 Second Register
 sra
+@description_start
+x[rd] = x[rs1] >> x[rs2] (signed)  
+Shifts register x[rs1] right by x[rs2] bit positions. The vacated bits are filled with copies of
+x[rs1]'s most-significant bit, and the result is written to x[rd]. The least-significant five bits
+of x[rs2] form the shift amount; the upper bits are ignored.
+@description_end 
+@param rd Destination Register
+@param rs1 First Register
+@param rs2 Second Register
 or
+@description_start
+x[rd] = x[rs1] | x[rs2]  
+Computes the bitwise inclusive-OR of registers x[rs1] and x[rs2] and writes the result to
+x[rd].
+@description_end 
+@param rd Destination Register
+@param rs1 First Register
+@param rs2 Second Register
 and
+@description_start
+x[rd] = x[rs1] & x[rs2]  
+Computes the bitwise AND of registers x[rs1] and x[rs2] and writes the result to x[rd].
+@description_end 
+@param rd Destination Register
+@param rs1 First Register
+@param rs2 Second Register
 
 @type immediate #[mnemonic] rd rs1 imm12
 addi
+@description_start
+x[rd] = x[rs1] + sext(immediate)  
+Adds the sign-extended immediate to register x[rs1] and writes the result to x[rd]. Arithmetic
+overflow is ignored.
+@description_end 
+@param rd Destination Register
+@param rs1 First Register
+@param imm12 12-bit Constant
 subi
+@deprecated
 slti
+@description_start
+x[rd] = x[rs1] < sext(immediate) (signed)  
+Compares x[rs1] and the sign-extended immediate as two's complement numbers, and writes
+1 to x[rd] if x[rs1] is smaller, or 0 if not.
+@description_end 
+@param rd Destination Register
+@param rs1 First Register
+@param imm12 12-bit Constant
 sltiu
+@description_start
+x[rd] = x[rs1] < sext(immediate) (unsigned)  
+Compares x[rs1] and the sign-extended immediate as unsigned numbers, and writes 1 to x[rd]
+if x[rs1] is smaller, or 0 if not.
+@description_end 
+@param rd Destination Register
+@param rs1 First Register
+@param imm12 12-bit Constant
 xori
+@description_start
+x[rd] = x[rs1] ^ sext(immediate)  
+Computes the bitwise exclusive-OR of the sign-extended immediate and register x[rs1] and
+writes the result to x[rd].
+@description_end 
+@param rd Destination Register
+@param rs1 First Register
+@param imm12 12-bit Constant
 ori
+@description_start
+x[rd] = x[rs1] | sext(immediate)  
+Computes the bitwise inclusive-OR of the sign-extended immediate and register x[rs1] and
+writes the result to x[rd].
+@description_end 
+@param rd Destination Register
+@param rs1 First Register
+@param imm12 12-bit Constant
 andi
+@description_start
+x[rd] = x[rs1] & sext(immediate)  
+Computes the bitwise AND of the sign-extended immediate and register x[rs1] and writes the
+result to x[rd].
+@description_end 
+@param rd Destination Register
+@param rs1 First Register
+@param imm12 12-bit Constant
 
 @type immediateshamt #mnemonic rd rs1 shamt
 slli
+@description_start
+x[rd] = x[rs1] << shamt  
+Shifts register x[rs1] left by shamt bit positions. The vacated bits are filled with zeros, and
+the result is written to x[rd]. For RV32I, the instruction is only legal when shamt[5]=0.
+@description_end 
+@param rd Destination Register
+@param rs1 First Register
+@param shamt 5-bit Constant
 srli
+@description_start
+x[rd] = x[rs1] >> shamt (unsigned)
+Shifts register x[rs1] right by shamt bit positions. The vacated bits are filled with zeros, and
+the result is written to x[rd]. For RV32I, the instruction is only legal when shamt[5]=0.
+@description_end 
+@param rd Destination Register
+@param rs1 First Register
+@param shamt 5-bit Constant
 srai
+@description_start
+x[rd] = x[rs1] >> shamt (signed)  
+Shifts register x[rs1] right by shamt bit positions. The vacated bits are filled with copies of
+x[rs1]'s most-significant bit, and the result is written to x[rd]. For RV32I, the instruction is
+only legal when shamt[5]=0.
+@description_end 
+@param rd Destination Register
+@param rs1 First Register
+@param shamt 5-bit Constant
 
 @type load #[mnemonic] rd, offset(rs1)
 lb
@@ -43,6 +187,14 @@ lb
 lh
 @deprecated
 lw
+@description_start
+x[rd] = sext(M[x[rs1] + sext(offset)][31:0])  
+Loads four bytes from memory at address x[rs1] + sign-extend(offset) and writes them to
+x[rd].
+@description_end 
+@param rd Destination Register
+@param offset 12-bit Address Offset
+@param rs1 Address Register
 lbu
 @deprecated
 lhu
@@ -54,27 +206,111 @@ sb
 sh
 @deprecated # Bin mir net sicher ob es wirklich deprecated ist xD
 sw
-
+@description_start
+M[x[rs1] + sext(offset)] = x[rs2][31:0]  
+Stores the four least-significant bytes in register x[rs2] to memory at address x[rs1] + sign-
+extend(offset).
+@description_end 
+@param rs2 Value Register
+@param offset 12-bit Address Offset
+@param rs1 Address Register
 @type jumpregister #[mnemonic] rd, offset(rs1)
 jalr
-
+@description_start
+t =pc+4; pc=(x[rs1]+sext(offset))&~1; x[rd]=t  
+Sets the pc to x[rs1] + sign-extend(offset), masking off the least-significant bit of the com-
+puted address, then writes the previous pc+4 to x[rd]. If rd is omitted, x1 is assumed.
+@description_end
+@param rd Destination Register
+@param offset 12-bit Offset
+@param rs1 Address Register
 @type branch #[mnemonic] rs1, rs2, offset
 beq
+@description_start
+if (rs1 == rs2) pc += sext(offset)  
+If register x[rs1] equals register x[rs2], set the pc to the current pc plus the sign-extended
+offset.
+@description_end
+@param rs1 First Register
+@param rs2 Second Register
+@param offset 12-bit Offset
 bne
+@description_start
+if (rs1 != rs2) pc += sext(offset)  
+If register x[rs1] does not equal register x[rs2], set the pc to the current pc plus the sign-
+extended offset.
+@description_end
+@param rs1 First Register
+@param rs2 Second Register
+@param offset 12-bit Offset
 blt
+@description_start
+if (rs1 < rs2) pc += sext(offset) (signed)  
+If register x[rs1] is less than x[rs2], treating the values as two's complement numbers, set the
+pc to the current pc plus the sign-extended offset.
+@description_end
+@param rs1 First Register
+@param rs2 Second Register
+@param offset 12-bit Offset
 bge
+@description_start
+if (rs1 >= rs2) pc += sext(offset) (signed)  
+If register x[rs1] is at least x[rs2], treating the values as two's complement numbers, set the
+pc to the current pc plus the sign-extended offset.
+@description_end
+@param rs1 First Register
+@param rs2 Second Register
+@param offset 12-bit Offset 
 bltu
+@description_start
+if (rs1 < rs2) pc += sext(offset) (unsigned)  
+If register x[rs1] is less than x[rs2], treating the values as unsigned numbers, set the pc to the
+current pc plus the sign-extended offset.
+@description_end
+@param rs1 First Register
+@param rs2 Second Register
+@param offset 12-bit Offset 
 bgeu
+@description_start
+if (rs1 >= rs2) pc += sext(offset) (unsigned)  
+If register x[rs1] is at least x[rs2], treating the values as unsigned numbers, set the pc to the
+current pc plus the sign-extended offset.
+@description_end
+@param rs1 First Register
+@param rs2 Second Register
+@param offset 12-bit Offset 
 
 @type bigimmediate #[menmonic] rd, imm20
 jal
+@description_start
+x[rd] = pc+4; pc += sext(offset)  
+Writes the address of the next instruction (pc+4) to x[rd], then set the pc to the current pc
+plus the sign-extended offset. If rd is omitted, x1 is assumed.
+@description_end
+@param rd Destination Register
+@param offset 20-bit Constant
 lui
+@description_start
+x[rd] = pc+4; pc += sext(offset)  
+Writes the address of the next instruction (pc+4) to x[rd], then set the pc to the current pc
+plus the sign-extended offset. If rd is omitted, x1 is assumed.
+@description_end
+@param rd Destination Register
+@param offset 20-bit Constant
 auipc
+@description_start
+x[rd] = pc + sext(immediate[31:12] << 12)  
+Adds the sign-extended 20-bit immediate, left-shifted by 12 bits, to the pc, and writes the
+result to x[rd].
+@description_end
+@param rd Destination Register
+@param offset 20-bit Constant
 
 @type pseudo rd:Register, var:Variable
 loadvar
 @description Loads the value of memory at the address of *var* into *rd*.
-
+@param rd Destination Register
+@param var Variable
 @type pseudo count:Immediate
 nop
 @description No Operation - stalls one clock cycle
