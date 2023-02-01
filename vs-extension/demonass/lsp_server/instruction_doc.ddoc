@@ -311,6 +311,19 @@ loadvar
 @description Loads the value of memory at the address of *var* into *rd*.
 @param rd Destination Register
 @param var Variable
-@type pseudo count:Immediate
+
+@type pseudo count:Immediate5
 nop
 @description No Operation - stalls one clock cycle
+
+@type pseudo label:Label
+j
+@description Jumps to a defined label
+
+@type pseudo rd:Register rs1:Register rs2:Register
+mul
+@description Multiplies *rs1* and *rs2* writing the result to *rd*\n\n *rs1* and *rs2* are caller-saved
+
+@type pseudo rd:Register rs1:Register
+mv
+@description Copys value of *rs1* to *rd*

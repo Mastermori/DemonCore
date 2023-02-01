@@ -7,7 +7,7 @@ use std.textio.all;
 ENTITY pipeTest IS
     GENERIC(
         periodC : TIME    := 10 ns;
-        cyclesC : INTEGER := 10);
+        cyclesC : INTEGER := 20);
 END ENTITY pipeTest;
 
 ARCHITECTURE testbenchPipe OF pipeTest IS

@@ -373,6 +373,7 @@ class AssemblerDoc:
                 context.is_description = False
                 context.current_instruction.set_description(
                     context.current_description.removesuffix("\n"))
+                context.current_description = ""
             case "deprecated":
                 context.current_instruction.set_deprecated(True)
 
