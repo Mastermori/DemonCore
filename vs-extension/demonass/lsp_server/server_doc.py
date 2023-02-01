@@ -7,6 +7,7 @@ from typing import Dict, List
 from lsprotocol.types import (
     CompletionItem, Hover, SignatureInformation, ParameterInformation)
 from demonass_parser.dictionarys import pseudoDic
+from demonass_parser.ast_base import ParseContext
 
 indentation_level = 10
 
@@ -17,7 +18,7 @@ class ParamDefinition(abc.ABC):
     description: str
 
     @abc.abstractmethod
-    def get_completion(self) -> List[CompletionItem]:
+    def get_completion(self, context: ParseContext) -> List[CompletionItem]:
         pass
 
     def get_param_info(self) -> ParameterInformation:
@@ -25,7 +26,7 @@ class ParamDefinition(abc.ABC):
 
 
 class RegisterParamDefinition(ParamDefinition):
-    def get_completion(self) -> List[CompletionItem]:
+    def get_completion(self, context: ParseContext) -> List[CompletionItem]:
         items = []
         for register in registers:
             items.append(CompletionItem(
@@ -33,15 +34,55 @@ class RegisterParamDefinition(ParamDefinition):
         return items
 
 
-# TODO: implement for %hi and %lo
-class ImmediateParamDefinition(ParamDefinition):
-    def get_completion(self) -> List[CompletionItem]:
-        return []
+class Immediate5ParamDefinition(ParamDefinition):
+    def get_completion(self, context: ParseContext) -> List[CompletionItem]:
+        items = []
+        items.append(CompletionItem(
+            label="0", kind=types.CompletionItemKind.Constant, detail=f"Number"))
+        return items
 
+class Immediate12ParamDefinition(ParamDefinition):
+    def get_completion(self, context: ParseContext) -> List[CompletionItem]:
+        items = []
+        items.append(CompletionItem(
+            label="0", kind=types.CompletionItemKind.Constant, detail=f"Number"))
+        items.append(CompletionItem(
+            label="%lo", kind=types.CompletionItemKind.Variable, detail=f"Lower 12 address bits",
+            insert_text=f"%lo(${{1:var}})",
+            insert_text_format=types.InsertTextFormat.Snippet))
+        return items
+
+class Immediate20ParamDefinition(ParamDefinition):
+    def get_completion(self, context: ParseContext) -> List[CompletionItem]:
+        items = []
+        items.append(CompletionItem(
+            label="0", kind=types.CompletionItemKind.Constant, detail=f"Number"))
+        items.append(CompletionItem(
+            label="%hi", kind=types.CompletionItemKind.Variable, detail=f"Higher 20 address bits",
+            insert_text=f"%hi(${{1:var}})",
+            insert_text_format=types.InsertTextFormat.Snippet))
+        return items
 
 class VariableParamDefinition(ParamDefinition):
-    def get_completion(self) -> List[CompletionItem]:
-        return []
+    def get_completion(self, context: ParseContext) -> List[CompletionItem]:
+        if not context:
+            return []
+        items = []
+        for var_name, variable in context.variables.items():
+            items.append(CompletionItem(
+                label=var_name, kind=types.CompletionItemKind.Variable, detail=f"Memory address: {variable.address}"))
+        return items
+
+
+class LabelParamDefinition(ParamDefinition):
+    def get_completion(self, context: ParseContext) -> List[CompletionItem]:
+        if not context:
+            return []
+        items = []
+        for label_name in context.labels:
+            items.append(CompletionItem(
+                label=label_name, kind=types.CompletionItemKind.Variable, detail=f"Label"))
+        return items
 
 
 class InstructionDefinition(abc.ABC):
@@ -65,10 +106,10 @@ class InstructionDefinition(abc.ABC):
             return None
         return self.param_definitions[param_index]
 
-    def get_param_completion(self, param_index) -> List[CompletionItem]:
+    def get_param_completion(self, param_index: int, context: ParseContext) -> List[CompletionItem]:
         if param_index >= len(self.param_definitions):
             return []
-        return self.param_definitions[param_index].get_completion()
+        return self.param_definitions[param_index].get_completion(context)
 
     def get_completion(self) -> CompletionItem:
         name = self.name
@@ -154,7 +195,7 @@ class ImmediateInstructionDefinition(InstructionDefinition):
         super().__init__(name, "immediate", [
             RegisterParamDefinition("rd", "Destination register"),
             RegisterParamDefinition("rs1", "First operation register"),
-            ImmediateParamDefinition("imm12", "12-bit immediate value")
+            Immediate12ParamDefinition("imm12", "12-bit immediate value")
         ], "Computes *rs1* and *imm12* to *rd*.")
 
     def get_insert_text(self, indentation=" ") -> str:
@@ -166,7 +207,7 @@ class ImmediateshamtInstructionDefinition(InstructionDefinition):
         super().__init__(name, "immediate", [
             RegisterParamDefinition("rd", "Destination register"),
             RegisterParamDefinition("rs1", "Register to shift"),
-            ImmediateParamDefinition(
+            Immediate5ParamDefinition(
                 "shamt", "5-bit immediate value to shift with")
         ], "Shifts *rs1* by *shamt* and writes the result to *rd*.")
 
@@ -178,7 +219,7 @@ class LoadInstructionDefinition(InstructionDefinition):
     def __init__(self, name: str, context) -> None:
         super().__init__(name, "load", [
             RegisterParamDefinition("rd", "Register that will be loaded to"),
-            ImmediateParamDefinition(
+            Immediate12ParamDefinition(
                 "offset", "12-bit immediate offset added to *rs1*"),
             RegisterParamDefinition(
                 "rs1", "Memory address to load from (+ *offset*)")
@@ -192,7 +233,7 @@ class SaveInstructionDefinition(InstructionDefinition):
     def __init__(self, name: str, context) -> None:
         super().__init__(name, "save", [
             RegisterParamDefinition("rs1", "Register that will be saved"),
-            ImmediateParamDefinition(
+            Immediate12ParamDefinition(
                 "offset", "12-bit immediate offset added to *rs2*"),
             RegisterParamDefinition(
                 "rs2", "Memory address to save *rs1* to (+ *offset*)")
@@ -207,7 +248,7 @@ class JumpregisterInstructionDefinition(InstructionDefinition):
         super().__init__(name, "jumpregister", [
             RegisterParamDefinition(
                 "rd", "Register to save return address to"),
-            ImmediateParamDefinition(
+            Immediate12ParamDefinition(
                 "offset", "12-bit immediate offset added to *rs1*"),
             RegisterParamDefinition(
                 "rs1", "Address to jump to (set pc to)")
@@ -222,7 +263,7 @@ class BranchInstructionDefinition(InstructionDefinition):
         super().__init__(name, "branch", [
             RegisterParamDefinition("rs1", "First register to compare"),
             RegisterParamDefinition("rs2", "Second register to compare"),
-            ImmediateParamDefinition(
+            Immediate12ParamDefinition(
                 "offset", "12-bit immediate offset that will be added to pc")
         ], "Branches (adds *offset* to pc) if the condition with *rs1* and *rs2* is fullfilled.")
 
@@ -234,14 +275,14 @@ class BigimmediateInstructionDefinition(InstructionDefinition):
     def __init__(self, name: str, context) -> None:
         super().__init__(name, "bigimmediate", [
             RegisterParamDefinition("rd", "Destination register"),
-            ImmediateParamDefinition("imm20", "Immediate value to compute")
+            Immediate20ParamDefinition("imm20", "Immediate value to compute")
         ], "Computes *imm20* and saves result to *rd*.")
 
     def get_insert_text(self, indentation=" ") -> str:
         return f"{self.name}{indentation}{self.get_snippet(0)}, {self.get_snippet(1)}"
 
 
-class ParseContext:
+class DocParseContext:
     current_type: str
     current_instruction: InstructionDefinition
     current_pseudo_param_format: str
@@ -260,7 +301,7 @@ class PseudoInstructionDefinition(InstructionDefinition):
     format: str
     expands_to_description: str
 
-    def __init__(self, name: str, context: ParseContext) -> None:
+    def __init__(self, name: str, context: DocParseContext) -> None:
         param_definitions = []
         format_string = context.current_pseudo_param_format
         self.format = format_string
@@ -279,7 +320,7 @@ class PseudoInstructionDefinition(InstructionDefinition):
         return super().set_description(f"{description}\n\n{self.expands_to_description}")
 
     def get_insert_text(self, indentation=" ") -> str:
-        return f"{self.name}{indentation}" + re.sub(r"(\w+):(\w+)", lambda match: self.get_snippet_by_name(match.groups()[0]), self.format)
+        return f"{self.name}{indentation}" + re.sub(r"(\w+):(\w+)", lambda match: self.get_snippet_by_name(match.groups()[0]), self.format).removesuffix("\n").removesuffix("\r")
 
 
 class AssemblerDoc:
@@ -289,7 +330,7 @@ class AssemblerDoc:
         self.instructions = self.parse(file_path)
 
     def parse(self, file_path: str):
-        context = ParseContext()
+        context = DocParseContext()
         instructions = {}
         with open(file_path, "r") as file_content:
             for line in file_content:
@@ -305,7 +346,7 @@ class AssemblerDoc:
                     context.current_instruction = instructions[name]
         return instructions
 
-    def parse_annotation(self, line: str, context: ParseContext):
+    def parse_annotation(self, line: str, context: DocParseContext):
         split_line = line.split(" ")
         annotation_name = split_line[0].strip()
         match annotation_name:
@@ -335,24 +376,30 @@ class AssemblerDoc:
             case "deprecated":
                 context.current_instruction.set_deprecated(True)
 
-    def parse_pseudo_types(self, args: List[str], context: ParseContext) -> None:
+    def parse_pseudo_types(self, args: List[str], context: DocParseContext) -> None:
         context.current_pseudo_param_format = " ".join(args)
 
     def get_instruction_completions(self) -> List[CompletionItem]:
         return [definition.get_completion() for definition in self.instructions.values()]
 
-    def get_param_completion_for_instruction(self, instruction_name: str, param_index: int) -> List[CompletionItem]:
+    def get_param_completion_for_instruction(self, instruction_name: str, param_index: int, context: ParseContext) -> List[CompletionItem]:
         if instruction_name in self.instructions:
             instruction_definition = self.instructions[instruction_name]
-            return instruction_definition.get_param_completion(param_index)
+            return instruction_definition.get_param_completion(param_index, context)
         return []
 
-    def get_hover_for(self, name: str) -> Hover:
+    def get_hover_for(self, name: str, context: ParseContext) -> Hover:
         if name in self.instructions:
             instruction_definition = self.instructions[name]
             return instruction_definition.get_hover()
         if name in registers:
             return Hover(contents=registers[name])
+        if context and name in context.variables:
+            variable = context.variables[name]
+            hex_address = f"0x{variable.address:x}"
+            return Hover(contents=f"Variable *{name}* points to address {variable.address} ({hex_address}).")
+        if context and name in context.labels:
+            return Hover(contents=f"Label *{name}*  \nCan be jumped to (e.g. with **j**)")
         return None
 
     def get_signature_info_for_instruction(self, instruction_name: str) -> SignatureInformation:

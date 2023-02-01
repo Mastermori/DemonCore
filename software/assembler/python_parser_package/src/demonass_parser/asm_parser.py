@@ -37,8 +37,6 @@ def start_logging(logging_level=logging.DEBUG, logging_show_time=False, format_l
 #
 #   Define AST
 #
-
-
 class ToAst(ToAstInstructions):
     logging
 

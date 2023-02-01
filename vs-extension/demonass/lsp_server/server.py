@@ -8,9 +8,12 @@ import lsprotocol.types as gls
 from lsprotocol.types import (CompletionList, CompletionOptions, CompletionParams, SignatureHelpOptions,
                               SignatureHelpParams, HoverParams, SignatureHelp, TypeDefinitionParams, ReferenceParams)
 from urllib.parse import urlparse, unquote
-from .server_doc import AssemblerDoc, indentation_level
 
 from demonass_parser.asm_parser import ContextParser
+from demonass_parser.ast_base import ParseContext
+
+from .server_doc import AssemblerDoc, indentation_level
+
 
 server = LanguageServer('DemonAssembler-Server', 'v0.1')
 
@@ -27,6 +30,7 @@ def start(args):
 
 
 doc = AssemblerDoc("lsp_server/instruction_doc.ddoc")
+last_context: ParseContext = None
 
 
 @server.feature(gls.TEXT_DOCUMENT_COMPLETION, CompletionOptions(trigger_characters=[',']))
@@ -40,7 +44,7 @@ def completions(params: CompletionParams):
         probable_mnemonic = split_line[0]
         param_index = line_to_cursor.count(",") + line_to_cursor.count("(")
         param_completions = doc.get_param_completion_for_instruction(
-            probable_mnemonic, param_index)
+            probable_mnemonic, param_index, last_context)
         items.extend(param_completions)
     elif len(split_line) == 1:
         items.extend(doc.get_instruction_completions())
@@ -56,11 +60,11 @@ def handle_hover(params: HoverParams):
     line = params.position.line
     character = params.position.character
     word, range = find_word(lines[line], character)
-    hover = doc.get_hover_for(word)
+    hover = doc.get_hover_for(word, last_context)
     if hover:
         return hover
-    # , range=gls.Range())
     # return Hover(contents=f"Line: {line}, Character: {character}, Word: {word}")
+
 
 @server.feature(gls.TEXT_DOCUMENT_SIGNATURE_HELP, SignatureHelpOptions(trigger_characters=[',', '(']))
 def signature_help(params: SignatureHelpParams):
@@ -138,7 +142,8 @@ def format_instruction(edits: List, line_index: int, line: str, starts_with: str
         stripped_line_len = len(line.rstrip())
         to_remove = len(line) - stripped_line_len
         if to_remove > 0:
-            edits.append(get_text_edit(line_index, stripped_line_len, len(line)-1, ""))
+            edits.append(get_text_edit(
+                line_index, stripped_line_len, len(line)-1, ""))
 
     #     if options.trim_trailing_whitespace:
     #         edits.append()
@@ -215,6 +220,8 @@ def _validate_assembler(source: str):
 
     try:
         parse_context = ContextParser(source).parse_with_context()
+        global last_context
+        last_context = parse_context
         for error in parse_context.get_errors():
             msg = error.msg
             col = error.colno
