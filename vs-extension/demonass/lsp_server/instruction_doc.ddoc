@@ -75,6 +75,6 @@ auipc
 loadvar
 @description Loads the value of memory at the address of *var* into *rd*.
 
-@type pseudo count:Immediate
+@type pseudo count:Immediate5
 nop
 @description No Operation - stalls one clock cycle
