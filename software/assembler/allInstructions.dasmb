@@ -1,0 +1,36 @@
+add       rd, rs1, rs2
+addi      rd, rs1, imm12
+and       rd, rs1, rs2
+andi      rd, rs1, imm12
+auipc     rd, imm20
+beq       rs1, rs2, offset
+bge       rs1, rs2, offset
+bgeu      rs1, rs2, offset
+blt       rs1, rs2, offset
+bltu      rs1, rs2, offset
+bne       rs1, rs2, offset
+j         label
+jal       rd, imm20
+jalr      rd, offset(rs1)
+loadvar   rd, var
+lui       rd, imm20
+lw        rd, offset(rs1)
+mul       rd rs1 rs2
+mv        rd rs1
+nop       count
+or        rd, rs1, rs2
+ori       rd, rs1, imm12
+sll       rd, rs1, rs2
+slli      rd, rs1, shamt
+slt       rd, rs1, rs2
+slti      rd, rs1, imm12
+sltiu     rd, rs1, imm12
+sltu      rd, rs1, rs2
+sra       rd, rs1, rs2
+srai      rd, rs1, shamt
+srl       rd, rs1, rs2
+srli      rd, rs1, shamt
+sub       rd, rs1, rs2
+sw        rs1, offset(rs2)
+xor       rd, rs1, rs2
+xori      rd, rs1, imm12

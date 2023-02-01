@@ -1,7 +1,7 @@
 import abc
 from dataclasses import dataclass
 from typing import List
-from demonass_parser.ast_base import _Ast, _AstMeta, ParseContext
+from demonass_parser.ast_base import _Ast, _AstMeta, ParseContext, Register
 from demonass_parser.ast_pseudo import _PseudoInstruction
 
 
@@ -25,8 +25,10 @@ class GlobalLabel(_Label):
 class LocalLabel(_Label):
     pass
 
+
 class _Directive(_AstMeta):
     pass
+
 
 @dataclass
 class AddressDirective(_Directive):
@@ -34,6 +36,7 @@ class AddressDirective(_Directive):
 
     def run(self, context: ParseContext) -> None:
         context.set_ram_address(int(self.address))
+
 
 @dataclass
 class _FlowControlPseudoInstruction(_PseudoInstruction):
@@ -55,19 +58,23 @@ class _FlowControlPseudoInstruction(_PseudoInstruction):
     def get_instruction_count(self) -> int:
         pass
 
+
 class PseudoJump(_FlowControlPseudoInstruction):
-    
+
     def get_instructions(self, context: ParseContext, labelOffset: int) -> List[str]:
         return self._get_replaced_list("j", {"offset": str(labelOffset)})
 
     def get_instruction_count(self) -> int:
         return 1
 
+
 class PseudoCall(_FlowControlPseudoInstruction):
     rd: str
 
-    def __init__(self, meta, labelName, rd = "x1"):
+    def __init__(self, meta, labelName, rd="x1"):
         super().__init__(meta, labelName)
+        if isinstance(rd, Register):
+            rd = rd.name
         self.rd = rd
 
     def get_instructions(self, context: ParseContext, labelOffset: int) -> List[str]:

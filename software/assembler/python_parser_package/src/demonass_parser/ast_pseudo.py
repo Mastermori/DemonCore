@@ -161,7 +161,6 @@ class PseudoReturn(_PseudoInstruction):
 def pseudo_parse(parser, text) -> str:
     this_module = sys.modules[__name__]
     transformer = ast_utils.create_transformer(this_module, ToAstPseudo())
-
     pseudo_text = text
     pseudo_offset = {}
     while True:

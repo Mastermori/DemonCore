@@ -5,10 +5,13 @@ loadvar   t1, var8
 addi      t0, t0, 1
 lui       t0, 1
 jalr      t0, 10(t1)
+call label1, x0
+
 
 //nop 3
 //addi t1, t1, 2
 //nop
+
 j label1
 //set t0, 4
 //set t1, 4

@@ -13,7 +13,7 @@ pseudo_nop: "nop"i /[1-9]\d*/?
 pseudo_mul: "mul"i register "," register "," register
 pseudo_return: "ret"i
 pseudo_load_var: "loadvar"i register "," var_name ("(" /0|-?[1-9]\d*/ ")")?
-pseudo_call: "call"i label_name
+pseudo_call: "call"i label_name ("," register)?
 pseudo_jump: "j"i label_name
 
 _label: global_label | local_label

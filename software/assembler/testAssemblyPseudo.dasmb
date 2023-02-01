@@ -1,11 +1,26 @@
 label1:
-addi t0, t0, 1
-addi x0, x0, 0    //nop 2
-addi x0, x0, 0    //nop 2
-//loadvar t1, var1
+addi      t0, t0, 1
+addi x0, x0, 0    //nop       2
+addi x0, x0, 0    //nop       2
+lui t1, %hi(var8)    //loadvar   t1, var8
+addi x0, x0, 0    //nop 3    //loadvar   t1, var8
+addi x0, x0, 0    //nop 3    //loadvar   t1, var8
+addi x0, x0, 0    //nop 3    //loadvar   t1, var8
+addi t1, t1, %lo(var8)    //loadvar   t1, var8
+addi x0, x0, 0    //nop 3    //loadvar   t1, var8
+addi x0, x0, 0    //nop 3    //loadvar   t1, var8
+addi x0, x0, 0    //nop 3    //loadvar   t1, var8
+lw t1, 0(t1)    //loadvar   t1, var8
+addi      t0, t0, 1
+lui       t0, 1
+jalr      t0, 10(t1)
+call label1
+
+
 //nop 3
 //addi t1, t1, 2
 //nop
+
 j label1
 //set t0, 4
 //set t1, 4
@@ -16,25 +31,25 @@ j label1
 
 // ADD     t2, a0, t0
 // sb      t1, 0(t2)
-// addi    t0, t0, 1    
+// addi    t0, t0, 1
 
-// jal     zero, 10     
+// jal     zero, 10
 // bge     t0, a2, 100
 // add     t1, a0, t0   // Das ein Kommentar
 // sb      zero, 0(t1)  // das ist einer /
 //    // Test
 
 // label:
-// addi    t0, t0, 1    
+// addi    t0, t0, 1
 // jal     zero, 11     ////// hah
 // jalr    zero, 0(ra)
 // slli    x1, sp, 5 // tast
 
-var1: .ASCII "abcd"
-var8: .CHAR 'a', 'b'
-vector: .INT 1, 2, 3
-var2: .WORD 0b100000000000000000001
-var3: .WORD 0b100000000000000000001
+var1:   .ASCII "abcd"
+var8:   .CHAR 'a', 'b'
+vector: .INT 1, 2, 300000000
+var2:   .WORD 0b100000000000000000001
+var3:   .WORD 0b100000000000000000001
 .ADDR 16
-var4: .WORD 0b100000000000000000001
-var5: .WORD 0b100000000000000000001
+var4:   .WORD 0b100000000000000000001
+var5:   .WORD 0b100000000000000000001

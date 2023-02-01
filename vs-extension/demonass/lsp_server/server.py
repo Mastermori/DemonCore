@@ -36,7 +36,10 @@ last_context: ParseContext = None
 @server.feature(gls.TEXT_DOCUMENT_COMPLETION, CompletionOptions(trigger_characters=[',']))
 def completions(params: CompletionParams):
     """Returns completion items."""
-    line = get_file_contents(params.text_document.uri)[params.position.line]
+    lines = get_file_contents(params.text_document.uri).copy()
+    if len(lines) == 0 or params.position.line == len(lines) and lines[-1].endswith("\n"):
+        lines.append("")
+    line = lines[params.position.line]
     line_to_cursor = line[:params.position.character]
     split_line = line_to_cursor.split(" ")
     items = []
@@ -68,7 +71,10 @@ def handle_hover(params: HoverParams):
 
 @server.feature(gls.TEXT_DOCUMENT_SIGNATURE_HELP, SignatureHelpOptions(trigger_characters=[',', '(']))
 def signature_help(params: SignatureHelpParams):
-    line = get_file_contents(params.text_document.uri)[params.position.line]
+    lines = get_file_contents(params.text_document.uri).copy()
+    if len(lines) == 0 or params.position.line == len(lines) and lines[-1].endswith("\n"):
+        lines.append("")
+    line = lines[params.position.line]
     line_to_cursor = line[:params.position.character]
     split_line = line_to_cursor.split(" ")
     param_index = line_to_cursor.count(",") + line_to_cursor.count("(")
