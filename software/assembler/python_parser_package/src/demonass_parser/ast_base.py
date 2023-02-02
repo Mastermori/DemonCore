@@ -120,13 +120,13 @@ class ParseContext():
 
     def append_flow_commdands(self, parser, transformer) -> None:
         for address, flow_command in self.flow_commands.items():
+            flow_command.label_address = self.get_label_address(
+                    flow_command.label_name)
             instruction_parse_string = "\n".join(
                 flow_command.get_instructions(self, address))
             parsed_instructions = transformer.transform(
                 parser.parse(instruction_parse_string))
             for index, instruction in enumerate(parsed_instructions):
-                flow_command.label_offset = self.get_label_address(
-                    flow_command.label_name) - address
                 self.set_raw_instruction(instruction.get_raw_instruction(
                     self), address + index, flow_command.meta.line)
         self.instruction_strings = collections.OrderedDict(
@@ -146,6 +146,9 @@ class ParseContext():
 
     def set_ram_address(self, address: int) -> None:
         self.ram_content.current_adress_pointer = address
+    
+    def set_rom_address(self, address: int) -> None:
+        self.instruction_address_pointer = address
 
     def write_to_ram(self, words: List[str], reference_line="", direct=True) -> int:
         if direct:

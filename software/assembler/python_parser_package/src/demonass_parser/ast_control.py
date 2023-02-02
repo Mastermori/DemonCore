@@ -37,11 +37,18 @@ class AddressDirective(_Directive):
     def run(self, context: ParseContext) -> None:
         context.set_ram_address(int(self.address))
 
+@dataclass
+class RomAddressDirective(_Directive):
+    address: str
+
+    def run(self, context: ParseContext) -> None:
+        context.set_rom_address(int(self.address))
+
 
 @dataclass
 class _FlowControlPseudoInstruction(_PseudoInstruction):
     label_name: str
-    label_offset: int
+    label_address: int
 
     def __init__(self, meta, label_name: str):
         super().__init__(meta)
@@ -51,7 +58,7 @@ class _FlowControlPseudoInstruction(_PseudoInstruction):
         context.add_flow_command(self)
 
     @abc.abstractmethod
-    def get_instructions(self, context: ParseContext) -> List[str]:
+    def get_instructions(self, context: ParseContext, address: int) -> List[str]:
         pass
 
     @abc.abstractmethod
@@ -61,8 +68,8 @@ class _FlowControlPseudoInstruction(_PseudoInstruction):
 
 class PseudoJump(_FlowControlPseudoInstruction):
 
-    def get_instructions(self, context: ParseContext, labelOffset: int) -> List[str]:
-        return self._get_replaced_list("j", {"offset": str(labelOffset)})
+    def get_instructions(self, context: ParseContext, address: int) -> List[str]:
+        return self._get_replaced_list("j", {"offset": str(self.label_address - address - 1)})
 
     def get_instruction_count(self) -> int:
         return 1
@@ -77,8 +84,8 @@ class PseudoCall(_FlowControlPseudoInstruction):
             rd = rd.name
         self.rd = rd
 
-    def get_instructions(self, context: ParseContext, labelOffset: int) -> List[str]:
-        return self._get_replaced_list("call", {"rd": self.rd, "offsetLo": str(labelOffset & 0xfff), "offsetHi": str(labelOffset >> 12)})
+    def get_instructions(self, context: ParseContext, address: int) -> List[str]:
+        return self._get_replaced_list("call", {"rd": self.rd, "offset": str(self.label_address & 0xfff)})
 
     def get_instruction_count(self) -> int:
-        return 2
+        return 1

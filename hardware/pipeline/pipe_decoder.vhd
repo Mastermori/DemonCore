@@ -144,12 +144,10 @@ BEGIN
 
                 WHEN JUMP_AND_LINK_OPCODE => --J layout
                     --internal_immediate(31 downto 21) := (others => '0');
-                    internal_immediate(21 DOWNTO 2) := signed(d_in_instruction(31 DOWNTO 12));
                     --internal_immediate(10 DOWNTO 1)  := signed(d_in_instruction(30 DOWNTO 21));
                     --internal_immediate(11)           := d_in_instruction(20);
                     --internal_immediate(19 DOWNTO 12) := signed(d_in_instruction(19 DOWNTO 12));
-                    internal_immediate(1 DOWNTO 0) := (OTHERS => '0');
-                    d_out_immediate <= resize(internal_immediate(21 DOWNTO 0), d_out_immediate'length); -- sign extension
+                    d_out_immediate <= resize(signed(d_in_instruction(31 DOWNTO 12)), d_out_immediate'length); -- sign extension
                     d_reg_addr_dest <= d_in_instruction(11 DOWNTO 7);
                     -- overwrite flags
                     d_out_second_func <= '0';

@@ -17,7 +17,8 @@ pseudo_call: "call"i label_name ("," register)?
 pseudo_jump: "j"i label_name
 
 _label: global_label | local_label
-?directive: "."(address_directive | align_directive) //TODO: Add more directives
+?directive: "."(address_directive | rom_address_directive | align_directive) //TODO: Add more directives
+
 variable: var_name ":" var_directive
 ?var_name: /\w(\w|\d|_|-)*/
 ?var_directive: var_directive_word | var_directive_ascii | var_directive_int | var_directive_byte | var_directive_char
@@ -27,6 +28,7 @@ local_label: "." label_name ":"
 ?label_name: /\w(\w|\d|_|-)*/
 
 address_directive: "ADDR" /\d+/
+rom_address_directive: "ROM_ADDR" /\d+/
 align_directive: "ALIGN" /\d+/
 
 _seperated{x, sep}: x (sep x)*

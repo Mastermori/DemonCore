@@ -193,9 +193,8 @@ pseudoDic = {
     'set': ['addi $rd, zero, $imm12'],
 
     'j': ['jal zero, $offset'],
-    'call': ['auipc $rd, $offsetHi',
-             'jalr $rd, $offsetLo($rd)'],
-    'ret': ['jarl x0, 0(x1)'],
+    'call': ['jalr $rd, $offset(x0)'],
+    'ret': ['jalr x0, 0(x1)'],
     'mul': [
         'addi $rd, zero, 0',
         'nop 2',

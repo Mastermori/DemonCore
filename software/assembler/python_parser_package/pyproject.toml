@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "demonass_parser"
-version = "0.0.10"
+version = "0.0.18"
 authors = [
   {name="Mastermori"}, {name="JCKL"}, {name="Nexaye"},
 ]

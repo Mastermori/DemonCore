@@ -48,8 +48,8 @@
 				"keyword.pseudo"
 			],
 			"settings": {
-				"fontStyle": "",
-				"foreground": "#319ac7"
+				"fontStyle": "italic",
+				"foreground": "#5a56d6"
 			}
 		},
         {

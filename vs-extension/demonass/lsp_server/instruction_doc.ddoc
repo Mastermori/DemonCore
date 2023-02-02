@@ -346,26 +346,146 @@ result to x[rd].
 loadvar
 @description Loads the value of memory at the address of *var* into *rd*.
 @param rd Destination Register
-@param var Variable
+@param var Variable to load
 
 @type pseudo count:Immediate5
 nop
-@description No Operation - stalls one clock cycle
+@description No Operation - stalls one clock cycle.
 @param count The count to repeat the nop instruction for - 1 will be assumed if omitted
+
+@type pseudo rd:Register rs1:Register rs2:Register
+mul
+@description Multiplies *rs1* and *rs2* writing the result to *rd*\n\n *rs1* and *rs2* are caller-saved.
+
+@type pseudo rd:Register rs1:Register
+mv
+@description Copys value of *rs1* to *rd*.
+@param rd Destination Register
+@param rs1 Register to copy value of
+
+not
+@description x[rd] = ~x[rs1]  \nWrites the inverted value of *rs1* to *rd*.
+@param rd Destination Register
+@param rs1 Register to invert
+
+neg
+@description x[rd] = -x[rs1]  \nWrites the negated value of *rs1* to *rd*.
+@param rd Destination Register
+@param rs1 Register to negate
+
+@type pseudo rd:Register, imm12:Immediate12
+set
+@description x[rd] = imm12  \nSets *rd* to the immediate value *imm12*.
+@param rd Destination Register
+@param imm12 Immediate value
 
 @type pseudo label:Label
 j
 @description Jumps to a defined label
-
-@type pseudo rd:Register rs1:Register rs2:Register
-mul
-@description Multiplies *rs1* and *rs2* writing the result to *rd*\n\n *rs1* and *rs2* are caller-saved
-
-@type pseudo rd:Register rs1:Register
-mv
-@description Copys value of *rs1* to *rd*
+@param label The label to jump to
 
 @type pseudo label:Label, rd:Register
 call
-@description Jumps to label and links 
-@param rd Write register **x1** will be used if omitted
+@description Jumps to label and links
+@param label The label to jump to
+@param rd Write register; *x1* will be used if omitted
+
+@type pseudo
+ret
+@description pc = x[1]  \nReturns to the last linked address/return address (register "x1"/"ra").
+
+@type pseudo rs1:Register, rs2:Register, offset:Immediate12
+bgt
+@description_start
+if (rs1 > rs2) pc += sext(offset) (signed)  
+If register x[rs1] is greater than x[rs2], treating the values as two's complement numbers, set the
+pc to the current pc plus the sign-extended offset.
+@description_end
+@param rs1 First Register
+@param rs2 Second Register
+@param offset 12-bit Offset
+
+ble
+@description_start
+if (rs1 <= rs2) pc += sext(offset) (signed)  
+If register x[rs1] is less or equal to x[rs2], treating the values as two's complement numbers, set the
+pc to the current pc plus the sign-extended offset.
+@description_end
+@param rs1 First Register
+@param rs2 Second Register
+@param offset 12-bit Offset
+
+bgtu
+@description_start
+if (rs1 > rs2) pc += sext(offset) (unsigned)  
+If register x[rs1] is greater than x[rs2], treating the values as unsigned numbers, set the pc to the
+current pc plus the sign-extended offset.
+@description_end
+@param rs1 First Register
+@param rs2 Second Register
+@param offset 12-bit Offset
+
+bleu
+@description_start
+if (rs1 <= rs2) pc += sext(offset) (unsigned)  
+If register x[rs1] is less or equal to x[rs2], treating the values as unsigned numbers, set the pc to the
+current pc plus the sign-extended offset.
+@description_end
+@param rs1 First Register
+@param rs2 Second Register
+@param offset 12-bit Offset 
+
+@type pseudo rs1:Register, offset:Immediate12
+beqz
+@description_start
+if (rs1 == 0) pc += sext(offset) (unsigned)  
+If register x[rs1] is equal to 0, treating the value as two's complement number, set the pc to the
+current pc plus the sign-extended offset.
+@description_end
+@param rs1 First Register
+@param offset 12-bit Offset
+
+bnez
+@description_start
+if (rs1 != 0) pc += sext(offset) (unsigned)  
+If register x[rs1] is not equal to 0, treating the value as two's complement number, set the pc to the
+current pc plus the sign-extended offset.
+@description_end
+@param rs1 First Register
+@param offset 12-bit Offset
+
+bgez
+@description_start
+if (rs1 >= 0) pc += sext(offset) (unsigned)  
+If register x[rs1] is greater than or equal to 0, treating the value as two's complement number, set the pc to the
+current pc plus the sign-extended offset.
+@description_end
+@param rs1 First Register
+@param offset 12-bit Offset
+
+blez
+@description_start
+if (rs1 <= 0) pc += sext(offset) (unsigned)  
+If register x[rs1] is less than or equal to 0, treating the value as two's complement number, set the pc to the
+current pc plus the sign-extended offset.
+@description_end
+@param rs1 First Register
+@param offset 12-bit Offset
+
+bgtz
+@description_start
+if (rs1 > 0) pc += sext(offset) (unsigned)  
+If register x[rs1] is greater than 0, treating the value as two's complement number, set the pc to the
+current pc plus the sign-extended offset.
+@description_end
+@param rs1 First Register
+@param offset 12-bit Offset
+
+bltz
+@description_start
+if (rs1 < 0) pc += sext(offset) (unsigned)  
+If register x[rs1] is less than 0, treating the value as two's complement number, set the pc to the
+current pc plus the sign-extended offset.
+@description_end
+@param rs1 First Register
+@param offset 12-bit Offset

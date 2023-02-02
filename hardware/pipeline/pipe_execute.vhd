@@ -74,6 +74,7 @@ BEGIN
             --e_out_write_memory_enable <= '-';
             e_out_reg_addr_dest <= e_in_reg_addr_dest;
             e_out_read_memory_enable <= e_in_read_memory;
+            pc_4 := e_in_pc + 4;
             CASE in_exec_func IS
                 WHEN LOGIC_ARITHMETIC_EXEC_CODE =>
                     e_out_result <= alu_result;
@@ -82,12 +83,11 @@ BEGIN
                     e_out_read_memory_enable <= '0';
                     e_out_write_memory_enable <= '0';
                 WHEN JUMP_EXEC_CODE =>
-                    pc_4 := e_in_pc + 4;
                     -- write linked register
-                    e_out_result <= signed(pc_4);
+                    e_out_result <= shift_right(signed(pc_4), 2);
                     e_out_write_reg_enable <= '1';
                     -- jump (by setting pc)
-                    e_out_computed_pc <= unsigned(pc_4 + unsigned(e_in_immediate));
+                    e_out_computed_pc <= unsigned(signed(pc_4) + shift_left(e_in_immediate, 2));
                     e_out_write_pc_enable <= '1';
                     e_out_read_memory_enable <= '0';
                     e_out_write_memory_enable <= '0';
@@ -124,7 +124,7 @@ BEGIN
 
                 WHEN JUMP_REGISTER_EXEC_CODE =>
                     -- write linked register
-                    e_out_result <= signed(e_in_pc + 4);
+                    e_out_result <= shift_right(signed(pc_4), 2);
                     e_out_write_reg_enable <= '1';
                     -- jump (by setting pc)
                     e_out_computed_pc <= unsigned(shift_left(e_in_data_1, 2) + shift_left(e_in_immediate, 2));

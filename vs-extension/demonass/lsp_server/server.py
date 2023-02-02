@@ -40,7 +40,7 @@ def completions(params: CompletionParams):
     if len(lines) == 0 or params.position.line == len(lines) and lines[-1].endswith("\n"):
         lines.append("")
     line = lines[params.position.line]
-    line_to_cursor = line[:params.position.character]
+    line_to_cursor = line[:params.position.character].lstrip()
     split_line = line_to_cursor.split(" ")
     items = []
     if len(split_line) > 1:
@@ -75,7 +75,7 @@ def signature_help(params: SignatureHelpParams):
     if len(lines) == 0 or params.position.line == len(lines) and lines[-1].endswith("\n"):
         lines.append("")
     line = lines[params.position.line]
-    line_to_cursor = line[:params.position.character]
+    line_to_cursor = line[:params.position.character].lstrip()
     split_line = line_to_cursor.split(" ")
     param_index = line_to_cursor.count(",") + line_to_cursor.count("(")
     signature_information = doc.get_signature_info_for_instruction(

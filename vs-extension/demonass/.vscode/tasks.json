@@ -17,21 +17,22 @@
 			}
 		},
 		{
-      "label": "Assemble With Current File",
-      "type": "shell",
-      "command": "${command:python.interpreterPath}",
-      "args": [
-        "${workspaceFolder}/software/assembler/parser/asm_parser.py",
-        "${workspaceFolder}/${relativeFile}"
-      ],
-    },
-    {
-      "label": "Assemble File Selector",
-      "type": "shell",
-      "command": "${command:python.interpreterPath}",
-      "args": [
-        "${workspaceFolder}/software/assembler/parser/asm_parser.py"
-      ]
-    }
+			"label": "Assemble With Current File",
+			"type": "shell",
+			"command": "${command:python.interpreterPath}",
+			"args": [
+				"${workspaceFolder}/software/assembler/parser/asm_parser.py",
+				"${workspaceFolder}/${relativeFile}"
+			],
+			"problemMatcher": []
+		},
+		{
+			"label": "Assemble File Selector",
+			"type": "shell",
+			"command": "${command:python.interpreterPath}",
+			"args": [
+				"${workspaceFolder}/software/assembler/parser/asm_parser.py"
+			]
+		}
 	]
 }

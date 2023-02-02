@@ -7,4 +7,4 @@ ghdl -a -fsynopsys pipeline/pipeline_collection.vhd
 ghdl -a -fsynopsys pipeline/pipeline_test.vhd
 ghdl -e -fsynopsys pipeTest
 ghdl -r -fsynopsys pipeTest --wave=pipeTest.ghw
-gtkwave pipeTest.ghw
+gtkwave mulTest.gtkw

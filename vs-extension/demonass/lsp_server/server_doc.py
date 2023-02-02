@@ -333,12 +333,13 @@ class AssemblerDoc:
         context = DocParseContext()
         instructions = {}
         with open(file_path, "r") as file_content:
-            for line in file_content:
+            for raw_line in file_content:
+                line = re.sub(r"#.*", "", raw_line)
                 stripped = line.strip()
                 if stripped.startswith("@"):
-                    self.parse_annotation(line[1:], context)
+                    self.parse_annotation(line[1:], raw_line[1:], context)
                 elif context.is_description:
-                    context.current_description += line.replace("\\n", "\n")
+                    context.current_description += raw_line.replace("\\n", "\n")
                 elif len(stripped) > 0:
                     name = stripped
                     instructions[name] = globals(
@@ -346,8 +347,9 @@ class AssemblerDoc:
                     context.current_instruction = instructions[name]
         return instructions
 
-    def parse_annotation(self, line: str, context: DocParseContext):
+    def parse_annotation(self, line: str, raw_line: str, context: DocParseContext):
         split_line = line.split(" ")
+        split_raw_line = raw_line.split(" ")
         annotation_name = split_line[0].strip()
         match annotation_name:
             case "type":
@@ -364,7 +366,7 @@ class AssemblerDoc:
                         break
                 context.current_instruction._set_markdown_documentation()
             case "description":
-                description = " ".join(split_line[1:]).removesuffix(
+                description = " ".join(split_raw_line[1:]).removesuffix(
                     "\n").replace("\\n", "\n")
                 context.current_instruction.set_description(description)
             case "description_start":
