@@ -1,0 +1,6 @@
+# Cadence Xcelium	v22.03-s005
+# ----------------------------------------------------------------------------
+xmvhdl -linedebug ../xcelium/de0Board.vho
+xmvhdl -linedebug de0Test.vhd
+xmelab de0Test
+xmsim -gui de0Test

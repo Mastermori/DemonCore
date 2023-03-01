@@ -1,0 +1,2 @@
+include $CDS_XCELIUM/tools/xcelium/files/cds.lib
+define work work

@@ -1,0 +1,151 @@
+xmvhdl(64): 22.03-s005: (c) Copyright 1995-2022 Cadence Design Systems, Inc.
+USE WORK.alu.ALL;
+        |
+xmvhdl_p: *E,SELLIB (pipeline_collection.vhd,5|8): unit (ALU) not found in library (WORKLIB).
+ARCHITECTURE pipeline_collection OF pipeline IS
+                                           |
+xmvhdl_p: *E,ENNOFN (pipeline_collection.vhd,13|43): Intermediate file for entity 'PIPELINE' could not be loaded, entity may require re-analysis.
+    pipe_fetch_inst : ENTITY work.pipe_fetch
+                  |
+xmvhdl_p: *E,PORLAB (pipeline_collection.vhd,43|18): unexpected label [9].
+    pipe_fetch_inst : ENTITY work.pipe_fetch
+                                 |
+xmvhdl_p: *E,EXPRIS (pipeline_collection.vhd,43|33): expecting the reserved word 'IS' [1.1].
+    pipe_decoder_inst : ENTITY work.pipe_decoder
+    |
+xmvhdl_p: *E,EXPACE (pipeline_collection.vhd,52|4): expecting a library unit [11.1].
+    pipe_decoder_inst : ENTITY work.pipe_decoder
+                                   |
+xmvhdl_p: *E,EXPRIS (pipeline_collection.vhd,52|35): expecting the reserved word 'IS' [1.1].
+    pipe_register_select_inst : ENTITY work.pipe_register_select
+    |
+xmvhdl_p: *E,EXPACE (pipeline_collection.vhd,72|4): expecting a library unit [11.1].
+    pipe_register_select_inst : ENTITY work.pipe_register_select
+                                           |
+xmvhdl_p: *E,EXPRIS (pipeline_collection.vhd,72|43): expecting the reserved word 'IS' [1.1].
+    pipe_execute_inst : ENTITY work.pipe_execute
+    |
+xmvhdl_p: *E,EXPACE (pipeline_collection.vhd,85|4): expecting a library unit [11.1].
+    pipe_execute_inst : ENTITY work.pipe_execute
+                                   |
+xmvhdl_p: *E,EXPRIS (pipeline_collection.vhd,85|35): expecting the reserved word 'IS' [1.1].
+    clkProcess : PROCESS (clk, reset) IS
+    |
+xmvhdl_p: *E,EXPACE (pipeline_collection.vhd,102|4): expecting a library unit [11.1].
+END ARCHITECTURE;
+                |
+xmvhdl_p: *E,EXPACN (pipeline_collection.vhd,110|16): expecting an architecture name [1.2].
+USE WORK.alu.all;
+        |
+xmvhdl_p: *E,SELLIB (pipe_execute.vhd,5|8): unit (ALU) not found in library (WORKLIB).
+architecture pipe_execute_simple of pipe_execute is
+                                               |
+xmvhdl_p: *E,ENNOFN (pipe_execute.vhd,30|47): Intermediate file for entity 'PIPE_EXECUTE' could not be loaded, entity may require re-analysis.
+    alu_inst: entity work.alu(alu_simple)
+           |
+xmvhdl_p: *E,PORLAB (pipe_execute.vhd,33|11): unexpected label [9].
+    alu_inst: entity work.alu(alu_simple)
+                         |
+xmvhdl_p: *E,EXPRIS (pipe_execute.vhd,33|25): expecting the reserved word 'IS' [1.1].
+    alu_proc: process (clk, reset) is
+    |
+xmvhdl_p: *E,EXPACE (pipe_execute.vhd,41|4): expecting a library unit [11.1].
+end architecture;
+                |
+xmvhdl_p: *E,EXPACN (pipe_execute.vhd,45|16): expecting an architecture name [1.2].
+            reg_addr_1 <= b"0_0000";
+                                  |
+xmvhdl_p: *E,EXPTYP (pipe_decoder.vhd,39|34): expecting an expression of type STD_LOGIC_VECTOR 87[8.3] 93[8.4].
+            reg_addr_2 <= b"0_0000";
+                                  |
+xmvhdl_p: *E,EXPTYP (pipe_decoder.vhd,40|34): expecting an expression of type STD_LOGIC_VECTOR 87[8.3] 93[8.4].
+            reg_addr_dest <= b"0_0000";
+                                     |
+xmvhdl_p: *E,EXPTYP (pipe_decoder.vhd,41|37): expecting an expression of type STD_LOGIC_VECTOR 87[8.3] 93[8.4].
+            control_enables <= b"0000000";
+                                        |
+xmvhdl_p: *E,EXPTYP (pipe_decoder.vhd,42|40): expecting an expression of type STD_LOGIC_VECTOR 87[8.3] 93[8.4].
+            immediate <= signed(0);
+                                |
+xmvhdl_p: *E,DIMNMM (pipe_decoder.vhd,45|32): dimension mismatch in type conversion between target type and operand type.
+            immediate <= signed(0);
+                              |
+xmvhdl_p: *E,APNPFX (pipe_decoder.vhd,45|30): cannot interpret prefix (SIGNED) for the construct used here.
+            upper_immediate <= signed(0);
+                                      |
+xmvhdl_p: *E,DIMNMM (pipe_decoder.vhd,46|38): dimension mismatch in type conversion between target type and operand type.
+            upper_immediate <= signed(0);
+                                    |
+xmvhdl_p: *E,APNPFX (pipe_decoder.vhd,46|36): cannot interpret prefix (SIGNED) for the construct used here.
+            reg_pc <= unsigned(0);
+                               |
+xmvhdl_p: *E,DIMNMM (pipe_decoder.vhd,47|31): dimension mismatch in type conversion between target type and operand type.
+            reg_pc <= unsigned(0);
+                             |
+xmvhdl_p: *E,APNPFX (pipe_decoder.vhd,47|29): cannot interpret prefix (UNSIGNED) for the construct used here.
+            reg_pc_4 <= unsigned(0);
+                                 |
+xmvhdl_p: *E,DIMNMM (pipe_decoder.vhd,48|33): dimension mismatch in type conversion between target type and operand type.
+            reg_pc_4 <= unsigned(0);
+                               |
+xmvhdl_p: *E,APNPFX (pipe_decoder.vhd,48|31): cannot interpret prefix (UNSIGNED) for the construct used here.
+                immediate <= signed(b"00000_00000_00000_00000" & instruction(31 DOWNTO 20)); --TODO: fix sign extension
+                                                               |
+xmvhdl_p: *E,BITOPR (pipe_decoder.vhd,61|63): This feature is allowed only in 93[13.7].
+                immediate(11 DOWNTO 5) <= instruction(31 DOWNTO 25); --TODO: fix sign extension
+                                                     |
+xmvhdl_p: *E,EXPTYP (pipe_decoder.vhd,67|53): expecting an expression of type SIGNED 87[8.3] 93[8.4].
+                immediate(4 DOWNTO 0) <= instruction(11 DOWNTO 7);
+                                                    |
+xmvhdl_p: *E,EXPTYP (pipe_decoder.vhd,71|52): expecting an expression of type SIGNED 87[8.3] 93[8.4].
+                immediate(12) <= instruction(31);
+                           |
+xmvhdl_p: *W,INDEXC (pipe_decoder.vhd,74|27): index constraint error [6.4].
+                immediate(10 DOWNTO 5) <= instruction(30 DOWNTO 25);
+                                                     |
+xmvhdl_p: *E,EXPTYP (pipe_decoder.vhd,75|53): expecting an expression of type SIGNED 87[8.3] 93[8.4].
+                immediate(4 DOWNTO 1) <= instruction(11 DOWNTO 8);
+                                                    |
+xmvhdl_p: *E,EXPTYP (pipe_decoder.vhd,79|52): expecting an expression of type SIGNED 87[8.3] 93[8.4].
+                upper_immediate <= instruction(31 DOWNTO 12);
+                                              |
+xmvhdl_p: *E,EXPTYP (pipe_decoder.vhd,83|46): expecting an expression of type SIGNED 87[8.3] 93[8.4].
+                immediate(20) <= instruction(31);
+                           |
+xmvhdl_p: *W,INDEXC (pipe_decoder.vhd,88|27): index constraint error [6.4].
+                immediate(10 DOWNTO 1) <= instruction(30 DOWNTO 21);
+                                                     |
+xmvhdl_p: *E,EXPTYP (pipe_decoder.vhd,89|53): expecting an expression of type SIGNED 87[8.3] 93[8.4].
+                immediate(19 DOWNTO 12) <= instruction(19 DOWNTO 12);
+                                     |
+xmvhdl_p: *W,DRICIC (pipe_decoder.vhd,91|37): discrete range is inconsistent with index constraint [3.2.1.1].
+                immediate(19 DOWNTO 12) <= instruction(19 DOWNTO 12);
+                                                      |
+xmvhdl_p: *E,EXPTYP (pipe_decoder.vhd,91|54): expecting an expression of type SIGNED 87[8.3] 93[8.4].
+        CASE(funct3) IS
+           |
+xmvhdl_p: *E,CASOTH (pipe_decoder.vhd,110|11): OTHERS is required as a case or select statement choice 87[8.7] 93[8.8] 2008[10.9][10.5.4][10.6.4] or case generate choice 2008[11.8].
+    SIGNAL rom : instruction_memory := (NOP_INSTRUCTION);
+                                  |
+xmvhdl_p: *E,STIUNC (pipe_fetch.vhd,22|34): subtype indication must not denote an unconstrained array type [4.3.1.2].
+            reg_pc <= x"0000_0000";
+                                 |
+xmvhdl_p: *E,EXPTYP (pipe_fetch.vhd,30|33): expecting an expression of type UNSIGNED 87[8.3] 93[8.4].
+            reg_pc_4 <= x"0000_0000";
+                                   |
+xmvhdl_p: *E,EXPTYP (pipe_fetch.vhd,31|35): expecting an expression of type UNSIGNED 87[8.3] 93[8.4].
+            instruction <= rom(pc);
+                             |
+xmvhdl_p: *E,IDENTU (pipe_fetch.vhd,34|29): identifier (ROM) is not declared [10.3].
+    SIGNAL data_1, data_2 : OUT word;
+                            |
+xmvhdl_p: *E,EXPUSN (pipe_reg_select.vhd,26|28): expecting an expanded name [6.3].
+        outVec <= vec1 + vec2 WHEN opCode = '0' ELSE vec1 - vec2;
+                              |
+xmvhdl_p: *E,EXPSMI (../general/alu.vhd,20|30): expecting a semicolon (';') 87[8.3] 93[8.4].
+        outVec <= vec1 + vec2 WHEN opCode = '0' ELSE vec1 - vec2;
+                                          |
+xmvhdl_p: *E,UNRKST (../general/alu.vhd,20|42): expecting a signal or variable assignment statement [8].
+        outVec <= vec1 + vec2 WHEN opCode = '0' ELSE vec1 - vec2;
+                                                          |
+xmvhdl_p: *E,UNRKST (../general/alu.vhd,20|58): expecting a signal or variable assignment statement [8].

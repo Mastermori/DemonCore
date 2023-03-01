@@ -1,0 +1,10 @@
+# Cadence Xcelium	v22.03-s005
+# ----------------------------------------------------------------------------
+xmvhdl -linedebug memPkg.vhd
+xmvhdl -linedebug rom.vhd
+xmvhdl -linedebug ramIO.vhd
+xmvhdl -linedebug procPkg.vhd
+xmvhdl -linedebug pipeProc.vhd
+xmvhdl -linedebug procTest.vhd
+xmelab procTest
+xmsim -gui procTest

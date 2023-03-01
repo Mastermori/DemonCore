@@ -1,0 +1,24 @@
+# ghdl		v2.0.0		- selber compiliert
+# gtkwave	v3.3.103	- Ubuntu deb
+# ----------------------------------------------------------------------------
+# hdl simulation		----------------------------------------------
+mkdir work
+ghdl -a -fsynopsys --workdir=work memPkg.vhd
+ghdl -a -fsynopsys --workdir=work rom.vhd
+ghdl -a -fsynopsys --workdir=work ramIO.vhd
+ghdl -a -fsynopsys --workdir=work procPkg.vhd
+ghdl -a -fsynopsys --workdir=work pipeProc.vhd
+ghdl -a -fsynopsys --workdir=work procTest.vhd
+ghdl -e -fsynopsys --workdir=work procTest
+ghdl -r -fsynopsys --workdir=work procTest --vcd=procTest.vcd
+gtkwave procTest.vcd
+
+# net simulation		----------------------------------------------
+mkdir work
+cp -pr $tamsSW/altera/simLibs/ghdl/altera* .
+cp -pr $tamsSW/altera/simLibs/ghdl/cycloneive .
+ghdl -a --workdir=work ../xcelium/de0Board.vho
+ghdl -a --workdir=work de0Test.vhd
+ghdl -e --workdir=work -fsynopsys de0Test
+ghdl -r --workdir=work -fsynopsys de0Test --stop-time=1ms --vcd=de0Test.vcd
+gtkwave de0Test.vcd

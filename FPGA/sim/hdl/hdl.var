@@ -1,0 +1,6 @@
+SOFTINCLUDE $CDS_XCELIUM/tools/inca/files/hdl.var
+DEFINE LIB_MAP ( + => work )
+DEFINE XMVHDLOPTS -v93
+DEFINE XMSIMRC         ( ${CDS_XCELIUM}/tools/inca/files/xmsimrc, ~/.xmsimrc )
+DEFINE VERILOG_SUFFIX (.v, .vt, .vlg, .vo)
+DEFINE VHDL_SUFFIX (.vhd, .vht, .vhdl, .vho)
