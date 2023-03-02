@@ -2,20 +2,20 @@ LIBRARY ieee;
 USE ieee.std_logic_1164.ALL;
 USE ieee.numeric_std.ALL;
 USE WORK.pipe_constants.ALL;
-USE work.memPkg.ALL;
 
 ENTITY pipeline IS
     PORT (
         clk : IN STD_LOGIC;
         reset : IN STD_LOGIC;
         -- ROM
-        f_out_rom_addr : OUT std_logic_vector(7 downto 0);
+        f_out_rom_addr : OUT std_logic_vector(31 downto 0);
         rom_out_data : IN instruction32;
         -- RAM
         m_out_memory_not_write_enable : OUT STD_LOGIC;
         m_out_memory_addr : OUT STD_LOGIC_VECTOR(31 DOWNTO 0);
         ram_out_data : IN word;
-        m_out_data : OUT word
+        m_out_data : BUFFER word;
+        reg_t0: OUT word
     );
 END;
 
@@ -123,7 +123,8 @@ BEGIN
             r_out_read_memory => r_out_read_memory,
             r_in_reg_addr_dest => w_out_reg_addr_dest,
             r_in_write_reg_enable => w_out_write_reg_enable,
-            r_in_write_data => w_out_data
+            r_in_write_data => w_out_data,
+            reg_t0_out => reg_t0
         );
     pipe_execute_inst : ENTITY work.pipe_execute
         PORT MAP(
@@ -207,10 +208,13 @@ BEGIN
     BEGIN
         IF (reset = '0') THEN
             pc <= x"0000_0000";
+            -- reg_t0 <= x"0000_0001";
 --            dummy_txt	<= load;
 --            rom_txt   <= load;
             -- rom_txt	<= load,  none after 5 ns;
         ELSIF (rising_edge(clk)) THEN
+            -- reg_t0(4 downto 0) <= w_out_reg_addr_dest;
+            -- reg_t0(31 downto 5) <= (others => '0');
             IF e_out_pc_write_enable = '1' THEN
                 pc <= unsigned(e_out_computed_pc);
             ELSE

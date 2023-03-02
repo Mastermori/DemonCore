@@ -91,7 +91,7 @@ BEGIN
                         d_out_exec_func <= JUMP_REGISTER_EXEC_CODE;
                     END IF;
 
-                WHEN STORE_OPCODE => --S layout
+                WHEN STORE_OPCODE => --S layout 0000000 00110 00101 010 00000 0100011
                     internal_immediate(11 DOWNTO 5) := signed(d_in_instruction(31 DOWNTO 25)); --TODO: fix sign extension
                     d_reg_addr_1 <= d_in_instruction(24 DOWNTO 20);
                     d_reg_addr_2 <= d_in_instruction(19 DOWNTO 15);

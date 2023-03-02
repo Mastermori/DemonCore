@@ -26,14 +26,21 @@ END;
 
 ARCHITECTURE pipe_memory_simple OF pipe_memory IS
 BEGIN
-    m_out_memory_addr <= m_in_memory_addr;
     PROCESS (clk, reset)
     BEGIN
-        IF (rising_edge(clk)) THEN
+        m_out_memory_addr <= m_in_memory_addr;
+        IF (reset = '0') THEN
+            --m_out_memory_addr <= (OTHERS => '1'),  (OTHERS => '0') after 1 ns;
+            m_out_memory_not_write_enable <= '1';
+            m_out_reg_addr_dest <= (OTHERS => '0');
+            m_out_write_reg_enable <= '1';
+            m_out_data <= (OTHERS => '0');
+        ELSIF (rising_edge(clk)) THEN
             -- Dont cares
             --m_out_reg_addr_dest <= (OTHERS => '-');
             --m_out_data <= (OTHERS => '-');
             --
+            
             m_out_reg_addr_dest <= m_in_reg_addr_dest;
             m_out_write_reg_enable <= m_in_write_reg_enable;
             m_out_memory_not_write_enable <= NOT m_in_write_memory_enable;
@@ -43,12 +50,6 @@ BEGIN
             ELSE
                 m_out_data <= STD_LOGIC_VECTOR(m_in_data);
             END IF;
-        ELSIF (reset = '0') THEN
-            --m_out_memory_addr <= (OTHERS => '1'),  (OTHERS => '0') after 1 ns;
-            m_out_memory_not_write_enable <= '1';
-            m_out_reg_addr_dest <= (OTHERS => '0');
-            m_out_write_reg_enable <= '1';
-            m_out_data <= (OTHERS => '0');
         END IF;
     END PROCESS;
 END pipe_memory_simple; -- pipe_memory_simple

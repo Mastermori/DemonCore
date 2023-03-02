@@ -120,7 +120,7 @@ architecture wrapper of de0Board is
   ------------------------------------------------------------------------------
   signal clk, clkN, slowClk : std_logic;
   signal rstN, dWE, dnWE    : std_logic;
-  signal iAddr, dAddr       : std_logic_vector( 9 downto 0);
+  signal iAddr, dAddr       : std_logic_vector(31 downto 0);
   signal iData, dDataI, dDataO  : std_logic_vector(31 downto 0);
 
   ------------------------------------------------------------------------------
@@ -133,6 +133,7 @@ architecture wrapper of de0Board is
   signal invC       : std_logic;
   signal xPos       : natural range 0 to 13;
   signal yPos       : natural range 0 to  5;
+  signal reg        : std_logic_vector(31 downto 0);
 
 begin
   -- disable unused hardware
@@ -147,12 +148,12 @@ begin
   pllI: pllClk  port map (clk50, clk,  clkN, open, open);   -- 2 MHz clock
 --pllI: pllClk  port map (clk50, open, open, clk,  clkN);   -- 1 MHz clock
 
-  dataMemI: ram10x32 port map (dAddr, clkN, dDataO, dWE, dDataI);
+  dataMemI: ram10x32 port map (dAddr(9 downto 0), clkN, dDataO, dWE, dDataI);
 
-  instMemI: rom10x32 port map (iAddr, clkN, iData);
+  instMemI: rom10x32 port map (iAddr(9 downto 0), clkN, iData);
 
-  procI: entity work.pipeline port map (slowClk, not rstN, iAddr, iData,
-                dnWE, dAddr, dDataI, dDataO);
+  procI: entity work.pipeline port map (slowClk, rstN, iAddr, iData,
+                dnWE, dAddr, dDataI, dDataO, reg);
 
   dispI: cDisp14x6
     generic map (   bgLight => false)
@@ -204,7 +205,7 @@ begin
     end if;
   end process butP;
 
-  led <= iAddr(7 downto 0);
+  led <= reg(7 downto 0);
 
   -- memory mapped control for cDisplay
   -- dAddr = 1023 : hex output dDataO 
@@ -228,8 +229,7 @@ begin
     when "1010" =>  return 'A';
     when "1011" =>  return 'B';
     when "1100" =>  return 'C';
-    when "1101" =>  return 'D';
-    when "1110" =>  return 'E';
+        
     when "1111" =>  return 'F';
     when others =>  return 'x';
     end case;
@@ -263,7 +263,7 @@ begin
 
       -- clear display                  ------------------------
       when dClear   =>
-    if ack = req and unsigned(dAddr) = 1023 then
+    if ack = req and unsigned(dAddr) = 255 then
                 req <= not req;
                 state   <= dChar1;
                 cmd <= dispChar;
@@ -290,40 +290,40 @@ begin
       when dChar3   =>
     if ack = req then   req <= not req;
                 state   <= dChar4;
-                cmd <= dispChar;
                 char    <= hex2char(dDataO(19 downto 16));
+                cmd <= dispChar;
     end if;
 
       -- char4  '[19..16]'              ------------------------
       when dChar4   =>
     if ack = req then   req <= not req;
                 state   <= dChar5;
-                cmd <= dispChar;
                 char    <= hex2char(dDataO(15 downto 12));
+                cmd <= dispChar;
     end if;
 
       -- char5  '[15..12]'              ------------------------
       when dChar5   =>
     if ack = req then   req <= not req;
                 state   <= dChar6;
-                cmd <= dispChar;
                 char    <= hex2char(dDataO(11 downto  8));
+                cmd <= dispChar;
     end if;
 
       -- char6  '[11..8]'               ------------------------
       when dChar6   =>
     if ack = req then   req <= not req;
                 state   <= dChar7;
-                cmd <= dispChar;
                 char    <= hex2char(dDataO( 7 downto  4));
+                cmd <= dispChar;
     end if;
 
       -- char7  '[7..4]'                ------------------------
       when dChar7   =>
     if ack = req then   req <= not req;
                 state   <= dChar8;
-                cmd <= dispChar;
                 char    <= hex2char(dDataO(3 downto 0));
+                cmd <= dispChar;
     end if;
 
 

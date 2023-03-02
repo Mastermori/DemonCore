@@ -1,0 +1,69 @@
+------------------------------------------------------------
+Timing Analyzer Summary
+------------------------------------------------------------
+
+Type  : Setup 'slowClk'
+Slack : 235.458
+TNS   : 0.000
+
+Type  : Setup 'pllI|altpll_component|auto_generated|pll1|clk[1]'
+Slack : 238.333
+TNS   : 0.000
+
+Type  : Setup 'pllI|altpll_component|auto_generated|pll1|clk[0]'
+Slack : 244.867
+TNS   : 0.000
+
+Type  : Hold 'slowClk'
+Slack : 0.307
+TNS   : 0.000
+
+Type  : Hold 'pllI|altpll_component|auto_generated|pll1|clk[0]'
+Slack : 0.357
+TNS   : 0.000
+
+Type  : Hold 'pllI|altpll_component|auto_generated|pll1|clk[1]'
+Slack : 0.357
+TNS   : 0.000
+
+Type  : Recovery 'pllI|altpll_component|auto_generated|pll1|clk[0]'
+Slack : 246.900
+TNS   : 0.000
+
+Type  : Recovery 'slowClk'
+Slack : 248.768
+TNS   : 0.000
+
+Type  : Recovery 'pllI|altpll_component|auto_generated|pll1|clk[1]'
+Slack : 496.993
+TNS   : 0.000
+
+Type  : Removal 'slowClk'
+Slack : 1.270
+TNS   : 0.000
+
+Type  : Removal 'pllI|altpll_component|auto_generated|pll1|clk[1]'
+Slack : 2.480
+TNS   : 0.000
+
+Type  : Removal 'pllI|altpll_component|auto_generated|pll1|clk[0]'
+Slack : 252.383
+TNS   : 0.000
+
+Type  : Minimum Pulse Width 'clk50'
+Slack : 9.747
+TNS   : 0.000
+
+Type  : Minimum Pulse Width 'pllI|altpll_component|auto_generated|pll1|clk[0]'
+Slack : 249.741
+TNS   : 0.000
+
+Type  : Minimum Pulse Width 'pllI|altpll_component|auto_generated|pll1|clk[1]'
+Slack : 249.744
+TNS   : 0.000
+
+Type  : Minimum Pulse Width 'slowClk'
+Slack : 999.671
+TNS   : 0.000
+
+------------------------------------------------------------

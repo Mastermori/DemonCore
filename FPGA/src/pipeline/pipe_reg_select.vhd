@@ -31,7 +31,9 @@ ENTITY pipe_register_select IS
         -- Write-Back Verkn�pfung
         r_in_reg_addr_dest : IN register_adress;
         r_in_write_reg_enable : IN STD_LOGIC;
-        r_in_write_data : IN unsigned(31 DOWNTO 0)
+        r_in_write_data : IN unsigned(31 DOWNTO 0);
+
+        reg_t0_out: OUT word
     );
 END;
 
@@ -52,8 +54,10 @@ BEGIN
             r_out_addr_dest <= (OTHERS => '0');
             r_out_immediate <= (OTHERS => '0');
             r_out_read_memory <= '0';
+            reg_t0_out <= x"0000_0002";
         ELSIF rising_edge(clk) THEN
             -- Register select
+            reg_t0_out <= std_logic_vector(reg_bank(5));
             IF r_in_register_read = '1' THEN
                 reg_data_1 <= reg_bank(to_integer(unsigned(addr_1)));
                 reg_data_2 <= reg_bank(to_integer(unsigned(addr_2)));
@@ -72,14 +76,19 @@ BEGIN
         END IF;
     END PROCESS;
 
-    reg_write_back : PROCESS (r_in_reg_addr_dest, r_in_write_data, r_in_write_reg_enable) IS
+    reg_write_back : PROCESS (clk, reset) IS
     BEGIN
-        IF r_in_write_reg_enable = '1' THEN
-            reg_bank(to_integer(unsigned(r_in_reg_addr_dest))) <= signed(r_in_write_data);
-            reg_bank(0) <= (OTHERS => '0'); -- TODO: find solution to hardwire 0
-        ELSE
-            NULL;
-        END IF;
+        IF (reset = '0') then
+            reg_bank <= (others => x"0000_0000");
+        ELSIF (falling_edge(clk)) THEN
+            IF r_in_write_reg_enable = '1' AND to_integer(unsigned(r_in_reg_addr_dest)) /= 0 THEN
+                reg_bank(to_integer(unsigned(r_in_reg_addr_dest))) <= signed(r_in_write_data);
+                -- reg_bank(0) <= (OTHERS => '0'); -- TODO: find solution to hardwire 0
+                --reg_t0_out <= std_logic_vector(reg_bank(to_integer(unsigned(r_in_reg_addr_dest))));
+            ELSE
+                NULL;
+            END IF;
+        END if;
     END PROCESS reg_write_back;
 
     -- Write Back

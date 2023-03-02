@@ -1,0 +1,33 @@
+
+State Machine - |de0Board|cmd
+Name cmd.dispChar cmd.dispPosXY cmd.dispClear cmd.dispInverse cmd.dispNormal cmd.dispAllOff cmd.dispAllOn cmd.dispReset 
+cmd.dispReset 0 0 0 0 0 0 0 0 
+cmd.dispAllOn 0 0 0 0 0 0 1 1 
+cmd.dispAllOff 0 0 0 0 0 1 0 1 
+cmd.dispNormal 0 0 0 0 1 0 0 1 
+cmd.dispInverse 0 0 0 1 0 0 0 1 
+cmd.dispClear 0 0 1 0 0 0 0 1 
+cmd.dispPosXY 0 1 0 0 0 0 0 1 
+cmd.dispChar 1 0 0 0 0 0 0 1 
+
+State Machine - |de0Board|state
+Name state.dChar9 state.dChar8 state.dChar7 state.dChar6 state.dChar5 state.dChar4 state.dChar3 state.dChar2 state.dChar1 state.dClear state.dNormal state.idle 
+state.idle 0 0 0 0 0 0 0 0 0 0 0 0 
+state.dNormal 0 0 0 0 0 0 0 0 0 0 1 1 
+state.dClear 0 0 0 0 0 0 0 0 0 1 0 1 
+state.dChar1 0 0 0 0 0 0 0 0 1 0 0 1 
+state.dChar2 0 0 0 0 0 0 0 1 0 0 0 1 
+state.dChar3 0 0 0 0 0 0 1 0 0 0 0 1 
+state.dChar4 0 0 0 0 0 1 0 0 0 0 0 1 
+state.dChar5 0 0 0 0 1 0 0 0 0 0 0 1 
+state.dChar6 0 0 0 1 0 0 0 0 0 0 0 1 
+state.dChar7 0 0 1 0 0 0 0 0 0 0 0 1 
+state.dChar8 0 1 0 0 0 0 0 0 0 0 0 1 
+state.dChar9 1 0 0 0 0 0 0 0 0 0 0 1 
+
+State Machine - |de0Board|cDisp14x6:dispI|state
+Name state.active state.init state.reset state.power 
+state.power 0 0 0 0 
+state.reset 0 0 1 1 
+state.init 0 1 0 1 
+state.active 1 0 0 1 

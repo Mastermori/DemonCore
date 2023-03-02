@@ -4,6 +4,30 @@ ADDRESS_RADIX = DEC;			-- address format
 DATA_RADIX = BIN;			-- data format
 CONTENT
 BEGIN
-0 : 00000000111111110000000011111111;	-- fill with data
-4 : 11111111000000001111111100000000;	-- ...not exhaustive
+0 : 00000000000000000000001100110111; --lui t1, %hi(var2) //loadvar t1, var2
+1 : 00000000000000000000000000010011; --addi x0, x0, 0 //nop 3 //loadvar t1, var2
+2 : 00000000000000000000000000010011; --addi x0, x0, 0 //nop 3 //loadvar t1, var2
+3 : 00000000000000000000000000010011; --addi x0, x0, 0 //nop 3 //loadvar t1, var2
+4 : 00000000011000110000001100010011; --addi t1, t1, %lo(var2) //loadvar t1, var2
+5 : 00000000000000000000000000010011; --addi x0, x0, 0 //nop 4 //loadvar t1, var2
+6 : 00000000000000000000000000010011; --addi x0, x0, 0 //nop 4 //loadvar t1, var2
+7 : 00000000000000000000000000010011; --addi x0, x0, 0 //nop 4 //loadvar t1, var2
+8 : 00000000000000000000000000010011; --addi x0, x0, 0 //nop 4 //loadvar t1, var2
+9 : 00000000000000110010001100000011; --lw t1, 0(t1) //loadvar t1, var2
+10 : 00000000000000000000000000010011; --addi x0, x0, 0 //nop 3 //loadvar t1, var2
+11 : 00000000000000000000000000010011; --addi x0, x0, 0 //nop 3 //loadvar t1, var2
+12 : 00000000000000000000000000010011; --addi x0, x0, 0 //nop 3 //loadvar t1, var2
+13 : 00000000000000000000001010110111; --lui t0, %hi(dispAddr) //loadvar t0, dispAddr
+14 : 00000000000000000000000000010011; --addi x0, x0, 0 //nop 3 //loadvar t0, dispAddr
+15 : 00000000000000000000000000010011; --addi x0, x0, 0 //nop 3 //loadvar t0, dispAddr
+16 : 00000000000000000000000000010011; --addi x0, x0, 0 //nop 3 //loadvar t0, dispAddr
+17 : 00000000010100101000001010010011; --addi t0, t0, %lo(dispAddr) //loadvar t0, dispAddr
+18 : 00000000000000000000000000010011; --addi x0, x0, 0 //nop 4 //loadvar t0, dispAddr
+19 : 00000000000000000000000000010011; --addi x0, x0, 0 //nop 4 //loadvar t0, dispAddr
+20 : 00000000000000000000000000010011; --addi x0, x0, 0 //nop 4 //loadvar t0, dispAddr
+21 : 00000000000000000000000000010011; --addi x0, x0, 0 //nop 4 //loadvar t0, dispAddr
+22 : 00000000000000101010001010000011; --lw t0, 0(t0) //loadvar t0, dispAddr
+23 : 00000000000000000000000000010011; --addi x0, x0, 0 //nop 3 //loadvar t0, dispAddr
+24 : 00000000000000000000000000010011; --addi x0, x0, 0 //nop 3 //loadvar t0, dispAddr
+25 : 00000000000000000000000000010011; --addi x0, x0, 0 //nop 3 //loadvar t0, dispAddr
 END;

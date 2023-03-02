@@ -94,6 +94,7 @@ BEGIN
                 WHEN BRANCH_EXEC_CODE =>
                     e_out_read_memory_enable <= '0';
                     e_out_write_memory_enable <= '0';
+                    e_out_write_reg_enable <= '0';
                     CASE in_alu_main_func IS
                         WHEN "000" =>
                             IF e_in_data_1 = e_in_data_2 THEN
@@ -136,11 +137,13 @@ BEGIN
                     e_out_memory_addr <= std_logic_vector(e_in_data_1 + e_in_immediate);
                     e_out_read_memory_enable <= '1';
                     e_out_write_memory_enable <= '0';
+                    e_out_write_reg_enable <= '0';
 
                 WHEN STORE_EXEC_CODE =>
                     e_out_memory_addr <= std_logic_vector(e_in_data_1 + e_in_immediate);
                     e_out_read_memory_enable <= '0';
                     e_out_write_memory_enable <= '1';
+                    e_out_write_reg_enable <= '0';
                     e_out_result <= e_in_data_2;
 
                 WHEN ADD_TO_PC_EXEC_CODE =>

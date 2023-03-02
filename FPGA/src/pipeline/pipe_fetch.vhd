@@ -10,7 +10,7 @@ ENTITY pipe_fetch IS
         clk : IN STD_LOGIC;
         reset : IN STD_LOGIC;
         pc : IN unsigned(31 DOWNTO 0);
-        f_out_rom_addr : OUT std_logic_vector(7 downto 0);
+        f_out_rom_addr : OUT std_logic_vector(31 downto 0);
         f_in_rom_data : IN instruction32;
         f_out_instruction : OUT instruction32;
         f_out_pc : OUT unsigned(31 DOWNTO 0)
@@ -19,7 +19,8 @@ END;
 
 ARCHITECTURE pipe_fetch_dummy OF pipe_fetch IS
 BEGIN
-    f_out_rom_addr <= std_logic_vector(pc(9 downto 2)); -- TODO: Find out how to do proper this properly (+4 bit adresses)
+    f_out_rom_addr(7 downto 0) <= std_logic_vector(pc(9 downto 2)); -- TODO: Find out how to do proper this properly (+4 bit adresses)
+    f_out_rom_addr(31 downto 8) <= (others => '0');
     PROCESS (clk, reset)
     BEGIN
         IF (reset = '0') THEN

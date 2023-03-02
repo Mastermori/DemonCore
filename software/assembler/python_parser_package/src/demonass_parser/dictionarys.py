@@ -170,9 +170,9 @@ pseudoDic = {
     'loadvar': ['lui $rd, %hi($var_name)',
                 'nop 3',
                 'addi $rd, $rd, %lo($var_name)',
-                'nop 3',
+                'nop 4',
                 'lw $rd, $offset($rd)',
-                # 'nop 3'
+                'nop 3'
                 ],
     'bgt': ['blt $rs2, $rs1, $offset'],
     'ble': ['bge $rs2, $rs1, $offset'],

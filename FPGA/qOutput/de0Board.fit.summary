@@ -1,0 +1,16 @@
+Fitter Status : Successful - Thu Mar  2 19:08:55 2023
+Quartus Prime Version : 22.1std.0 Build 915 10/25/2022 SC Standard Edition
+Revision Name : de0Board
+Top-level Entity Name : de0Board
+Family : Cyclone IV E
+Device : EP4CE22F17C6
+Timing Models : Final
+Total logic elements : 3,025 / 22,320 ( 14 % )
+    Total combinational functions : 2,878 / 22,320 ( 13 % )
+    Dedicated logic registers : 1,526 / 22,320 ( 7 % )
+Total registers : 1526
+Total pins : 33 / 154 ( 21 % )
+Total virtual pins : 0
+Total memory bits : 46,176 / 608,256 ( 8 % )
+Embedded Multiplier 9-bit elements : 0 / 132 ( 0 % )
+Total PLLs : 1 / 4 ( 25 % )

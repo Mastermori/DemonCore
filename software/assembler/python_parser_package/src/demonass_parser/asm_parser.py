@@ -145,6 +145,21 @@ class ContextParser:
         return parseContext
 
 
+def format_memory_content(content) -> str:
+    formated_content = """DEPTH = 1024;				-- # words
+WIDTH = 32;				-- # bits/word
+ADDRESS_RADIX = DEC;			-- address format
+DATA_RADIX = BIN;			-- data format
+CONTENT
+BEGIN
+"""
+    for line in re.sub(r"[^\S\r\n]+", " ", content).split("\n"):
+        print(line)
+        split_line = line.split(" ")
+        formated_content += split_line[0] + " : " + split_line[1] + ";" + (" " + " ".join(split_line[2:]) if len(split_line) > 2 else "") + "\n"
+    formated_content += "END;"
+    return formated_content
+
 def main():
     # "software/assembler/testAssembly.dasmb"
     choosenPath = ""
@@ -159,16 +174,17 @@ def main():
     parseContext = ContextParser(file_contents).parse_with_context()
 
     print("ROM:")
-    rom_content = parseContext.get_compiled_instructions(l, transformer)
+    rom_content = format_memory_content(parseContext.get_compiled_instructions(l, transformer))
     print(rom_content)
     print("RAM:")
-    print(parseContext.get_ram_content_str())
+    ram_content = format_memory_content(parseContext.get_ram_content_str())
+    print(ram_content)
     # ../../../hardware/memorySim/rom_fill.dat
-    with open("hardware/memorySim/rom_fill.dat", "w") as out_file:
+    with open("../../../../FPGA/memory/rom10x32.mif", "w") as out_file:
         out_file.writelines(rom_content)
     # ../../../hardware/memorySim/ram_fill.dat
-    with open("hardware/memorySim/ram_fill.dat", "w") as out_file:
-        out_file.writelines(parseContext.get_ram_content_str())
+    with open("../../../../FPGA/memory/ram10x32.mif", "w") as out_file:
+        out_file.writelines(ram_content)
     print(chad_success)
 
 

@@ -1,0 +1,92 @@
+Assembler report for de0Board
+Thu Mar  2 19:08:59 2023
+Quartus Prime Version 22.1std.0 Build 915 10/25/2022 SC Standard Edition
+
+
+---------------------
+; Table of Contents ;
+---------------------
+  1. Legal Notice
+  2. Assembler Summary
+  3. Assembler Settings
+  4. Assembler Generated Files
+  5. Assembler Device Options: de0Board.sof
+  6. Assembler Messages
+
+
+
+----------------
+; Legal Notice ;
+----------------
+Copyright (C) 2022  Intel Corporation. All rights reserved.
+Your use of Intel Corporation's design tools, logic functions 
+and other software and tools, and any partner logic 
+functions, and any output files from any of the foregoing 
+(including device programming or simulation files), and any 
+associated documentation or information are expressly subject 
+to the terms and conditions of the Intel Program License 
+Subscription Agreement, the Intel Quartus Prime License Agreement,
+the Intel FPGA IP License Agreement, or other applicable license
+agreement, including, without limitation, that your use is for
+the sole purpose of programming logic devices manufactured by
+Intel and sold by Intel or its authorized distributors.  Please
+refer to the applicable agreement for further details, at
+https://fpgasoftware.intel.com/eula.
+
+
+
++---------------------------------------------------------------+
+; Assembler Summary                                             ;
++-----------------------+---------------------------------------+
+; Assembler Status      ; Successful - Thu Mar  2 19:08:59 2023 ;
+; Revision Name         ; de0Board                              ;
+; Top-level Entity Name ; de0Board                              ;
+; Family                ; Cyclone IV E                          ;
+; Device                ; EP4CE22F17C6                          ;
++-----------------------+---------------------------------------+
+
+
++----------------------------------+
+; Assembler Settings               ;
++--------+---------+---------------+
+; Option ; Setting ; Default Value ;
++--------+---------+---------------+
+
+
++----------------------------------------------------------------+
+; Assembler Generated Files                                      ;
++----------------------------------------------------------------+
+; File Name                                                      ;
++----------------------------------------------------------------+
+; /homeL/0junge/Mikrorechner/DemonCore/FPGA/qOutput/de0Board.sof ;
++----------------------------------------------------------------+
+
+
++----------------------------------------+
+; Assembler Device Options: de0Board.sof ;
++----------------+-----------------------+
+; Option         ; Setting               ;
++----------------+-----------------------+
+; JTAG usercode  ; 0x0037DB3A            ;
+; Checksum       ; 0x0037DB3A            ;
++----------------+-----------------------+
+
+
++--------------------+
+; Assembler Messages ;
++--------------------+
+Info: *******************************************************************
+Info: Running Quartus Prime Assembler
+    Info: Version 22.1std.0 Build 915 10/25/2022 SC Standard Edition
+    Info: Processing started: Thu Mar  2 19:08:57 2023
+Info: Command: quartus_asm --read_settings_files=off --write_settings_files=off de0Board -c de0Board
+Warning (18236): Number of processors has not been specified which may cause overloading on shared machines.  Set the global assignment NUM_PARALLEL_PROCESSORS in your QSF to an appropriate value for best performance.
+Info (115031): Writing out detailed assembly data for power analysis
+Info (115030): Assembler is generating device programming files
+Info: Quartus Prime Assembler was successful. 0 errors, 1 warning
+    Info: Peak virtual memory: 380 megabytes
+    Info: Processing ended: Thu Mar  2 19:08:59 2023
+    Info: Elapsed time: 00:00:02
+    Info: Total CPU time (on all processors): 00:00:01
+
+
