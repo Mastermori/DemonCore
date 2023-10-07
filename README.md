@@ -1,5 +1,5 @@
 # DemonCore
-This processor was developed as part of the Embedded Systems Project at Uni Hamburg.
+This processor was developed as part of the Embedded Systems Project at Uni Hamburg. <br>
 It contains:
 * VHDL code describing the hardware of the processor
 * a lark grammar describing our own assembler language (demon assembler)
