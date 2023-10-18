@@ -67,8 +67,8 @@ jump_upper_direct_instruction: ju_type register "," imm20
 !i_type: "addi"i | "xori"i | "ori"i | "andi"i | "slti"i | "sltiu"i
     //| "ecall"i | "ebreak"i
 !is_type: "slli"i | "srli"i | "srai"i
-!l_type: "lb"i | "lh"i | "lw"i | "lbu"i | "lhu"i
-!s_type: "sb"i | "sh"i | "sw"i
+!l_type: "lw"i
+!s_type: "sw"i
 !b_type: "beq"i | "bne"i | "blt"i | "bge"i | "bltu"i | "bgeu"i
 !ju_type: "lui"i | "auipc"i | "jal"i
 !jl_type: "jalr"i
