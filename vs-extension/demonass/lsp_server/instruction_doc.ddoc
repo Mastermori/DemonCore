@@ -224,10 +224,10 @@ lhu
 
 @type save #[mnemonic] rs1, offset(rs2)
 sb
-@deprecated # Bin mir net sicher ob es wirklich deprecated ist xD
+@deprecated
 
 sh
-@deprecated # Bin mir net sicher ob es wirklich deprecated ist xD
+@deprecated
 
 sw
 @description_start
